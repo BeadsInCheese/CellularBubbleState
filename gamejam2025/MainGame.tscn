@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://PlayerController.gd" id="2_eflv5"]
 [ext_resource type="AudioStream" uid="uid://bopl44gp5ld8e" path="res://resources/loop_bubbles_1.ogg" id="2_s7r41"]
 [ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_w1ryg"]
-[ext_resource type="PackedScene" uid="uid://b4rgdo55qhhue" path="res://sidebar.tscn" id="3_xlshu"]
+[ext_resource type="PackedScene" uid="uid://cdp1ptkk1qkda" path="res://sidebar.tscn" id="3_xlshu"]
 
 [sub_resource type="Gradient" id="Gradient_blu0u"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -66,8 +66,9 @@ stream = ExtResource("2_s7r41")
 volume_db = -9.502
 autoplay = true
 
-[node name="Board" type="Sprite2D" parent="."]
+[node name="Board" type="Sprite2D" parent="." node_paths=PackedStringArray("gui")]
 script = ExtResource("1_aixle")
+gui = NodePath("../Sidebar")
 
 [node name="PlayerController" type="Node2D" parent="."]
 script = ExtResource("2_eflv5")

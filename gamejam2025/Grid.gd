@@ -4,7 +4,7 @@ class_name Board
 @export
 var bubble = preload("Bubble.tscn")
 @export
-var gui = preload("res://sidebar.tscn").instantiate()
+var gui :GUI
 @export
 var xsize : int = 20
 @export
