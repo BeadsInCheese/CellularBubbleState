@@ -1,7 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://1bsyxxel7wtb"]
+[gd_scene load_steps=4 format=3 uid="uid://1bsyxxel7wtb"]
 
 [ext_resource type="Script" path="res://Grid.gd" id="1_aixle"]
 [ext_resource type="Script" path="res://PlayerController.gd" id="2_eflv5"]
+
+[sub_resource type="Environment" id="Environment_in81w"]
+background_mode = 3
+glow_enabled = true
+glow_intensity = 1.27
+glow_strength = 0.22
+glow_blend_mode = 0
+glow_hdr_threshold = 2.27
+glow_hdr_scale = 0.58
 
 [node name="root" type="Node2D"]
 
@@ -19,5 +28,8 @@ offset_top = 161.0
 offset_right = 1072.0
 offset_bottom = 249.0
 text = "Debug"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_in81w")
 
 [connection signal="button_down" from="Button" to="Board" method="_on_button_button_down"]
