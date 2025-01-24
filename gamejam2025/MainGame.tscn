@@ -1,3 +1,10 @@
-[gd_scene format=3 uid="uid://1bsyxxel7wtb"]
+[gd_scene load_steps=2 format=3 uid="uid://1bsyxxel7wtb"]
+
+[ext_resource type="Script" path="res://Grid.gd" id="1_aixle"]
 
 [node name="root" type="Node2D"]
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+script = ExtResource("1_aixle")
