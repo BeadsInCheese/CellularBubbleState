@@ -5,6 +5,7 @@ var board:Board
 
 
 func update_gfx(type):
+	print("update called "+str(type))
 	if(type == 1):
 		$BubbleGfx.set_texture(load("res://resources/pillar_player1.png"))
 	elif (type == 3):
@@ -23,11 +24,11 @@ func _process(delta: float) -> void:
 
 
 func _on_button_button_down() -> void:
-	update_gfx(tileType)
+
 	if(board.turnOrder[board.currentTurn]!=board.Players.AUTOMATA):
 		print(tileType)
 		tileType=board.turnOrder[board.currentTurn]
 		board.changeTurn()
 		$Button.visible=false
-	
+	update_gfx(tileType)
 	pass # Replace with function body.
