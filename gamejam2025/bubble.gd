@@ -3,7 +3,9 @@ class_name Bubble
 var tileType=1
 var board:Board
 
-
+func setTileType(type):
+	tileType=type
+	update_gfx(tileType)
 func update_gfx(type):
 	print("update called "+str(type))
 	if(type == 1):
@@ -27,8 +29,8 @@ func _on_button_button_down() -> void:
 
 	if(board.turnOrder[board.currentTurn]!=board.Players.AUTOMATA):
 		print(tileType)
-		tileType=board.turnOrder[board.currentTurn]
+		setTileType(board.turnOrder[board.currentTurn])
 		board.changeTurn()
 		$Button.visible=false
-	update_gfx(tileType)
+
 	pass # Replace with function body.
