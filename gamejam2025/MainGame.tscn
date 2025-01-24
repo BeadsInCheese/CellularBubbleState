@@ -1,7 +1,41 @@
-[gd_scene load_steps=4 format=3 uid="uid://1bsyxxel7wtb"]
+[gd_scene load_steps=11 format=3 uid="uid://1bsyxxel7wtb"]
 
 [ext_resource type="Script" path="res://Grid.gd" id="1_aixle"]
 [ext_resource type="Script" path="res://PlayerController.gd" id="2_eflv5"]
+[ext_resource type="AudioStream" uid="uid://bopl44gp5ld8e" path="res://resources/loop_bubbles_1.ogg" id="2_s7r41"]
+[ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_w1ryg"]
+
+[sub_resource type="Gradient" id="Gradient_blu0u"]
+colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_n246t"]
+gradient = SubResource("Gradient_blu0u")
+
+[sub_resource type="Curve" id="Curve_cuygm"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_giy07"]
+curve = SubResource("Curve_cuygm")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yj7he"]
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(100, 120, 1)
+emission_shape = 3
+emission_box_extents = Vector3(7.325, 1, 1)
+angle_min = 312.6
+angle_max = 430.5
+direction = Vector3(0, 0, 0)
+spread = 56.728
+initial_velocity_min = 70.46
+initial_velocity_max = 344.0
+angular_velocity_min = -1.60933e-05
+angular_velocity_max = -1.60933e-05
+gravity = Vector3(0, -98, 0)
+scale_min = 0.1
+scale_max = 0.2
+scale_curve = SubResource("CurveTexture_giy07")
+color = Color(1, 1, 1, 0.0941176)
 
 [sub_resource type="Environment" id="Environment_in81w"]
 background_mode = 3
@@ -14,7 +48,22 @@ glow_hdr_scale = 0.58
 
 [node name="root" type="Node2D"]
 
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(577.953, 323.668)
+rotation = 4.71239
+scale = Vector2(10.3003, 18.0381)
+texture = SubResource("GradientTexture2D_n246t")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+position = Vector2(632, 459)
+process_material = SubResource("ParticleProcessMaterial_yj7he")
+texture = ExtResource("3_w1ryg")
+lifetime = 1.77
+
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_s7r41")
+volume_db = -9.502
+autoplay = true
 
 [node name="Board" type="Sprite2D" parent="."]
 script = ExtResource("1_aixle")
@@ -31,5 +80,13 @@ text = "Debug"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_in81w")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -18.0
+offset_top = -20.0
+offset_right = 1155.0
+offset_bottom = 657.0
+mouse_filter = 2
+color = Color(0.1144, 0.239213, 0.44, 0.568627)
 
 [connection signal="button_down" from="Button" to="Board" method="_on_button_button_down"]
