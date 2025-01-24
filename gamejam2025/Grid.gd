@@ -1,6 +1,6 @@
 extends Sprite2D
 
-
+class_name Board
 @export
 var bubble = preload("Bubble.tscn")
 @export
@@ -9,7 +9,7 @@ var xsize : int = 20
 var ysize : int = 20
 
 var gridList=[]
-enum Players{PLAYER1,PLAYER2,AUTOMATA}
+enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
 var turnOrder=[Players.PLAYER1,Players.PLAYER2,Players.AUTOMATA,Players.PLAYER2,Players.PLAYER1,Players.AUTOMATA]
 var currentTurn=0
 
@@ -18,7 +18,9 @@ var currentTurn=0
 func changeTurn()->void:
 	currentTurn=(currentTurn+1)%6
 	if(turnOrder[currentTurn]==Players.AUTOMATA):
-		pass
+		automata_step()
+		changeTurn()
+	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	for i in range(xsize):
@@ -34,7 +36,7 @@ func moveToplace()->void:
 	for i in range(len(gridList)):
 		var xpos:int=i%xsize
 		var ypos:int=i/ysize
-		gridList[i].position=Vector2(xpos,ypos)*24+Vector2(20,20)
+		gridList[i].position=Vector2(xpos,ypos)*34+Vector2(20,20)
 func automata_step() -> void:
 	for i in range(len(gridList)):
 		var xpos:int=i%xsize
