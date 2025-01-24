@@ -4,6 +4,8 @@ class_name Board
 @export
 var bubble = preload("Bubble.tscn")
 @export
+var gui = preload("res://sidebar.tscn").instantiate()
+@export
 var xsize : int = 20
 @export
 var ysize : int = 20
@@ -12,11 +14,12 @@ var gridList=[]
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
 var turnOrder=[Players.PLAYER1,Players.PLAYER2,Players.AUTOMATA,Players.PLAYER2,Players.PLAYER1,Players.AUTOMATA]
 var currentTurn=0
-
-
+var player1Score = 0
+var player2Score = 0
 
 func changeTurn()->void:
 	currentTurn=(currentTurn+1)%6
+	gui.updateSidebar(turnOrder[currentTurn],player1Score,player2Score)
 	if(turnOrder[currentTurn]==Players.AUTOMATA):
 		automata_step()
 		changeTurn()
@@ -51,4 +54,6 @@ func _process(delta: float) -> void:
 
 
 func _on_button_button_down() -> void:
+	player1Score = player1Score+1
+	changeTurn()
 	automata_step()

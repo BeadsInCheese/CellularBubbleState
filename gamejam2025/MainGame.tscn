@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://1bsyxxel7wtb"]
+[gd_scene load_steps=4 format=3 uid="uid://1bsyxxel7wtb"]
 
 [ext_resource type="Script" path="res://Grid.gd" id="1_aixle"]
 [ext_resource type="Script" path="res://PlayerController.gd" id="2_eflv5"]
+[ext_resource type="PackedScene" uid="uid://b4rgdo55qhhue" path="res://sidebar.tscn" id="3_xlshu"]
 
 [node name="root" type="Node2D"]
 
@@ -14,10 +15,16 @@ script = ExtResource("1_aixle")
 script = ExtResource("2_eflv5")
 
 [node name="Button" type="Button" parent="."]
-offset_left = 807.0
-offset_top = 161.0
-offset_right = 1072.0
-offset_bottom = 249.0
+offset_left = 752.0
+offset_top = 8.0
+offset_right = 849.0
+offset_bottom = 58.0
 text = "Debug"
+
+[node name="Sidebar" parent="." instance=ExtResource("3_xlshu")]
+offset_left = 754.0
+offset_top = 67.0
+offset_right = 1044.0
+offset_bottom = 464.0
 
 [connection signal="button_down" from="Button" to="Board" method="_on_button_button_down"]
