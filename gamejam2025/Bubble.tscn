@@ -2,18 +2,18 @@
 
 [ext_resource type="Script" path="res://bubble.gd" id="1_k25p1"]
 
-[sub_resource type="Gradient" id="Gradient_sfvb8"]
+[sub_resource type="Gradient" id="Gradient_wi3sw"]
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_xaec3"]
-gradient = SubResource("Gradient_sfvb8")
-width = 24
-height = 24
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_01tgn"]
+gradient = SubResource("Gradient_wi3sw")
+width = 34
+height = 34
 
 [node name="Bubble" type="Node2D"]
 script = ExtResource("1_k25p1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = SubResource("GradientTexture2D_xaec3")
+texture = SubResource("GradientTexture2D_01tgn")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 modulate = Color(1, 0, 0, 1)

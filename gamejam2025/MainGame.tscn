@@ -10,9 +10,8 @@
 [node name="Board" type="Sprite2D" parent="."]
 script = ExtResource("1_aixle")
 
-[node name="PlayerController" type="Node2D" parent="." node_paths=PackedStringArray("Board")]
+[node name="PlayerController" type="Node2D" parent="."]
 script = ExtResource("2_eflv5")
-Board = NodePath("../Board")
 
 [node name="Button" type="Button" parent="."]
 offset_left = 807.0
