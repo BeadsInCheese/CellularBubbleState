@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://bubble.gd" id="1_k25p1"]
 
 [sub_resource type="Gradient" id="Gradient_wi3sw"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_01tgn"]
 gradient = SubResource("Gradient_wi3sw")

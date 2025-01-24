@@ -3,19 +3,23 @@
 [ext_resource type="Script" path="res://GUI.gd" id="1_50b85"]
 
 [node name="Sidebar" type="VBoxContainer"]
-offset_right = 40.0
-offset_bottom = 77.0
+custom_minimum_size = Vector2(100, 100)
+offset_right = 57.0
+offset_bottom = 86.0
 size_flags_stretch_ratio = 1.86
 script = ExtResource("1_50b85")
 
-[node name="Score_player1" type="Label" parent="."]
+[node name="Score_player1" type="RichTextLabel" parent="."]
 layout_mode = 2
-text = "16"
+text = "4534"
+fit_content = true
 
-[node name="Score_player2" type="Label" parent="."]
+[node name="Score_player2" type="RichTextLabel" parent="."]
 layout_mode = 2
 text = "18"
+fit_content = true
 
-[node name="TurnValue" type="Label" parent="."]
+[node name="TurnValue" type="RichTextLabel" parent="."]
 layout_mode = 2
 text = "65"
+fit_content = true

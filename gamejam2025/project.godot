@@ -18,3 +18,8 @@ config/icon="res://icon.svg"
 [display]
 
 window/stretch/mode="viewport"
+
+[rendering]
+
+viewport/transparent_background=true
+viewport/hdr_2d=true
