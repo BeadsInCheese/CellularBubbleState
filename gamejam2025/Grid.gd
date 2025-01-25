@@ -6,9 +6,9 @@ var bubble = preload("Bubble.tscn")
 @export
 var gui :GUI
 @export
-var xsize : int = 20
+var xsize : int = 17
 @export
-var ysize : int = 20
+var ysize : int = 17
 
 var gridList=[]
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
@@ -49,7 +49,7 @@ func moveToplace()->void:
 	for i in range(len(gridList)):
 		var xpos:int=i%xsize
 		var ypos:int=i/ysize
-		gridList[i].position=Vector2(xpos,ypos)*34+Vector2(20,20)
+		gridList[i].position=Vector2(xpos,ypos)*38+Vector2(20,20)
 func automata_step() -> void:
 	for i in range(len(gridList)):
 		var xpos:int=i%xsize
