@@ -16,13 +16,23 @@ var turnOrder=[Players.PLAYER1,Players.PLAYER2,Players.AUTOMATA,Players.PLAYER2,
 var currentTurn=0
 var player1Score = 0
 var player2Score = 0
-
+func updateScore():
+	player1Score=0
+	player2Score=0
+	for i in gridList:
+		if(i.tileType==1 or i.tileType== 2):
+			player1Score+=1
+		if(i.tileType==3 or i.tileType == 4):
+			player2Score+=1
+			
 func changeTurn()->void:
 	currentTurn=(currentTurn+1)%6
-	gui.updateSidebar(turnOrder[currentTurn],player1Score,player2Score)
+	
 	if(turnOrder[currentTurn]==Players.AUTOMATA):
 		automata_step()
 		changeTurn()
+	updateScore()
+	gui.updateSidebar(turnOrder[currentTurn],player1Score,player2Score)
 	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
