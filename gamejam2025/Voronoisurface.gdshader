@@ -11,7 +11,7 @@ void fragment() {
 if(COLOR.a<0.){
 	discard;
 }
-	vec4 t=max((texture(voronoi,0.01*sin(UV.x*1.*TIME*2.)+fract((UV*(0.02*(UV.x)+1.))-vec2(TIME,0)*0.02))),0);
+	vec4 t=max((texture(voronoi,0.01*sin(UV.x*TIME*2.)+fract((UV*(0.02*(UV.x)+1.))-vec2(TIME,0)*0.02))),0);
 	if(t.r<0.6){
 		discard;
 	}

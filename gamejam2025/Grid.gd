@@ -6,9 +6,9 @@ var bubble = preload("Bubble.tscn")
 @export
 var gui :GUI
 @export
-var xsize : int = 20
+var xsize : int = 17
 @export
-var ysize : int = 20
+var ysize : int = 17
 
 var gridList=[]
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
@@ -21,12 +21,23 @@ var player2Score = 0
 var testxpos = 0
 var testypos = 0
 
+func updateScore():
+	player1Score=0
+	player2Score=0
+	for i in gridList:
+		if(i.tileType==1 or i.tileType== 2):
+			player1Score+=1
+		if(i.tileType==3 or i.tileType == 4):
+			player2Score+=1
+			
 func changeTurn()->void:
 	currentTurn=(currentTurn+1)%6
-	gui.updateSidebar(turnOrder[currentTurn],player1Score,player2Score)
+	
 	if(turnOrder[currentTurn]==Players.AUTOMATA):
 		automata_step()
 		changeTurn()
+	updateScore()
+	gui.updateSidebar(turnOrder[currentTurn],player1Score,player2Score)
 	
 	checkRule(rules.keys()[0], 0, testxpos, testypos)
 	
@@ -47,7 +58,7 @@ func moveToplace()->void:
 	for i in range(len(gridList)):
 		var xpos:int=i%xsize
 		var ypos:int=i/ysize
-		gridList[i].position=Vector2(xpos,ypos)*34+Vector2(20,20)
+		gridList[i].position=Vector2(xpos,ypos)*38+Vector2(20,20)
 func automata_step() -> void:
 	for i in range(len(gridList)):
 		var xpos:int=i%xsize

@@ -118,10 +118,10 @@ environment = SubResource("Environment_in81w")
 
 [node name="Button" type="Button" parent="."]
 top_level = true
-offset_left = 735.0
-offset_top = 185.0
-offset_right = 832.0
-offset_bottom = 235.0
+offset_left = 770.0
+offset_top = 324.0
+offset_right = 867.0
+offset_bottom = 374.0
 text = "Debug"
 
 [node name="Sidebar" parent="." instance=ExtResource("3_xlshu")]

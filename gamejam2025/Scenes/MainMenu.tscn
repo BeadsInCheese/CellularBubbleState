@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://d0q8tr7g0mqks"]
+
+[ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="1_nwb4t"]
+
+[node name="MainMenu" type="Node2D"]
+
+[node name="Button" type="Button" parent="."]
+offset_left = 354.0
+offset_top = 149.0
+offset_right = 793.0
+offset_bottom = 307.0
+theme = ExtResource("1_nwb4t")
+text = "Local multiplayer"
+
+[node name="Button2" type="Button" parent="."]
+offset_left = 397.0
+offset_top = 356.0
+offset_right = 740.0
+offset_bottom = 514.0
+theme = ExtResource("1_nwb4t")
+text = "Settings"
