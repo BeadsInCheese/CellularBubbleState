@@ -2,8 +2,8 @@ extends Node
 class_name GUI
 
 func updateSidebar(turn,score1,score2):
-	$Score_player1.text = str(score1)
-	$Score_player2.text = str(score2)
+	$Score_player1.text = "Player1: "+str(score1)
+	$Score_player2.text = "Player2: "+str(score2)
 	#print("Gui debug")
 	#print($Score_player1)
 	#print(score2)

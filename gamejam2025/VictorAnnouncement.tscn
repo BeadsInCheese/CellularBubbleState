@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://d0m7td6t45bii"]
+
+[ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="1_7b2p2"]
+[ext_resource type="Script" path="res://EndScreen.gd" id="2_300fv"]
+
+[node name="VictorAnnouncement" type="Node2D"]
+position = Vector2(578, 287)
+
+[node name="Text" type="RichTextLabel" parent="."]
+offset_left = -150.0
+offset_top = -31.0
+offset_right = 177.0
+offset_bottom = 49.0
+theme = ExtResource("1_7b2p2")
+bbcode_enabled = true
+text = "[center]player x wins![/center]"
+metadata/_edit_use_anchors_ = true
+
+[node name="Button" type="Button" parent="."]
+offset_left = -112.0
+offset_top = 46.0
+offset_right = 118.0
+offset_bottom = 109.0
+theme = ExtResource("1_7b2p2")
+text = "MAIN MENU"
+script = ExtResource("2_300fv")
+metadata/_edit_use_anchors_ = true
+
+[connection signal="button_down" from="Button" to="Button" method="_on_button_down"]

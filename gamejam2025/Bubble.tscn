@@ -18,6 +18,7 @@ width = 34
 height = 34
 
 [node name="Bubble" type="Node2D"]
+scale = Vector2(2.505, 2.505)
 script = ExtResource("1_k25p1")
 
 [node name="Button" type="Button" parent="."]
