@@ -14,15 +14,15 @@ func _process(delta: float) -> void:
 
 
 func _on_master_value_changed(value: float) -> void:
-	Settings.setMaster(-80+value)
+	Settings.setMaster(value)
 
 
 func _on_sfx_value_changed(value: float) -> void:
-	Settings.setSFX(-80+value)
+	Settings.setSFX(value)
 
 
 func _on_music_value_changed(value: float) -> void:
-	Settings.setMusic(-80+value)
+	Settings.setMusic(value)
 
 
 func _on_button_button_down() -> void:
