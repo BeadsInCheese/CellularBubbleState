@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://ug0madqa8a8h"
+path="res://.godot/imported/Smooth 10.wav-3548919e2138543d36681687a8ffc743.sample"
+
+[deps]
+
+source_file="res://Smooth 10.wav"
+dest_files=["res://.godot/imported/Smooth 10.wav-3548919e2138543d36681687a8ffc743.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

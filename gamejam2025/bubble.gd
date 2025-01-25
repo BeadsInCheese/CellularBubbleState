@@ -6,8 +6,13 @@ var board:Board
 func setTileType(type):
 	tileType=type
 	update_gfx(tileType)
+func appear():
+	$AudioStreamPlayer2D.play()
+	for i in range(100):
+		$BubbleGfx.material.set_shader_parameter("treshold",0.05*(10-i))
+		await get_tree().process_frame
 func update_gfx(type):
-	print("update called "+str(type))
+	#print("update called "+str(type))
 	if(type == 1):
 		$BubbleGfx.set_texture(load("res://resources/pillar_player1.png"))
 	elif (type == 3):
@@ -28,9 +33,9 @@ func _process(delta: float) -> void:
 func _on_button_button_down() -> void:
 
 	if(board.turnOrder[board.currentTurn]!=board.Players.AUTOMATA):
-		print(tileType)
+		#print(tileType)
 		setTileType(board.turnOrder[board.currentTurn])
 		board.changeTurn()
 		$Button.visible=false
-
+		appear()
 	pass # Replace with function body.

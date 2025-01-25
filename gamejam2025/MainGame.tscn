@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://1bsyxxel7wtb"]
+[gd_scene load_steps=17 format=3 uid="uid://1bsyxxel7wtb"]
 
 [ext_resource type="Script" path="res://Grid.gd" id="1_aixle"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="1_qw4ww"]
@@ -6,6 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://bopl44gp5ld8e" path="res://resources/loop_bubbles_1.ogg" id="2_s7r41"]
 [ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_w1ryg"]
 [ext_resource type="PackedScene" uid="uid://cdp1ptkk1qkda" path="res://sidebar.tscn" id="3_xlshu"]
+[ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="7_nmuy5"]
 
 [sub_resource type="Gradient" id="Gradient_blu0u"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -57,11 +58,15 @@ color = Color(1, 1, 1, 0.0941176)
 [sub_resource type="Environment" id="Environment_in81w"]
 background_mode = 3
 glow_enabled = true
-glow_intensity = 1.82
-glow_strength = 0.31
-glow_hdr_threshold = 4.0
-glow_hdr_scale = 1.32
+glow_levels/1 = 16.0
+glow_intensity = 0.92
+glow_strength = 0.9
+glow_mix = 0.132
+glow_blend_mode = 1
+glow_hdr_threshold = 1.47
+glow_hdr_scale = 0.0
 glow_hdr_luminance_cap = 256.0
+glow_map_strength = 0.0
 
 [node name="root" type="Node2D"]
 
@@ -124,5 +129,9 @@ offset_left = 760.0
 offset_top = 78.0
 offset_right = 800.0
 offset_bottom = 155.0
+
+[node name="AudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_nmuy5")
+autoplay = true
 
 [connection signal="button_down" from="Button" to="Board" method="_on_button_button_down"]
