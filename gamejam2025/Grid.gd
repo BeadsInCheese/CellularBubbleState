@@ -17,12 +17,18 @@ var currentTurn=0
 var player1Score = 0
 var player2Score = 0
 
+#debug
+var testxpos = 0
+var testypos = 0
+
 func changeTurn()->void:
 	currentTurn=(currentTurn+1)%6
 	gui.updateSidebar(turnOrder[currentTurn],player1Score,player2Score)
 	if(turnOrder[currentTurn]==Players.AUTOMATA):
 		automata_step()
 		changeTurn()
+	
+	checkRule(rules.keys()[0], 0, testxpos, testypos)
 	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -34,6 +40,8 @@ func _ready() -> void:
 			add_child(x)
 			gridList.append(x)
 	moveToplace()
+	
+	checkRule(rules.keys()[0], 0, testxpos, testypos)
 	
 func moveToplace()->void:
 	for i in range(len(gridList)):
@@ -57,3 +65,68 @@ func _on_button_button_down() -> void:
 	player1Score = player1Score+1
 	changeTurn()
 	automata_step()
+
+func getGridTileType(xpos: int, ypos: int):
+	if xpos < 0 or ypos < 0 or xpos >= xsize or ypos >= ysize:
+		return null
+		
+	return gridList[xpos + ypos * ysize].tileType
+
+func checkRule(matchGrid: Array, matchResult: int, xpos: int, ypos: int) -> bool:
+	for j in range(len(matchGrid)):
+		for i in range(len(matchGrid[0])):
+			print(i, j, "  ", matchGrid[i][j])
+	
+	print(getGridTileType(xpos, ypos))
+	print(getGridTileType(xpos+1, ypos+1))
+	print(getGridTileType(xpos-1, ypos-1))
+	print(getGridTileType(xpos+10, ypos+10))
+	
+	return false
+
+var o = null # shortcut for Any
+var t = -1   # shortcut for Tower
+var b = -2   # shortcut for Bubble
+var rules: Dictionary = {
+	[
+		[ 2, 4],
+		[ 4, o]
+	]: 0,
+	
+	[
+		[ 0, b],
+		[ t, b]
+	]: b,
+	[
+		[ b, b],
+		[ 0, t]
+	]: 0,
+	
+	[
+		[ o, o, o],
+		[ b, b, b],
+		[ o, t, o]
+	]: 0,
+	
+	[
+		[0],
+		[b],
+		[t]
+	]: b,
+	
+	[
+		[ o, t, o],
+		[ o, 0, o],
+		[ o, t, o]
+	]: b,
+	[
+		[t],
+		[0],
+		[t]
+	]: 0,
+	
+	[
+		[ 0, t],
+		[ t, b]
+	]: b
+}
