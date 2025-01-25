@@ -26,4 +26,5 @@ func _on_music_value_changed(value: float) -> void:
 
 
 func _on_button_button_down() -> void:
+	await get_tree().process_frame
 	SceneNavigation._on_MainMenuPressed()

@@ -1,9 +1,13 @@
-[gd_scene load_steps=11 format=3 uid="uid://d0q8tr7g0mqks"]
+[gd_scene load_steps=17 format=3 uid="uid://d0q8tr7g0mqks"]
 
 [ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="1_nwb4t"]
 [ext_resource type="Script" path="res://Scenes/SceneNavigation.gd" id="1_ygpmw"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="2_lpkp4"]
 [ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="4_1qja7"]
+[ext_resource type="Shader" path="res://Scenes/MainMenu.gdshader" id="4_3l6nv"]
+[ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="5_ga2sp"]
+[ext_resource type="Shader" path="res://Scenes/Transition.gdshader" id="7_phqtp"]
+[ext_resource type="Script" path="res://Scenes/transition.gd" id="8_llfhg"]
 
 [sub_resource type="Gradient" id="Gradient_blu0u"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -28,10 +32,16 @@ noise = SubResource("FastNoiseLite_0jmjm")
 shader = ExtResource("2_lpkp4")
 shader_parameter/voronoi = SubResource("NoiseTexture2D_ucuru")
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dd348"]
+shader = ExtResource("4_3l6nv")
+
 [sub_resource type="Theme" id="Theme_5h72o"]
 default_base_scale = 1.0
 default_font = ExtResource("4_1qja7")
 default_font_size = 100
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o7cbw"]
+shader = ExtResource("7_phqtp")
 
 [node name="MainMenu" type="Node2D"]
 script = ExtResource("1_ygpmw")
@@ -76,12 +86,25 @@ mouse_filter = 2
 color = Color(0.1144, 0.239213, 0.44, 0.568627)
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
+material = SubResource("ShaderMaterial_dd348")
 offset_top = 59.0
 offset_right = 1157.0
 offset_bottom = 231.0
 theme = SubResource("Theme_5h72o")
 bbcode_enabled = true
 text = "[center]Cellular bubble state [/center]"
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_ga2sp")
+autoplay = true
+bus = &"Music"
+
+[node name="Transition" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_o7cbw")
+offset_right = 1167.0
+offset_bottom = 673.0
+mouse_filter = 2
+script = ExtResource("8_llfhg")
 
 [connection signal="button_down" from="Button" to="." method="_onLocalMPSelected"]
 [connection signal="button_down" from="Button2" to="." method="_on_SettingsPressed"]
