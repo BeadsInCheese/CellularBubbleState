@@ -5,8 +5,8 @@
 
 [node name="Sidebar" type="VBoxContainer"]
 custom_minimum_size = Vector2(100, 100)
-offset_right = 760.0
-offset_bottom = 1002.0
+offset_right = 656.0
+offset_bottom = 579.0
 size_flags_stretch_ratio = 1.86
 script = ExtResource("1_50b85")
 
@@ -16,15 +16,15 @@ layout_mode = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="contUpper1"]
 clip_contents = false
+custom_minimum_size = Vector2(325, 0)
 layout_mode = 2
-size_flags_horizontal = 3
 theme = ExtResource("2_7aq0k")
-text = "Player1: "
+text = "Player 1 score: "
 
 [node name="Score_player1" type="RichTextLabel" parent="contUpper1"]
 clip_contents = false
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 8
 theme = ExtResource("2_7aq0k")
 text = "0"
 fit_content = true
@@ -35,15 +35,14 @@ layout_mode = 2
 
 [node name="RichTextLabel" type="RichTextLabel" parent="contUpper2"]
 clip_contents = false
+custom_minimum_size = Vector2(325, 0)
 layout_mode = 2
-size_flags_horizontal = 3
 theme = ExtResource("2_7aq0k")
-text = "Player2: "
+text = "Player 2 score: "
 
 [node name="Score_player2" type="RichTextLabel" parent="contUpper2"]
 clip_contents = false
 layout_mode = 2
-size_flags_horizontal = 3
 theme = ExtResource("2_7aq0k")
 text = "0"
 fit_content = true
