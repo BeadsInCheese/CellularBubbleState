@@ -10,7 +10,7 @@ var xsize : int = 17
 @export
 var ysize : int = 17
 
-var gridList=[]
+var gridList: Array[Bubble] = []
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
 var turnOrder=[Players.PLAYER1,Players.PLAYER2,Players.AUTOMATA,Players.PLAYER2,Players.PLAYER1,Players.AUTOMATA]
 var currentTurn=0
@@ -18,8 +18,10 @@ var player1Score = 0
 var player2Score = 0
 
 #debug
-var testxpos = 0
-var testypos = 0
+var testxpos = 1
+var testypos = 1
+var testxmark = -1
+var testymark = -1
 
 func updateScore():
 	player1Score=0
@@ -39,7 +41,7 @@ func changeTurn()->void:
 	updateScore()
 	gui.updateSidebar(turnOrder[currentTurn],player1Score,player2Score)
 	
-	checkRule(rules.keys()[0], 0, testxpos, testypos)
+	checkRule(rules.keys()[0], 0, testxpos, testypos, testxmark, testymark)
 	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -52,8 +54,11 @@ func _ready() -> void:
 			gridList.append(x)
 	moveToplace()
 	
-	checkRule(rules.keys()[0], 0, testxpos, testypos)
+	checkRule(rules.keys()[0], 0, testxpos, testypos, testxmark, testymark)
 	
+	flipMatchGrid([[1,2], [3,4]])
+
+
 func moveToplace()->void:
 	for i in range(len(gridList)):
 		var xpos:int=i%xsize
@@ -80,20 +85,54 @@ func _on_button_button_down() -> void:
 func getGridTileType(xpos: int, ypos: int):
 	if xpos < 0 or ypos < 0 or xpos >= xsize or ypos >= ysize:
 		return null
-		
+
 	return gridList[xpos + ypos * ysize].tileType
 
-func checkRule(matchGrid: Array, matchResult: int, xpos: int, ypos: int) -> bool:
+func checkRule(matchGrid: Array, matchResult: int, xpos: int, ypos: int, xmark: int, ymark: int) -> bool:
 	for j in range(len(matchGrid)):
 		for i in range(len(matchGrid[0])):
-			print(i, j, "  ", matchGrid[i][j])
-	
-	print(getGridTileType(xpos, ypos))
-	print(getGridTileType(xpos+1, ypos+1))
-	print(getGridTileType(xpos-1, ypos-1))
-	print(getGridTileType(xpos+10, ypos+10))
-	
+			print(i, j, "  ", matchGrid[i][j], " ", getGridTileType(i + xpos + xmark, j + ypos + ymark))
+
 	return false
+
+func checkAllRules():
+	for matchGrid in rules.keys():
+		var matchResult = rules[matchGrid]
+		
+
+func flipMatchGrid(matchGrid: Array):
+	var grid = matchGrid
+	print(grid)
+	for i in range(4):
+		grid = rotateGrid(grid)
+		print(grid)
+
+func rotateGrid(grid):
+	if len(grid) == 2:
+		return rotate2x2Grid(grid)
+	elif len(grid) == 1:
+		return rotate1x3Grid(grid)
+	elif len(grid) == 3 and len(grid[0]) == 1:
+		return rotate3x1Grid(grid)
+	else:
+		return rotate3x3Grid(grid)
+
+func rotate2x2Grid(grid):
+	return [[grid[0][1], grid[1][1]], [grid[0][0], grid[1][0]]]
+
+func rotate3x1Grid(grid):
+	return [[grid[2][0], grid[1][0], grid[0][0]]]
+	
+func rotate1x3Grid(grid):
+	return [[grid[0][0]], [grid[0][1]], [grid[0][2]]]
+
+func rotate3x3Grid(grid):
+	var result = []
+	for i in range(3):
+		result.append([])
+		for j in range(3):
+			result[-1].append(grid[j][2-i])
+	return result
 
 var o = null # shortcut for Any
 var t = -1   # shortcut for Tower
