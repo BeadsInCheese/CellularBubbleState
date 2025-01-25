@@ -32,4 +32,3 @@ window/stretch/mode="canvas_items"
 
 viewport/transparent_background=true
 viewport/hdr_2d=true
-anti_aliasing/quality/screen_space_aa=1

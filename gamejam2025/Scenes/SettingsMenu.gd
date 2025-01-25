@@ -27,3 +27,8 @@ func _on_music_value_changed(value: float) -> void:
 
 func _on_button_button_down() -> void:
 	SceneNavigation._on_MainMenuPressed()
+
+
+func _on_fxaa_toggled(toggled_on: bool) -> void:
+	ProjectSettings.set_setting("rendering/quality/fxaa", 2)  # 2x MSAA
+	ProjectSettings.save()
