@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://bubble.gd" id="1_k25p1"]
 [ext_resource type="Shader" path="res://Token.gdshader" id="2_5ncrq"]
-[ext_resource type="AudioStream" uid="uid://ug0madqa8a8h" path="res://Smooth 10.wav" id="3_t8mo4"]
+[ext_resource type="AudioStream" uid="uid://xv2itqg1romi" path="res://resources/stone_rock_or_wood_moved_no_tick.mp3" id="3_50q4b"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_oabc8"]
 resource_local_to_scene = true
@@ -51,7 +51,7 @@ bbcode_enabled = true
 text = "[center]1[/center]"
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("3_t8mo4")
+stream = ExtResource("3_50q4b")
 volume_db = -4.38
 
 [connection signal="button_down" from="Button" to="." method="_on_button_button_down"]

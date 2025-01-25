@@ -36,7 +36,7 @@ shader_parameter/voronoi = SubResource("NoiseTexture2D_cohci")
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_a6hd4"]
+[sub_resource type="CurveTexture" id="CurveTexture_l1u0o"]
 curve = SubResource("Curve_cuygm")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yj7he"]
@@ -53,7 +53,7 @@ angular_velocity_max = -1.60933e-05
 gravity = Vector3(0, -5, 0)
 scale_min = 0.1
 scale_max = 0.2
-scale_curve = SubResource("CurveTexture_a6hd4")
+scale_curve = SubResource("CurveTexture_l1u0o")
 color = Color(1, 1, 1, 0.0941176)
 
 [sub_resource type="Environment" id="Environment_in81w"]
