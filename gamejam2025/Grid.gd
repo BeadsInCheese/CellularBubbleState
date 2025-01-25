@@ -74,14 +74,25 @@ func moveToplace()->void:
 		var xpos:int=i%xsize
 		var ypos:int=i/ysize
 		gridList[i].position=Vector2(xpos,ypos)*38+Vector2(20,20)
+		
 func automata_step() -> void:
+	var tempGrid = getTempGridCopy()
+	
 	for i in range(len(gridList)):
 		var xpos:int=i%xsize
 		var ypos:int=i/ysize
 		
-		pass
-	pass
-
+		var result = checkRulesForPos(xpos, ypos)
+		if result != -1:
+			tempGrid[i] = result
+	
+	for i in range(len(gridList)):
+		var currentTile = gridList[i].tileType
+		var newTile = tempGrid[i]
+		
+		if currentTile != newTile:
+			gridList[i].setTileType(newTile)
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
@@ -91,6 +102,15 @@ func _on_button_button_down() -> void:
 	player1Score = player1Score+1
 	changeTurn()
 	automata_step()
+
+func getTempGridCopy() -> Array:
+	var tempGrid = []
+	tempGrid.resize(len(gridList))
+		
+	for i in range(len(gridList)):
+		tempGrid[i] = gridList[i].tileType
+	
+	return tempGrid
 
 func getGridTileType(xpos: int, ypos: int):
 	if xpos < 0 or ypos < 0 or xpos >= xsize or ypos >= ysize:
@@ -142,7 +162,6 @@ func checkRulesForPos(xpos: int, ypos: int) -> int:
 	for matchGrid in rules.keys():
 		var grid = matchGrid
 		var marks = getMarkIndexes(grid)
-		print("Checking grid: ", grid)
 		
 		for rot in range(4):
 			var result = checkRule(grid, rules[matchGrid], xpos, ypos, marks[rot][0], marks[rot][1])
@@ -150,13 +169,14 @@ func checkRulesForPos(xpos: int, ypos: int) -> int:
 				return result
 			if rot < 3:
 				grid = rotateGrid(grid)
-		print("No match for: ", grid)
 	return -1
 
-func checkAllRules() -> void:
-	for xpos in range(xsize):
-		for ypos in range(ysize):
-			checkRulesForPos(xpos, ypos)
+#func checkAllRules() -> int:
+	#for xpos in range(xsize):
+		#for ypos in range(ysize):
+			#var result = checkRulesForPos(xpos, ypos)
+			#if result != -1:
+				#return result
 
 
 func rotateMatchGrid(matchGrid: Array):
