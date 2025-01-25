@@ -17,6 +17,7 @@ func update_gfx(type):
 		$BubbleGfx.set_texture(load("res://resources/pillar_player1.png"))
 	elif (type == 3):
 		$BubbleGfx.set_texture(load("res://resources/pillar_player2.png"))
+	
 	$BubbleGfx.scale=Vector2(0.08,0.08)
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

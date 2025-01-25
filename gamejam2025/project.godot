@@ -32,3 +32,10 @@ window/stretch/mode="canvas_items"
 
 viewport/transparent_background=true
 viewport/hdr_2d=true
+
+[shader_globals]
+
+tt={
+"type": "float",
+"value": 0.0
+}

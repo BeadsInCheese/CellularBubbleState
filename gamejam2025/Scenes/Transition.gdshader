@@ -2,11 +2,14 @@ shader_type canvas_item;
 
 void vertex() {
 	// Called for every vertex the material is visible on.
-	VERTEX.y+=sin(TIME+UV.x*20.)*10.;
 }
+global uniform float tt;
 void fragment() {
-	//float t=UV.y+0.004*sin(TIME+UV.x*3.);
-	//COLOR=texture(TEXTURE ,vec2(UV.x,t));
+	// Called for every pixel the material is visible on.
+	if(1.0-distance(vec2(0.5,0.5),UV.xy)>tt){
+		discard;
+	}
+	COLOR=vec4(0,0,0,1);
 }
 
 //void light() {

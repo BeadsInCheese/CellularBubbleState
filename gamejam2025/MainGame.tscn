@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://1bsyxxel7wtb"]
+[gd_scene load_steps=18 format=3 uid="uid://1bsyxxel7wtb"]
 
 [ext_resource type="Script" path="res://Grid.gd" id="1_aixle"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="1_qw4ww"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_w1ryg"]
 [ext_resource type="PackedScene" uid="uid://cdp1ptkk1qkda" path="res://sidebar.tscn" id="3_xlshu"]
 [ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="7_nmuy5"]
+[ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="8_3ddsp"]
 
 [sub_resource type="Gradient" id="Gradient_ubn5m"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -134,5 +135,7 @@ offset_bottom = 155.0
 stream = ExtResource("7_nmuy5")
 autoplay = true
 bus = &"Music"
+
+[node name="Transition" parent="." instance=ExtResource("8_3ddsp")]
 
 [connection signal="button_down" from="Button" to="Board" method="_on_button_button_down"]
