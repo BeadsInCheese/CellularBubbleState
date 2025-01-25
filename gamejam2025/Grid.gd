@@ -247,6 +247,14 @@ var rules: Dictionary = {
 		[ b, b],
 		[ 0, t]
 	]: 0,
+	[
+		[ 0, t],
+		[ b, b]
+	]: b,
+	[
+		[ b, 0],
+		[ b, t]
+	]: 0,
 	
 	[
 		[ o, o, o],
