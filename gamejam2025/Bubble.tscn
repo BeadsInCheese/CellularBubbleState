@@ -20,8 +20,22 @@ height = 34
 [node name="Bubble" type="Node2D"]
 script = ExtResource("1_k25p1")
 
+[node name="Button" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -15.0
+offset_top = -15.0
+offset_right = 15.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="BubbleGfx" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_oabc8")
+position = Vector2(0, -2)
 scale = Vector2(0.6, 0.6)
 texture = SubResource("GradientTexture2D_01tgn")
 
@@ -35,12 +49,6 @@ offset_bottom = 14.0
 scale = Vector2(0.85, 0.85)
 bbcode_enabled = true
 text = "[center]1[/center]"
-
-[node name="Button" type="Button" parent="."]
-offset_left = -11.0
-offset_top = -11.0
-offset_right = 11.0
-offset_bottom = 11.0
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_t8mo4")
