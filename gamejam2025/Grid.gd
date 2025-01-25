@@ -6,9 +6,9 @@ var bubble = preload("Bubble.tscn")
 @export
 var gui :GUI
 @export
-var xsize : int = 17
+var xsize : int = 6
 @export
-var ysize : int = 17
+var ysize : int = 6
 
 var gridList: Array[Bubble] = []
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
@@ -24,7 +24,11 @@ var testxpos = 1
 var testypos = 1
 var testxmark = 1
 var testymark = 1
-
+func isEnd()->bool:
+	for i in gridList:
+		if(i.tileType==0):
+			return false
+	return true
 func updateScore():
 	player1Score=0
 	player2Score=0
@@ -33,7 +37,7 @@ func updateScore():
 			player1Score+=1
 		if(i.tileType==3 or i.tileType == 4):
 			player2Score+=1
-
+var announced=false
 func changeTurn()->void:
 	currentTurn=(currentTurn+1)%6
 	
@@ -44,6 +48,12 @@ func changeTurn()->void:
 	gui.updateSidebar(currentTurn,player1Score,player2Score)
 	
 	testRule()
+	if(!announced and isEnd()):
+		announced=true
+		var x = load("res://VictorAnnouncement.tscn").instantiate()
+		x.get_node("Text").text="[center]DRAW[/center]" if player1Score==player2Score  else "[center]Player 1 Wins[/center]" if player1Score>player2Score else "[center]Player 2 Wins[/center]"  
+		
+		add_child(x)
 	#checkRulesForPos(testxpos, testypos)
 	
 # Called when the node enters the scene tree for the first time.
@@ -73,7 +83,7 @@ func moveToplace()->void:
 	for i in range(len(gridList)):
 		var xpos:int=i%xsize
 		var ypos:int=i/ysize
-		gridList[i].position=Vector2(xpos,ypos)*38+Vector2(20,20)
+		gridList[i].position=Vector2(xpos,ypos)*100+Vector2(60,60)
 		
 func automata_step() -> void:
 	var tempGrid = getTempGridCopy()
@@ -246,6 +256,14 @@ var rules: Dictionary = {
 	[
 		[ b, b],
 		[ 0, t]
+	]: 0,
+	[
+		[ 0, t],
+		[ b, b]
+	]: b,
+	[
+		[ b, 0],
+		[ b, t]
 	]: 0,
 	
 	[
