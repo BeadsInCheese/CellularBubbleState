@@ -1,9 +1,10 @@
-[gd_scene load_steps=13 format=3 uid="uid://du0yh6kapw386"]
+[gd_scene load_steps=17 format=3 uid="uid://du0yh6kapw386"]
 
 [ext_resource type="Script" path="res://Scenes/SettingsMenu.gd" id="1_1pkla"]
 [ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="2_8ojid"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="2_ebrvy"]
 [ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="3_fvun2"]
+[ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_vwrow"]
 [ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="5_oi7ah"]
 [ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="6_xbstv"]
 
@@ -30,6 +31,30 @@ noise = SubResource("FastNoiseLite_ui55k")
 shader = ExtResource("2_ebrvy")
 shader_parameter/voronoi = SubResource("NoiseTexture2D_1j1k8")
 
+[sub_resource type="Curve" id="Curve_4kehj"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_a6hd4"]
+curve = SubResource("Curve_4kehj")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_etf3o"]
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(100, 120, 1)
+emission_shape = 3
+emission_box_extents = Vector3(7.325, 1, 1)
+angle_min = -48.5
+angle_max = 52.0
+direction = Vector3(0, 0, 0)
+spread = 56.728
+angular_velocity_min = -1.60933e-05
+angular_velocity_max = -1.60933e-05
+gravity = Vector3(0, -5, 0)
+scale_min = 0.1
+scale_max = 0.2
+scale_curve = SubResource("CurveTexture_a6hd4")
+color = Color(1, 1, 1, 0.0941176)
+
 [sub_resource type="Theme" id="Theme_ehdvb"]
 default_base_scale = 1.0
 default_font = ExtResource("5_oi7ah")
@@ -52,6 +77,14 @@ offset_right = 1303.0
 offset_bottom = 1148.0
 rotation = 1.5708
 mouse_filter = 2
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+position = Vector2(448, 737)
+amount = 10
+process_material = SubResource("ParticleProcessMaterial_etf3o")
+texture = ExtResource("3_vwrow")
+lifetime = 11.84
+preprocess = 32.1
 
 [node name="Master" type="HSlider" parent="."]
 offset_left = 372.0
