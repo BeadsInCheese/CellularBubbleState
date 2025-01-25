@@ -11,6 +11,16 @@ func _input(event: InputEvent) -> void:
 		print("test "+str(event.position))
 		
 	
+	if Input.is_key_pressed(KEY_ESCAPE):
+		get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
+		get_tree().quit()
+		
+	if Input.is_key_pressed(KEY_M):
+		if Settings.masterVolume == 0:
+			Settings.setMaster(80)
+		else:
+			Settings.setMaster(0)
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
