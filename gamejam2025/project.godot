@@ -11,13 +11,14 @@ config_version=5
 [application]
 
 config/name="Gamejam2025"
-run/main_scene="res://MainGame.tscn"
+run/main_scene="res://Scenes/MainMenu.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 Settings="*res://Settings.gd"
+SceneNavigation="*res://Scenes/SceneNavigation.gd"
 
 [debug]
 
