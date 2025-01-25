@@ -6,9 +6,9 @@ var bubble = preload("Bubble.tscn")
 @export
 var gui :GUI
 @export
-var xsize : int = 6
+var xsize : int = 12
 @export
-var ysize : int = 6
+var ysize : int = 12
 
 var gridList: Array[Bubble] = []
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
@@ -17,18 +17,13 @@ var currentTurn=0
 var player1Score = 0
 var player2Score = 0
 
-#debug
-@export
-var testxpos = 1
-@export
-var testypos = 1
-var testxmark = 1
-var testymark = 1
+
 func isEnd()->bool:
 	for i in gridList:
 		if(i.tileType==0):
 			return false
 	return true
+	
 func updateScore():
 	player1Score=0
 	player2Score=0
@@ -37,6 +32,7 @@ func updateScore():
 			player1Score+=1
 		if(i.tileType==3 or i.tileType == 4):
 			player2Score+=1
+
 var announced=false
 func changeTurn()->void:
 	currentTurn=(currentTurn+1)%6
@@ -47,14 +43,12 @@ func changeTurn()->void:
 	updateScore()
 	gui.updateSidebar(currentTurn,player1Score,player2Score)
 	
-	testRule()
 	if(!announced and isEnd()):
 		announced=true
 		var x = load("res://VictorAnnouncement.tscn").instantiate()
 		x.get_node("Text").text="[center]DRAW[/center]" if player1Score==player2Score  else "[center]Player 1 Wins[/center]" if player1Score>player2Score else "[center]Player 2 Wins[/center]"  
 		
 		add_child(x)
-	#checkRulesForPos(testxpos, testypos)
 	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -66,24 +60,13 @@ func _ready() -> void:
 			add_child(x)
 			gridList.append(x)
 	moveToplace()
-	
-	testRule()
-	
-	#rotateMatchGrid([[1,2], [3,4]])
-	#rotateMatchGrid([[1,2,3], [3,4,5], [5,6,7]])
-	#rotateMatchGrid([[1, 2, 3]])
-	
-	#checkRulesForPos(testxpos, testypos)
 
-func testRule():
-	#print(checkRule((rules.keys()[6]), -2, testxpos, testypos, testxmark, testymark))
-	print(checkRulesForPos(1,1))
 
 func moveToplace()->void:
 	for i in range(len(gridList)):
 		var xpos:int=i%xsize
 		var ypos:int=i/ysize
-		gridList[i].position=Vector2(xpos,ypos)*100+Vector2(60,60)
+		gridList[i].position=Vector2(xpos,ypos)*52+Vector2(38,38)
 		
 func automata_step() -> void:
 	var tempGrid = getTempGridCopy()
@@ -165,7 +148,7 @@ func checkRule(matchGrid: Array, matchResult: int, xpos: int, ypos: int, xmark: 
 		return 2 if matchPlayer == 1 else 4
 	if matchResult == t:
 		return 1 if matchPlayer == 1 else 3
-		
+
 	return matchResult
 
 func checkRulesForPos(xpos: int, ypos: int) -> int:
@@ -180,13 +163,6 @@ func checkRulesForPos(xpos: int, ypos: int) -> int:
 			if rot < 3:
 				grid = rotateGrid(grid)
 	return -1
-
-#func checkAllRules() -> int:
-	#for xpos in range(xsize):
-		#for ypos in range(ysize):
-			#var result = checkRulesForPos(xpos, ypos)
-			#if result != -1:
-				#return result
 
 
 func rotateMatchGrid(matchGrid: Array):
@@ -226,15 +202,12 @@ func rotate3x3Grid(grid: Array) -> Array:
 
 func getMarkIndexes(matchGrid: Array) -> Array:
 	if len(matchGrid) == 2:
-		return mark2x2
+		return [[0,0],[1,0],[1,1],[0,1]]
 	elif len(matchGrid) == 1:
-		return mark1x3
+		return [[0,0],[0,0],[0,2],[2,0]]
 	else:
-		return mark3x3
+		return [[1,1],[1,1],[1,1],[1,1]]
 
-var mark2x2 = [[0,0],[1,0],[1,1],[0,1]]
-var mark1x3 = [[0,0],[0,0],[0,2],[2,0]]
-var mark3x3 = [[1,1],[1,1],[1,1],[1,1]]
 
 var o = null # shortcut for Any
 var t = -1   # shortcut for Tower
@@ -267,10 +240,10 @@ var rules: Dictionary = {
 	]: 0,
 	
 	[
-		[ o, o, o],
 		[ b, b, b],
-		[ o, t, o]
-	]: 0,
+		[ o, o, o],
+		[ o, o, o]
+	]: b,
 	
 	[
 		[0, b, t],
