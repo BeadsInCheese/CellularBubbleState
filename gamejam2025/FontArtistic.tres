@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://bgqmjm172gald"]
+
+[ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="1_fvrtm"]
+
+[resource]
+default_base_scale = 1.0
+default_font = ExtResource("1_fvrtm")
+default_font_size = 45
