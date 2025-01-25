@@ -19,6 +19,7 @@ func _on_master_value_changed(value: float) -> void:
 
 func _on_sfx_value_changed(value: float) -> void:
 	Settings.setSFX(value)
+	
 
 
 func _on_music_value_changed(value: float) -> void:
@@ -28,3 +29,7 @@ func _on_music_value_changed(value: float) -> void:
 func _on_button_button_down() -> void:
 	await get_tree().process_frame
 	SceneNavigation._on_MainMenuPressed()
+
+
+func _on_sfx_drag_ended(value_changed: bool) -> void:
+	$"SFX/AudioStreamPlayer2D".play()

@@ -20,15 +20,20 @@ func update_gfx(type):
 	if type == 1:
 		$BubbleGfx.set_texture(load("res://resources/pillar_player1.png"))
 		$BubbleGfx.scale=Vector2(0.08,0.08)
+		appear()
 	elif type == 3:
 		$BubbleGfx.set_texture(load("res://resources/pillar_player2.png"))
 		$BubbleGfx.scale=Vector2(0.08,0.08)
+		appear()
 	elif type == 2:
+		print("type2 ")
 		$BubbleGfx.set_texture(load("res://resources/bubble03b.png"))
 		$BubbleGfx.scale=Vector2(0.2,0.2)
+		appear()
 	elif type == 4:
 		$BubbleGfx.set_texture(load("res://resources/bubble03b_2.png"))
 		$BubbleGfx.scale=Vector2(0.2,0.2)
+		appear()
 	elif type == 0:
 		$BubbleGfx.set_texture(null)
 		$Button.visible=true
@@ -51,5 +56,5 @@ func _on_button_button_down() -> void:
 		#print(tileType)
 		setTileType(board.turnOrder[board.currentTurn])
 		board.changeTurn()
-		appear()
+		
 	pass # Replace with function body.

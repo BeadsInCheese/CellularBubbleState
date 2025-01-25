@@ -1,10 +1,11 @@
-[gd_scene load_steps=17 format=3 uid="uid://du0yh6kapw386"]
+[gd_scene load_steps=18 format=3 uid="uid://du0yh6kapw386"]
 
 [ext_resource type="Script" path="res://Scenes/SettingsMenu.gd" id="1_1pkla"]
 [ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="2_8ojid"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="2_ebrvy"]
 [ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="3_fvun2"]
 [ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_vwrow"]
+[ext_resource type="AudioStream" uid="uid://dnfuse2pq888r" path="res://resources/vgmenuhighlight.ogg" id="4_4c5lr"]
 [ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="5_oi7ah"]
 [ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="6_xbstv"]
 
@@ -98,6 +99,10 @@ offset_top = 254.0
 offset_right = 813.0
 offset_bottom = 270.0
 
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="SFX"]
+stream = ExtResource("4_4c5lr")
+bus = &"SFX"
+
 [node name="Music" type="HSlider" parent="."]
 offset_left = 374.0
 offset_top = 311.0
@@ -163,6 +168,7 @@ text = "[center]settings [/center]"
 [node name="Transition" parent="." instance=ExtResource("6_xbstv")]
 
 [connection signal="value_changed" from="Master" to="." method="_on_master_value_changed"]
+[connection signal="drag_ended" from="SFX" to="." method="_on_sfx_drag_ended"]
 [connection signal="value_changed" from="SFX" to="." method="_on_sfx_value_changed"]
 [connection signal="value_changed" from="Music" to="." method="_on_music_value_changed"]
 [connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
