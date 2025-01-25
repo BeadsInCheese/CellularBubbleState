@@ -41,7 +41,7 @@ func changeTurn()->void:
 		automata_step()
 		changeTurn()
 	updateScore()
-	gui.updateSidebar(turnOrder[currentTurn],player1Score,player2Score)
+	gui.updateSidebar(currentTurn,player1Score,player2Score)
 	
 	testRule()
 	#checkRulesForPos(testxpos, testypos)

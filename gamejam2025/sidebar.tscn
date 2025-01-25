@@ -1,30 +1,76 @@
-[gd_scene load_steps=3 format=3 uid="uid://cdp1ptkk1qkda"]
+[gd_scene load_steps=3 format=3 uid="uid://b4rgdo55qhhue"]
 
 [ext_resource type="Script" path="res://GUI.gd" id="1_50b85"]
-[ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="2_7aq0k"]
+[ext_resource type="Theme" path="res://FontArtistic.tres" id="2_7aq0k"]
 
 [node name="Sidebar" type="VBoxContainer"]
 custom_minimum_size = Vector2(100, 100)
-offset_right = 57.0
-offset_bottom = 86.0
+offset_right = 760.0
+offset_bottom = 1002.0
 size_flags_stretch_ratio = 1.86
 script = ExtResource("1_50b85")
 
-[node name="Score_player1" type="RichTextLabel" parent="."]
+[node name="contUpper1" type="HBoxContainer" parent="."]
+clip_contents = true
 layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="contUpper1"]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_7aq0k")
+text = "Player1: "
+
+[node name="Score_player1" type="RichTextLabel" parent="contUpper1"]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
 theme = ExtResource("2_7aq0k")
 text = "0"
 fit_content = true
 
-[node name="Score_player2" type="RichTextLabel" parent="."]
+[node name="contUpper2" type="HBoxContainer" parent="."]
+clip_contents = true
 layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="contUpper2"]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_7aq0k")
+text = "Player2: "
+
+[node name="Score_player2" type="RichTextLabel" parent="contUpper2"]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
 theme = ExtResource("2_7aq0k")
 text = "0"
 fit_content = true
+
+[node name="separator1" type="Label" parent="."]
+layout_mode = 2
 
 [node name="TurnValue" type="RichTextLabel" parent="."]
 layout_mode = 2
 theme = ExtResource("2_7aq0k")
 text = "Player 1 turn"
+fit_content = true
+autowrap_mode = 0
+
+[node name="contLower" type="HBoxContainer" parent="."]
+clip_contents = true
+layout_mode = 2
+
+[node name="TurnValue2" type="RichTextLabel" parent="contLower"]
+layout_mode = 2
+theme = ExtResource("2_7aq0k")
+text = "Next turn: "
+fit_content = true
+autowrap_mode = 0
+
+[node name="NextTurnValue" type="RichTextLabel" parent="contLower"]
+layout_mode = 2
+theme = ExtResource("2_7aq0k")
 fit_content = true
 autowrap_mode = 0
