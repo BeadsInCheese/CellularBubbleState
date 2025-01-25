@@ -1,6 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://1bsyxxel7wtb"]
+[gd_scene load_steps=16 format=3 uid="uid://1bsyxxel7wtb"]
 
 [ext_resource type="Script" path="res://Grid.gd" id="1_aixle"]
+[ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="1_qw4ww"]
 [ext_resource type="Script" path="res://PlayerController.gd" id="2_eflv5"]
 [ext_resource type="AudioStream" uid="uid://bopl44gp5ld8e" path="res://resources/loop_bubbles_1.ogg" id="2_s7r41"]
 [ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_w1ryg"]
@@ -11,6 +12,23 @@ colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_n246t"]
 gradient = SubResource("Gradient_blu0u")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_8v4va"]
+noise_type = 2
+frequency = 0.0776
+offset = Vector3(0, -3.6, 0)
+cellular_distance_function = 1
+cellular_jitter = 1.38
+domain_warp_type = 1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ucuru"]
+seamless = true
+seamless_blend_skirt = 0.3
+noise = SubResource("FastNoiseLite_8v4va")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w1rf0"]
+shader = ExtResource("1_qw4ww")
+shader_parameter/voronoi = SubResource("NoiseTexture2D_ucuru")
 
 [sub_resource type="Curve" id="Curve_cuygm"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
@@ -24,15 +42,13 @@ particle_flag_disable_z = true
 emission_shape_scale = Vector3(100, 120, 1)
 emission_shape = 3
 emission_box_extents = Vector3(7.325, 1, 1)
-angle_min = 312.6
-angle_max = 430.5
+angle_min = -48.5
+angle_max = 52.0
 direction = Vector3(0, 0, 0)
 spread = 56.728
-initial_velocity_min = 70.46
-initial_velocity_max = 344.0
 angular_velocity_min = -1.60933e-05
 angular_velocity_max = -1.60933e-05
-gravity = Vector3(0, -98, 0)
+gravity = Vector3(0, -5, 0)
 scale_min = 0.1
 scale_max = 0.2
 scale_curve = SubResource("CurveTexture_giy07")
@@ -41,11 +57,11 @@ color = Color(1, 1, 1, 0.0941176)
 [sub_resource type="Environment" id="Environment_in81w"]
 background_mode = 3
 glow_enabled = true
-glow_intensity = 1.27
-glow_strength = 0.22
-glow_blend_mode = 0
-glow_hdr_threshold = 2.27
-glow_hdr_scale = 0.58
+glow_intensity = 1.82
+glow_strength = 0.31
+glow_hdr_threshold = 4.0
+glow_hdr_scale = 1.32
+glow_hdr_luminance_cap = 256.0
 
 [node name="root" type="Node2D"]
 
@@ -55,11 +71,30 @@ rotation = 4.71239
 scale = Vector2(10.3003, 18.0381)
 texture = SubResource("GradientTexture2D_n246t")
 
+[node name="ColorRect2" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_w1rf0")
+offset_left = 1151.0
+offset_top = -2.0
+offset_right = 1303.0
+offset_bottom = 1148.0
+rotation = 1.5708
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -18.0
+offset_top = -20.0
+offset_right = 1155.0
+offset_bottom = 657.0
+mouse_filter = 2
+color = Color(0.1144, 0.239213, 0.44, 0.568627)
+
 [node name="GPUParticles2D" type="GPUParticles2D" parent="."]
-position = Vector2(632, 459)
+position = Vector2(448, 737)
+amount = 10
 process_material = SubResource("ParticleProcessMaterial_yj7he")
 texture = ExtResource("3_w1ryg")
-lifetime = 1.77
+lifetime = 11.84
+preprocess = 32.1
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("2_s7r41")
@@ -73,23 +108,16 @@ gui = NodePath("../Sidebar")
 [node name="PlayerController" type="Node2D" parent="."]
 script = ExtResource("2_eflv5")
 
-[node name="Button" type="Button" parent="."]
-offset_left = 752.0
-offset_top = 8.0
-offset_right = 849.0
-offset_bottom = 58.0
-text = "Debug"
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_in81w")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-offset_left = -18.0
-offset_top = -20.0
-offset_right = 1155.0
-offset_bottom = 657.0
-mouse_filter = 2
-color = Color(0.1144, 0.239213, 0.44, 0.568627)
+[node name="Button" type="Button" parent="."]
+top_level = true
+offset_left = 735.0
+offset_top = 185.0
+offset_right = 832.0
+offset_bottom = 235.0
+text = "Debug"
 
 [node name="Sidebar" parent="." instance=ExtResource("3_xlshu")]
 offset_left = 760.0
