@@ -11,9 +11,11 @@ config_version=5
 [application]
 
 config/name="Cellular Bubble State"
+config/description="Game"
+config/version="1.0"
 run/main_scene="res://Scenes/MainMenu.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://resources/bubble03b_2.png"
 
 [autoload]
 
