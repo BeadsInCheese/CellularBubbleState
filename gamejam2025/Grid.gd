@@ -53,7 +53,7 @@ var p1cursor=preload("res://CursorImages/Player1.png")
 var p2cursor=preload("res://CursorImages/Player2.png")
 func updateCursor():
 	var new_cursor_image =p1cursor if(turnOrder[currentTurn]==Players.PLAYER1) else p2cursor
-	Input.set_custom_mouse_cursor(new_cursor_image)
+	Input.set_custom_mouse_cursor(new_cursor_image, Input.CURSOR_ARROW, Vector2(15,15))
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	for i in range(xsize):
