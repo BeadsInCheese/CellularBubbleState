@@ -139,4 +139,5 @@ bus = &"Music"
 [node name="Transition" parent="." instance=ExtResource("8_3ddsp")]
 visible = false
 
+[connection signal="tree_exiting" from="Board" to="Board" method="_on_tree_exiting"]
 [connection signal="button_down" from="Button" to="Board" method="_on_button_button_down"]
