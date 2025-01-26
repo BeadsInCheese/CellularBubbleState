@@ -98,11 +98,6 @@ func _process(delta: float) -> void:
 	pass
 
 
-func _on_button_button_down() -> void:
-	player1Score = player1Score+1
-	changeTurn()
-	automata_step()
-
 func getTempGridCopy() -> Array:
 	var tempGrid = []
 	tempGrid.resize(len(gridList))

@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://PlayerController.gd" id="2_eflv5"]
 [ext_resource type="AudioStream" uid="uid://bopl44gp5ld8e" path="res://resources/loop_bubbles_1.ogg" id="2_s7r41"]
 [ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_w1ryg"]
-[ext_resource type="PackedScene" uid="uid://cdp1ptkk1qkda" path="res://sidebar.tscn" id="3_xlshu"]
+[ext_resource type="PackedScene" uid="uid://b4rgdo55qhhue" path="res://sidebar.tscn" id="3_xlshu"]
 [ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="7_nmuy5"]
 [ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="8_3ddsp"]
 
@@ -117,15 +117,6 @@ script = ExtResource("2_eflv5")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_in81w")
 
-[node name="Button" type="Button" parent="."]
-visible = false
-top_level = true
-offset_left = 770.0
-offset_top = 324.0
-offset_right = 867.0
-offset_bottom = 374.0
-text = "Debug"
-
 [node name="Sidebar" parent="." instance=ExtResource("3_xlshu")]
 offset_left = 725.0
 offset_top = 78.0
@@ -142,4 +133,3 @@ bus = &"Music"
 visible = false
 
 [connection signal="tree_exiting" from="Board" to="Board" method="_on_tree_exiting"]
-[connection signal="button_down" from="Button" to="Board" method="_on_button_button_down"]
