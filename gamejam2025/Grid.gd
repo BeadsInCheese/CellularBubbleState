@@ -241,7 +241,7 @@ var rules: Dictionary = {
 	
 	[
 		[ b, b, b],
-		[ o, o, o],
+		[ o, 0, o],
 		[ o, o, o]
 	]: b,
 	
