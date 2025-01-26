@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://b4rgdo55qhhue"]
+[gd_scene load_steps=3 format=3 uid="uid://cdp1ptkk1qkda"]
 
 [ext_resource type="Script" path="res://GUI.gd" id="1_50b85"]
-[ext_resource type="Theme" path="res://FontArtistic.tres" id="2_7aq0k"]
+[ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="2_7aq0k"]
 
 [node name="Sidebar" type="VBoxContainer"]
 custom_minimum_size = Vector2(100, 100)
