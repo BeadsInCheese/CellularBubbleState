@@ -40,6 +40,7 @@ func changeTurn()->void:
 	if(turnOrder[currentTurn]==Players.AUTOMATA):
 		automata_step()
 		changeTurn()
+		
 	updateScore()
 	gui.updateSidebar(currentTurn,player1Score,player2Score)
 	updateCursor()
@@ -89,8 +90,9 @@ func automata_step() -> void:
 		var newTile = tempGrid[i]
 		
 		if currentTile != newTile:
+			await get_tree().create_timer(0.02).timeout
 			gridList[i].setTileType(newTile)
-	
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
