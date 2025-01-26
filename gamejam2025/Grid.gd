@@ -90,7 +90,6 @@ func automata_step() -> void:
 		var newTile = tempGrid[i]
 		
 		if currentTile != newTile:
-			OS.delay_msec(20)
 			gridList[i].setTileType(newTile)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
