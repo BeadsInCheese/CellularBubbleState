@@ -1,6 +1,5 @@
-[gd_scene load_steps=19 format=3 uid="uid://1bsyxxel7wtb"]
+[gd_scene load_steps=18 format=3 uid="uid://1bsyxxel7wtb"]
 
-[ext_resource type="Script" path="res://Showanim.gd" id="1_3hud6"]
 [ext_resource type="Script" path="res://Grid.gd" id="1_aixle"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="1_qw4ww"]
 [ext_resource type="Script" path="res://PlayerController.gd" id="2_eflv5"]
@@ -71,7 +70,6 @@ glow_hdr_luminance_cap = 256.0
 glow_map_strength = 0.0
 
 [node name="root" type="Node2D"]
-script = ExtResource("1_3hud6")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(577.953, 323.668)
