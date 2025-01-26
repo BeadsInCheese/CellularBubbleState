@@ -4,6 +4,7 @@ void vertex() {
 	// Called for every vertex the material is visible on.
 }
 uniform float treshold=1;
+uniform vec3 color;
 void fragment() {
 	// Called for every pixel the material is visible on.
 	if(UV.y<treshold){
@@ -11,7 +12,9 @@ void fragment() {
 	}
 	
 	float mult=smoothstep(treshold+0.1,treshold,UV.y)*10.;
-	COLOR.r=max(mult,COLOR.r);
+	if(mult>3.){
+		COLOR=vec4(color*mult,COLOR.a);
+	}
 }
 
 //void light() {

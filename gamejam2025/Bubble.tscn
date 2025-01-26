@@ -8,6 +8,7 @@
 resource_local_to_scene = true
 shader = ExtResource("2_5ncrq")
 shader_parameter/treshold = 1.0
+shader_parameter/color = null
 
 [sub_resource type="Gradient" id="Gradient_wi3sw"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
