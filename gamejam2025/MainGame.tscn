@@ -1,11 +1,12 @@
-[gd_scene load_steps=18 format=3 uid="uid://1bsyxxel7wtb"]
+[gd_scene load_steps=19 format=3 uid="uid://1bsyxxel7wtb"]
 
+[ext_resource type="Script" path="res://Showanim.gd" id="1_3hud6"]
 [ext_resource type="Script" path="res://Grid.gd" id="1_aixle"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="1_qw4ww"]
 [ext_resource type="Script" path="res://PlayerController.gd" id="2_eflv5"]
 [ext_resource type="AudioStream" uid="uid://bopl44gp5ld8e" path="res://resources/loop_bubbles_1.ogg" id="2_s7r41"]
 [ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_w1ryg"]
-[ext_resource type="PackedScene" uid="uid://b4rgdo55qhhue" path="res://sidebar.tscn" id="3_xlshu"]
+[ext_resource type="PackedScene" uid="uid://cdp1ptkk1qkda" path="res://sidebar.tscn" id="3_xlshu"]
 [ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="7_nmuy5"]
 [ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="8_3ddsp"]
 
@@ -70,6 +71,7 @@ glow_hdr_luminance_cap = 256.0
 glow_map_strength = 0.0
 
 [node name="root" type="Node2D"]
+script = ExtResource("1_3hud6")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(577.953, 323.668)
@@ -130,6 +132,5 @@ autoplay = true
 bus = &"Music"
 
 [node name="Transition" parent="." instance=ExtResource("8_3ddsp")]
-visible = false
 
 [connection signal="tree_exiting" from="Board" to="Board" method="_on_tree_exiting"]
