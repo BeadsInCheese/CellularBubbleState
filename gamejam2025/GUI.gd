@@ -13,12 +13,18 @@ func updateSidebar(turn,score1,score2):
 		$contLower/NextTurnValue.text="Player 2"
 	elif(turn == 1):
 		$TurnValue.text="Player 2 turn"
+		$contLower/NextTurnValue.text="Automata"
+	elif(turn == 2):
+		$TurnValue.text="Automata turn"
 		$contLower/NextTurnValue.text="Player 2"
 	elif(turn == 3):
 		$TurnValue.text="Player 2 turn"
 		$contLower/NextTurnValue.text="Player 1"
 	elif(turn == 4):
 		$TurnValue.text="Player 1 turn"
+		$contLower/NextTurnValue.text="Automata"
+	elif(turn == 5):
+		$TurnValue.text="Automata turn"
 		$contLower/NextTurnValue.text="Player 1"
 
 	
