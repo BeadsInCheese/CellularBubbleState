@@ -28,19 +28,25 @@ func updateScore():
 	player1Score=0
 	player2Score=0
 	for i in gridList:
-		if(i.tileType==1 or i.tileType== 2):
-			player1Score+=1
-		if(i.tileType==3 or i.tileType == 4):
-			player2Score+=1
+		if(i.tileType == 1 or i.tileType == 2):
+			player1Score += 1
+		if(i.tileType == 3 or i.tileType == 4):
+			player2Score += 1
 
 var announced=false
 func changeTurn()->void:
-	currentTurn=(currentTurn+1)%6
+	currentTurn = (currentTurn+1) % 6
 	
-	if(turnOrder[currentTurn]==Players.AUTOMATA):
+	if turnOrder[currentTurn] == Players.AUTOMATA:
 		automata_step()
 		changeTurn()
-		
+		return
+	
+	if turnOrder[currentTurn] == Players.PLAYER2:
+		randombot_step()
+		changeTurn()
+		return
+	
 	updateScore()
 	gui.updateSidebar(currentTurn,player1Score,player2Score)
 	updateCursor()
@@ -49,6 +55,7 @@ func changeTurn()->void:
 		var x = load("res://VictorAnnouncement.tscn").instantiate()
 		x.get_node("Text").text="[center]DRAW[/center]" if player1Score==player2Score  else "[center]Player 1 Wins[/center]" if player1Score>player2Score else "[center]Player 2 Wins[/center]"  
 		add_child(x)
+		
 var p1cursor=preload("res://CursorImages/Player1.png")
 var p2cursor=preload("res://CursorImages/Player2.png")
 func updateCursor():
@@ -91,6 +98,18 @@ func automata_step() -> void:
 		
 		if currentTile != newTile:
 			gridList[i].setTileType(newTile)
+
+func randombot_step() -> void:
+	var emptyIndexes = []
+	
+	for i in range(len(gridList)):
+		if gridList[i].tileType == 0:
+			emptyIndexes.append(i)
+	
+	if len(emptyIndexes) == 0:
+		return
+	
+	gridList[emptyIndexes.pick_random()].setTileType(3)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
