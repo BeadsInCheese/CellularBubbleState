@@ -2,9 +2,12 @@ extends "res://AI/AgentBase.gd"
 
 class_name PlayerAgent
 # Called when the node enters the scene tree for the first time.
-
+var makingMove=false
 func makeMove(observation:Board):
-	pass
+	makingMove=true
+	while makingMove:
+		await observation.get_tree().process_frame
+		#print((makingMove))
 
 func _ready() -> void:
 	pass

@@ -37,14 +37,16 @@ func updateScore():
 
 var announced=false
 func changeTurn()->void:
+	await turnOrder[currentTurn].makeMove(self)
 	currentTurn=(currentTurn+1)%6
 	
 	#if(turnOrder[currentTurn]==Players.AUTOMATA):
 	#	automata_step()
 	#	changeTurn()
-	if(turnOrder[currentTurn].get_is_player()==false):
-		await turnOrder[currentTurn].makeMove(self)
-		changeTurn()
+
+	changeTurn()
+	
+	
 	updateScore()
 	gui.updateSidebar(currentTurn,player1Score,player2Score)
 	updateCursor()
@@ -68,6 +70,7 @@ func _ready() -> void:
 			add_child(x)
 			gridList.append(x)
 
+
 	var x:AgentBase=player1Agent.new()
 	x.playerType=Players.PLAYER1
 	var y:AgentBase=player2Agent.new()
@@ -82,7 +85,7 @@ func _ready() -> void:
 		print(i.get_custom_class_name())
 	moveToplace()
 	updateCursor()
-	
+	changeTurn()
 
 
 func moveToplace()->void:

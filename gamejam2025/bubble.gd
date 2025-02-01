@@ -59,6 +59,6 @@ func _on_button_button_down() -> void:
 	if(board.turnOrder[board.currentTurn].get_is_player()==true):
 		#print(tileType)
 		setTileType(board.turnOrder[board.currentTurn].playerType)
-		board.changeTurn()
+		board.turnOrder[board.currentTurn].makingMove=false
 		
 	pass # Replace with function body.
