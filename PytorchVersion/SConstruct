@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+import os
+import sys
+
+env = SConscript("godot-cpp/SConstruct")
+
+# For reference:
+# - CCFLAGS are compilation flags shared between C and C++
+# - CFLAGS are for C-specific compilation flags
+# - CXXFLAGS are for C++-specific compilation flags
+# - CPPFLAGS are for pre-processor flags
+# - CPPDEFINES are for pre-processor defines
+# - LINKFLAGS are for linking flags
+
+# Tweak this if you want to use different folders, or more folders, to store your source code in.
+env.Append(CPPPATH=["src/"])
+sources = Glob("src/*.cpp")
+
+libtorch_folder="libtorch"
+env.Append(CPPPATH=[
+    os.path.join(libtorch_folder, 'include'),
+    os.path.join(libtorch_folder, 'include', 'torch', 'csrc', 'api', 'include')
+])
+
+
+
+# Disable treating warnings as errors
+env.Append(LINKFLAGS=['/WX:NO'])
+
+# specify libraries to link against (e.g. Torch and all its .so files)
+
+env.Append(LIBS=['torch', 'torch_cpu', 'c10']) # need specifically 'torch_cuda' for gpu actions
+env.Append(LINKFLAGS=['-Wl,-R'+ "libtorch" +'/lib'])
+env.Append(LIBPATH=[os.path.join(libtorch_folder, 'lib')])
+
+# Build the shared library
+env.SharedLibrary(target='gdexample', source=['gdexample.cpp'])
+
+if env["platform"] == "macos":
+    library = env.SharedLibrary(
+        "godotc/bin/libgdexample.{}.{}.framework/libgdexample.{}.{}".format(
+            env["platform"], env["target"], env["platform"], env["target"]
+        ),
+        source=sources,
+    )
+elif env["platform"] == "ios":
+    if env["ios_simulator"]:
+        library = env.StaticLibrary(
+            "godotc/bin/libgdexample.{}.{}.simulator.a".format(env["platform"], env["target"]),
+            source=sources,
+        )
+    else:
+        library = env.StaticLibrary(
+            "godotc/bin/libgdexample.{}.{}.a".format(env["platform"], env["target"]),
+            source=sources,
+        )
+else:
+    library = env.SharedLibrary(
+        "godotc/bin/libgdexample{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        source=sources,
+    )
+
+Default(library)
