@@ -17,7 +17,7 @@ struct layer{
 
 };
 enum layerType{
-    Conv2D,Dense,maxPool
+    Conv2D,Dense,maxPool,Flatten
 
 };
 
@@ -32,6 +32,7 @@ void GDExample::_bind_methods(){
     ClassDB::bind_method(D_METHOD("modelAddSoftMax"), &GDExample::modelAddSoftMax);
     ClassDB::bind_method(D_METHOD("modelAddLinear"), &GDExample::modelAddLinear);
     ClassDB::bind_method(D_METHOD("modelAddMaxPool"), &GDExample::modelAddMaxPool);
+    ClassDB::bind_method(D_METHOD("modelAddFlatten"), &GDExample::modelAddFlatten);
      ClassDB::bind_method(D_METHOD("stringtest"), &GDExample::stringtest);
       ClassDB::bind_method(D_METHOD("train"), &GDExample::train);
       ClassDB::bind_method(D_METHOD("predict"), &GDExample::predict);
@@ -41,6 +42,13 @@ void GDExample::_bind_methods(){
 void GDExample::modelAddReLU(){}
 void GDExample::modelAddConv2D(String name,String activation,int filters,int kernelSize,int stride){
     layers.push_back(layer(std::string(name.utf8().get_data()),Conv2D,relu,filters,kernelSize,stride));
+
+}
+
+
+
+void GDExample::modelAddFlatten(String name,String activation){
+    layers.push_back(layer(std::string(name.utf8().get_data()),Flatten,relu,0,0,0));
 
 }
 void GDExample::modelAddSoftMax(int input){}
@@ -64,7 +72,14 @@ struct net : torch::nn::Module {
                     networklayers->push_back(linear);
                     break;
                 }
-                // Handle other layer types (Conv2D, etc.) similarly
+                case Conv2D:{
+                    auto conv=torch::nn::Conv2d(l.param1,l.param2,l.param3);
+
+                }
+                case Flatten:{
+                    auto conv=torch::nn::Flatten();
+
+                }
                 default:
                     break;
             }
@@ -82,6 +97,16 @@ struct net : torch::nn::Module {
                 }else{
                     x=torch::sigmoid(x);
                 }
+                
+            }else if(auto conv = current_layer->as<torch::nn::Conv2d>()){
+
+                x = conv->forward(x);
+                x = torch::relu(x);
+                
+            }else if(auto conv = current_layer->as<torch::nn::Flatten>()){
+
+                x = conv->forward(x);
+                x = torch::relu(x);
                 
             }
             // Handle other layer types here
@@ -126,15 +151,7 @@ void GDExample::train(int epocs,Array XData,Array YData){
     }
 }
 
-int GDExample::createSession(Array godot_array) {
-
-    //auto net=torch::nn::Sequential(torch::nn::Linear(2,2),torch::nn::Tanh(),torch::nn::Linear(2,2),torch::nn::Tanh(),torch::nn::Linear(2,1));
-    // Add layers dynamically
-auto options = torch::TensorOptions().dtype(torch::kFloat32);
-auto X_train = torch::tensor({{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}}, options);
-auto y_train = torch::tensor({{0.0}, {1.0}, {1.0}, {0.0}}, options);
-
-
+int GDExample::createSession() {
     model = std::make_shared<net>();
 
     return 0;

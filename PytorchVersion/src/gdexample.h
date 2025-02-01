@@ -11,17 +11,19 @@ class GDExample:public Node2D{
     static void _bind_methods();
 public:
     GDExample();
-    int createSession(Array godot_array);
+    int createSession();
     void predict(Array arr);
     void stringtest(String test);
     void save(String name);
     void load(String name);
     void train(int epocs,Array XData,Array YData);
     void modelAddReLU();
+    void modelAddFlatten(String name,String activation);
     void modelAddConv2D(String name,String activation,int filters,int kernelSize,int stride);
     void modelAddSoftMax(int input);
     void modelAddLinear(String name,String activation,int x,int y);
     void modelAddMaxPool(String name,String activation,int size);
+    
     
     ~GDExample();
     void _process(double delta) override;
