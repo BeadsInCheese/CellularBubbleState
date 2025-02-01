@@ -12,5 +12,14 @@ func _process(delta: float) -> void:
 
 
 func proceduralMove(currentTurn,color,board) -> Bubble:
-	print(str(board[0]))
-	return board[16]
+	var m = 0
+	var i = 1
+	var result = 0
+	
+	while m < 500:
+		i = (int)(1000*(1000*sin(i)-(int)(1000*sin(i)))) % len(board)
+		m = m+1
+		if board[i].tileType == 0:
+			result = i
+			break;
+	return board[result]

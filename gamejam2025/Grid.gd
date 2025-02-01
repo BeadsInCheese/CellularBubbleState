@@ -9,6 +9,8 @@ var gui :GUI
 var xsize : int = 12
 @export
 var ysize : int = 12
+#@export
+var agent : Agent = Agent.new()
 
 var gridList: Array[Bubble] = []
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
@@ -16,7 +18,8 @@ var turnOrder=[Players.PLAYER1,Players.PLAYER2,Players.AUTOMATA,Players.PLAYER2,
 var currentTurn=0
 var player1Score = 0
 var player2Score = 0
-
+var AIGame = true
+var player = 1
 
 func isEnd()->bool:
 	for i in gridList:
@@ -36,7 +39,11 @@ func updateScore():
 var announced=false
 func changeTurn()->void:
 	currentTurn=(currentTurn+1)%6
-	
+	print(turnOrder[currentTurn])
+	if(AIGame && turnOrder[currentTurn] == 3):
+		agent.proceduralMove(currentTurn,turnOrder[currentTurn],gridList).setTileType(turnOrder[currentTurn])
+		changeTurn()
+		
 	if(turnOrder[currentTurn]==Players.AUTOMATA):
 		automata_step()
 		changeTurn()
@@ -51,6 +58,7 @@ func changeTurn()->void:
 		add_child(x)
 var p1cursor=preload("res://CursorImages/Player1.png")
 var p2cursor=preload("res://CursorImages/Player2.png")
+
 func updateCursor():
 	var new_cursor_image =p1cursor if(turnOrder[currentTurn]==Players.PLAYER1) else p2cursor
 	Input.set_custom_mouse_cursor(new_cursor_image, Input.CURSOR_ARROW, Vector2(15,15))
