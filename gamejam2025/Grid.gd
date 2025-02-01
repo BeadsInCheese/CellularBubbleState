@@ -12,11 +12,13 @@ var ysize : int = 12
 
 var gridList: Array[Bubble] = []
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
-var turnOrder=[Players.PLAYER1,Players.PLAYER2,Players.AUTOMATA,Players.PLAYER2,Players.PLAYER1,Players.AUTOMATA]
+var turnOrder=[]
 var currentTurn=0
 var player1Score = 0
 var player2Score = 0
-
+var player1Agent=load("res://AI/PlayerAgent.gd")
+var player2Agent=load("res://AI/RandomAIAgent.gd")
+var automataAgent=load("res://AI/AutomataAgent.gd").new()
 
 func isEnd()->bool:
 	for i in gridList:
@@ -37,10 +39,12 @@ var announced=false
 func changeTurn()->void:
 	currentTurn=(currentTurn+1)%6
 	
-	if(turnOrder[currentTurn]==Players.AUTOMATA):
-		automata_step()
+	#if(turnOrder[currentTurn]==Players.AUTOMATA):
+	#	automata_step()
+	#	changeTurn()
+	if(turnOrder[currentTurn].get_is_player()==false):
+		await turnOrder[currentTurn].makeMove(self)
 		changeTurn()
-		
 	updateScore()
 	gui.updateSidebar(currentTurn,player1Score,player2Score)
 	updateCursor()
@@ -52,7 +56,7 @@ func changeTurn()->void:
 var p1cursor=preload("res://CursorImages/Player1.png")
 var p2cursor=preload("res://CursorImages/Player2.png")
 func updateCursor():
-	var new_cursor_image =p1cursor if(turnOrder[currentTurn]==Players.PLAYER1) else p2cursor
+	var new_cursor_image =p1cursor if(turnOrder[currentTurn].playerType==Players.PLAYER1) else p2cursor
 	Input.set_custom_mouse_cursor(new_cursor_image, Input.CURSOR_ARROW, Vector2(15,15))
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -63,6 +67,19 @@ func _ready() -> void:
 			
 			add_child(x)
 			gridList.append(x)
+
+	var x:AgentBase=player1Agent.new()
+	x.playerType=Players.PLAYER1
+	var y:AgentBase=player2Agent.new()
+	y.playerType=Players.PLAYER2
+	turnOrder.append(x)
+	turnOrder.append(y)
+	turnOrder.append(automataAgent)
+	turnOrder.append(y)
+	turnOrder.append(x)
+	turnOrder.append(automataAgent)	
+	for i in turnOrder:
+		print(i.get_custom_class_name())
 	moveToplace()
 	updateCursor()
 	

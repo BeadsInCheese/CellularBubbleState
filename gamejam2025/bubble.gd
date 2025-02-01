@@ -55,10 +55,10 @@ func _process(delta: float) -> void:
 
 
 func _on_button_button_down() -> void:
-
-	if(board.turnOrder[board.currentTurn]!=board.Players.AUTOMATA):
+	print(board.turnOrder[board.currentTurn].get_custom_class_name())
+	if(board.turnOrder[board.currentTurn].get_is_player()==true):
 		#print(tileType)
-		setTileType(board.turnOrder[board.currentTurn])
+		setTileType(board.turnOrder[board.currentTurn].playerType)
 		board.changeTurn()
 		
 	pass # Replace with function body.
