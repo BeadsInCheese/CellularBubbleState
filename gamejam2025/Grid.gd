@@ -16,8 +16,10 @@ var turnOrder=[]
 var currentTurn=0
 var player1Score = 0
 var player2Score = 0
+
+var lastMove=[-1,-1]
 var player1Agent=load("res://AI/PlayerAgent.gd")
-var player2Agent=load("res://AI/RandomAIAgent.gd")
+var player2Agent=load("res://AI/MultiplayerAgent.gd")
 var automataAgent=load("res://AI/AutomataAgent.gd").new()
 
 func isEnd()->bool:
@@ -61,25 +63,32 @@ func updateCursor():
 	var new_cursor_image =p1cursor if(turnOrder[currentTurn].playerType==Players.PLAYER1) else p2cursor
 	Input.set_custom_mouse_cursor(new_cursor_image, Input.CURSOR_ARROW, Vector2(15,15))
 # Called when the node enters the scene tree for the first time.
+var p1AgentInstance
+var p2AgentInstance
 func _ready() -> void:
 	for i in range(xsize):
 		for j in range(ysize):
 			var x:Bubble=bubble.instantiate()
 			x.tileType=0
-			
+			x.tileIndex=j+i*xsize
 			add_child(x)
 			gridList.append(x)
 
 
-	var x:AgentBase=player1Agent.new()
-	x.playerType=Players.PLAYER1
-	var y:AgentBase=player2Agent.new()
-	y.playerType=Players.PLAYER2
-	turnOrder.append(x)
-	turnOrder.append(y)
+	p1AgentInstance=player1Agent.new()
+	p1AgentInstance.playerType=Players.PLAYER1
+	p2AgentInstance=player2Agent.new()
+	p2AgentInstance.playerType=Players.PLAYER2
+	await p1AgentInstance.init(self)
+	await p2AgentInstance.init(self)
+	print("oh oooooo")
+	
+	
+	turnOrder.append(p1AgentInstance)
+	turnOrder.append(p2AgentInstance)
 	turnOrder.append(automataAgent)
-	turnOrder.append(y)
-	turnOrder.append(x)
+	turnOrder.append(p2AgentInstance)
+	turnOrder.append(p1AgentInstance)
 	turnOrder.append(automataAgent)	
 	for i in turnOrder:
 		print(i.get_custom_class_name())

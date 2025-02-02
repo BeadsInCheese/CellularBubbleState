@@ -12,6 +12,7 @@ func makeMove(observation:Board):
 			if(offset>100000):
 				return
 	observation.gridList[(x+offset-1)%len(observation.gridList)].setTileType(playerType)
+	moveMade.emit(observation)
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.

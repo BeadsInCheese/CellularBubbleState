@@ -1,7 +1,10 @@
 
 class_name AgentBase
 var isPlayer=false
+signal moveMade(board:Board)
 var playerType=1
+func init(board:Board):
+	pass
 func makeMove(observation:Board):
 	pass
 # Called when the node enters the scene tree for the first time.

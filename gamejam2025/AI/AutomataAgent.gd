@@ -4,6 +4,7 @@ class_name AutomataAgent
 # Called when the node enters the scene tree for the first time.
 func makeMove(observation:Board):
 	observation.automata_step()
+	moveMade.emit(observation)
 func _ready() -> void:
 	pass # Replace with function body.
 

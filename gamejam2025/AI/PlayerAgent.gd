@@ -6,9 +6,12 @@ var makingMove=false
 func makeMove(observation:Board):
 	makingMove=true
 	while makingMove:
-		await observation.get_tree().process_frame
+		if(observation!=null):
+			await observation.get_tree().process_frame
+		else:
+			return
 		#print((makingMove))
-
+	moveMade.emit(observation)
 func _ready() -> void:
 	pass
 
