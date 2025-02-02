@@ -43,7 +43,7 @@ def main():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind(("0.0.0.0", 25565))
     server.listen(2)
-    print("Server listening on port 4242")
+    print("Server listening on port 25565")
 
     # Accept two clients
     client1, addr1 = server.accept()
