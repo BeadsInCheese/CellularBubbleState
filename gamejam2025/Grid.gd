@@ -48,8 +48,8 @@ func updateScore():
 var announced=false
 func changeTurn()->void:
 	await turnOrder[currentTurn].makeMove(self)
-	#currentTurn = (currentTurn+1) % 6
-	currentTurn = (currentTurn+1) % 4
+	currentTurn = (currentTurn+1) % 6
+	#currentTurn = (currentTurn+1) % 4
 	
 	changeTurn()
 
