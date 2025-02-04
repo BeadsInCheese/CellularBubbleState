@@ -34,7 +34,7 @@ func action(state: Array, depth: int = -1) -> Array:
 	var alpha: float = -INF
 	var beta: float = INF
 	
-	print("start", str(state), " ADVERSARY" if is_adversary else " NON-A")
+	#print("start", str(state), " ADVERSARY" if is_adversary else " NON-A")
 	
 
 	# Evaluate each possible action and update optimal values based on pruning.
@@ -42,7 +42,7 @@ func action(state: Array, depth: int = -1) -> Array:
 		var result_state = result_func.call(state, _action, is_adversary)
 		var value_of_result_state: float = self.minimax(result_state, not is_adversary, alpha, beta, current_depth + 1)
 	
-		print("     ", str(result_state), " value: ", value_of_result_state, " ADVERSARY " if is_adversary else " NON-A ")
+		#print("     ", str(result_state), " value: ", value_of_result_state, " ADVERSARY " if is_adversary else " NON-A ")
 		
 		if is_adversary:
 			if value_of_result_state < optimal_value:
