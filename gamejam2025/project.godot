@@ -22,10 +22,6 @@ config/icon="res://resources/bubble03b_2.png"
 Settings="*res://Settings.gd"
 SceneNavigation="*res://Scenes/SceneNavigation.gd"
 
-[debug]
-
-settings/stdout/print_fps=true
-
 [display]
 
 window/stretch/mode="canvas_items"

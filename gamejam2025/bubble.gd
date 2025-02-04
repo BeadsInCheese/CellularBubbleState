@@ -2,7 +2,7 @@ extends Node2D
 class_name Bubble
 var tileType=1
 var board:Board
-
+var tileIndex=0
 func setTileType(type):
 	tileType=type
 	update_gfx(tileType)
@@ -55,10 +55,11 @@ func _process(delta: float) -> void:
 
 
 func _on_button_button_down() -> void:
-
-	if(board.turnOrder[board.currentTurn]!=board.Players.AUTOMATA):
+	print(board.turnOrder[board.currentTurn].get_custom_class_name())
+	if(board.turnOrder[board.currentTurn].get_is_player()==true):
 		#print(tileType)
-		setTileType(board.turnOrder[board.currentTurn])
-		board.changeTurn()
+		setTileType(board.turnOrder[board.currentTurn].playerType)
+		board.lastMove=[tileIndex,board.turnOrder[board.currentTurn].playerType]
+		board.turnOrder[board.currentTurn].makingMove=false
 		
 	pass # Replace with function body.

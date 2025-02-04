@@ -12,10 +12,15 @@ var ysize : int = 12
 
 var gridList: Array[Bubble] = []
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
-var turnOrder=[Players.PLAYER1,Players.AUTOMATA,Players.PLAYER2,Players.AUTOMATA]
+var turnOrder=[]
 var currentTurn=0
 var player1Score = 0
 var player2Score = 0
+
+var lastMove=[-1,-1]
+var player1Agent=load("res://AI/PlayerAgent.gd")
+var player2Agent=load("res://AI/MultiplayerAgent.gd")
+var automataAgent=load("res://AI/AutomataAgent.gd").new()
 
 var minimax: Minimax = Minimax.new(Callable(result), Callable(terminal), Callable(utility), Callable(possible_actions))
 
@@ -73,17 +78,11 @@ func updateScore():
 
 var announced=false
 func changeTurn()->void:
+	await turnOrder[currentTurn].makeMove(self)
 	currentTurn = (currentTurn+1) % 4
 	
-	if turnOrder[currentTurn] == Players.AUTOMATA:
-		automata_step()
-		changeTurn()
-		return
+	changeTurn()
 	
-	if turnOrder[currentTurn] == Players.PLAYER2:
-		bot_step()
-		changeTurn()
-		return
 	
 	updateScore()
 	gui.updateSidebar(currentTurn,player1Score,player2Score)
@@ -93,23 +92,43 @@ func changeTurn()->void:
 		var x = load("res://VictorAnnouncement.tscn").instantiate()
 		x.get_node("Text").text="[center]DRAW[/center]" if player1Score==player2Score  else "[center]Player 1 Wins[/center]" if player1Score>player2Score else "[center]Player 2 Wins[/center]"  
 		add_child(x)
-		
 var p1cursor=preload("res://CursorImages/Player1.png")
 var p2cursor=preload("res://CursorImages/Player2.png")
 func updateCursor():
-	var new_cursor_image =p1cursor if(turnOrder[currentTurn]==Players.PLAYER1) else p2cursor
+	var new_cursor_image =p1cursor if(turnOrder[currentTurn].playerType==Players.PLAYER1) else p2cursor
 	Input.set_custom_mouse_cursor(new_cursor_image, Input.CURSOR_ARROW, Vector2(15,15))
 # Called when the node enters the scene tree for the first time.
+var p1AgentInstance
+var p2AgentInstance
 func _ready() -> void:
 	for i in range(xsize):
 		for j in range(ysize):
 			var x:Bubble=bubble.instantiate()
 			x.tileType=0
+			x.tileIndex=j+i*xsize
 			
 			add_child(x)
 			gridList.append(x)
+
+
+	p1AgentInstance=player1Agent.new()
+	p1AgentInstance.playerType=Players.PLAYER1
+	p2AgentInstance=player2Agent.new()
+	p2AgentInstance.playerType=Players.PLAYER2
+	await p1AgentInstance.init(self)
+	await p2AgentInstance.init(self)
+	print("oh oooooo")
+	
+	
+	turnOrder.append(p1AgentInstance)
+	turnOrder.append(automataAgent)
+	turnOrder.append(p2AgentInstance)
+	turnOrder.append(automataAgent)	
+	for i in turnOrder:
+		print(i.get_custom_class_name())
 	moveToplace()
 	updateCursor()
+	changeTurn()
 
 
 func moveToplace()->void:
