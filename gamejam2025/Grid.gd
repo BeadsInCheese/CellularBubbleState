@@ -12,11 +12,49 @@ var ysize : int = 12
 
 var gridList: Array[Bubble] = []
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
-var turnOrder=[Players.PLAYER1,Players.PLAYER2,Players.AUTOMATA,Players.PLAYER2,Players.PLAYER1,Players.AUTOMATA]
+var turnOrder=[Players.PLAYER1,Players.AUTOMATA,Players.PLAYER2,Players.AUTOMATA]
 var currentTurn=0
 var player1Score = 0
 var player2Score = 0
 
+var minimax: Minimax = Minimax.new(Callable(result), Callable(terminal), Callable(utility), Callable(possible_actions))
+
+# Simulate the result of an action on the board
+# Returns a new board state after applying the move
+func result(minimax_board: Array, action: Array, is_adversary: bool) -> Array:
+	var tempBoard = minimax_board.duplicate(true)
+	tempBoard[action[0]][0] = 3 if is_adversary else 1
+	automata_step_for_minimax_board(tempBoard)
+	return tempBoard
+
+
+# Check if the game has reached a terminal state (win/draw)
+func terminal(board: Array) -> bool:
+	for tile in board:
+		if(tile[0] == 0):
+			return false
+	return true
+
+# Evaluate the board state
+func utility(board: Array, is_adversary: bool) -> float:
+	var p1Score=0
+	var p2Score=0
+	for tile in board:
+		if(tile[0] == 1 or tile[0] == 2):
+			p1Score += 1
+		if(tile[0] == 3 or tile[0] == 4):
+			p2Score += 1
+	
+	return p1Score - p2Score
+
+# Get all possible valid moves on the current board
+func possible_actions(board: Array) -> Array[Array]:
+	var actions: Array[Array] = []
+	for i in range(len(board)):
+		if board[i][0] == 0:
+			actions.append([i])
+	
+	return actions
 
 func isEnd()->bool:
 	for i in gridList:
@@ -35,7 +73,7 @@ func updateScore():
 
 var announced=false
 func changeTurn()->void:
-	currentTurn = (currentTurn+1) % 6
+	currentTurn = (currentTurn+1) % 4
 	
 	if turnOrder[currentTurn] == Players.AUTOMATA:
 		automata_step()
@@ -43,7 +81,7 @@ func changeTurn()->void:
 		return
 	
 	if turnOrder[currentTurn] == Players.PLAYER2:
-		randombot_step()
+		bot_step()
 		changeTurn()
 		return
 	
@@ -72,7 +110,6 @@ func _ready() -> void:
 			gridList.append(x)
 	moveToplace()
 	updateCursor()
-	
 
 
 func moveToplace()->void:
@@ -82,56 +119,78 @@ func moveToplace()->void:
 		gridList[i].position=Vector2(xpos,ypos)*52+Vector2(38,38)
 		
 func automata_step() -> void:
-	var tempGrid = getTempGridCopy()
-	
-	for i in range(len(gridList)):
+	var baseGrid = getBoardCopy()
+	var tempGrid = baseGrid.duplicate(true)
+	for i in range(len(tempGrid)):
 		var xpos:int=i%xsize
 		var ypos:int=i/ysize
 		
-		var result = checkRulesForPos(xpos, ypos)
+		var result = checkRulesForPos(xpos, ypos, baseGrid)
 		if result != -1:
 			tempGrid[i] = result
 	
-	for i in range(len(gridList)):
+	for i in range(len(tempGrid)):
 		var currentTile = gridList[i].tileType
 		var newTile = tempGrid[i]
 		
 		if currentTile != newTile:
 			gridList[i].setTileType(newTile)
 
-func randombot_step() -> void:
-	var emptyIndexes = []
+func automata_step_for_minimax_board(minimax_board: Array) -> void:
+	var board = []
+	for tile in minimax_board:
+		board.append(tile[0])
+
+	var baseBoard = board.duplicate(true)
 	
-	for i in range(len(gridList)):
-		if gridList[i].tileType == 0:
-			emptyIndexes.append(i)
+	for i in range(len(board)):
+		var xpos:int=i%xsize
+		var ypos:int=i/ysize
+		
+		var result = checkRulesForPos(xpos, ypos, baseBoard)
+		if result != -1:
+			board[i] = result
 	
-	if len(emptyIndexes) == 0:
+	for i in range(len(minimax_board)):
+		var currentTile = minimax_board[i][0]
+		var newTile = board[i]
+		
+		if currentTile != newTile:
+			minimax_board[i][0] = newTile
+
+func bot_step() -> void:
+	var tempBoard = getBoardCopy()
+	var minimax_board = []
+	for tile in tempBoard:
+		minimax_board.append([tile])
+		
+	var action: Array = minimax.action(minimax_board, 2)
+	if len(action) == 0:
 		return
-	
-	gridList[emptyIndexes.pick_random()].setTileType(3)
+
+	gridList[action[0]].setTileType(3)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
 
 
-func getTempGridCopy() -> Array:
-	var tempGrid = []
-	tempGrid.resize(len(gridList))
+func getBoardCopy() -> Array:
+	var board = []
+	board.resize(len(gridList))
 		
 	for i in range(len(gridList)):
-		tempGrid[i] = gridList[i].tileType
+		board[i] = gridList[i].tileType
 	
-	return tempGrid
+	return board
 
-func getGridTileType(xpos: int, ypos: int):
+func getGridTileType(xpos: int, ypos: int, board: Array):
 	if xpos < 0 or ypos < 0 or xpos >= xsize or ypos >= ysize:
 		return null
 
-	return gridList[xpos + ypos * ysize].tileType
+	return board[xpos + ypos * ysize]
 
-func checkRule(matchGrid: Array, matchResult: int, xpos: int, ypos: int, xmark: int, ymark: int) -> int:
+func checkRule(matchGrid: Array, matchResult: int, xpos: int, ypos: int, xmark: int, ymark: int, board: Array) -> int:
 	var matchPlayer: int = 0  # 0: no-player, 1: player-1, 2: player-2
 	
 	for j in range(len(matchGrid[0])):
@@ -142,7 +201,7 @@ func checkRule(matchGrid: Array, matchResult: int, xpos: int, ypos: int, xmark: 
 			if matchRef == null:
 				continue
 			
-			var tile = getGridTileType(i + xpos - xmark, j + ypos - ymark)
+			var tile = getGridTileType(i + xpos - xmark, j + ypos - ymark, board)
 			#print(i, j, "  ", matchRef, "\t\t", tile)
 			
 			if matchRef == t:
@@ -171,13 +230,13 @@ func checkRule(matchGrid: Array, matchResult: int, xpos: int, ypos: int, xmark: 
 
 	return matchResult
 
-func checkRulesForPos(xpos: int, ypos: int) -> int:
+func checkRulesForPos(xpos: int, ypos: int, board: Array) -> int:
 	for matchGrid in rules.keys():
 		var grid = matchGrid
 		var marks = getMarkIndexes(grid)
 		
 		for rot in range(4):
-			var result = checkRule(grid, rules[matchGrid], xpos, ypos, marks[rot][0], marks[rot][1])
+			var result = checkRule(grid, rules[matchGrid], xpos, ypos, marks[rot][0], marks[rot][1], board)
 			if result != -1:
 				return result
 			if rot < 3:
