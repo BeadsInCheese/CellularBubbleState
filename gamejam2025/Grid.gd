@@ -100,6 +100,8 @@ func automata_step() -> void:
 		if currentTile != newTile:
 			await get_tree().create_timer(0.02).timeout
 			gridList[i].setTileType(newTile)
+			if(AIGame):
+				agent.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
