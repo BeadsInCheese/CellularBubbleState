@@ -1,0 +1,157 @@
+[gd_scene load_steps=19 format=3 uid="uid://ukd2jyt4crcd"]
+
+[ext_resource type="Script" path="res://playerSelect.gd" id="1_ck5mi"]
+[ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="2_64eh4"]
+[ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_4bkf4"]
+[ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="4_q2vhn"]
+[ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="5_uchd8"]
+[ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="6_rls2n"]
+[ext_resource type="Texture2D" uid="uid://bdscg5n4f3hqd" path="res://resources/LarryTheSeaUrchin.png" id="7_8gyga"]
+[ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="7_tav7e"]
+[ext_resource type="Texture2D" uid="uid://bjb4puyp6bwp1" path="res://resources/SeraBotIcon.png" id="8_tidc7"]
+
+[sub_resource type="Gradient" id="Gradient_156fm"]
+colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_k6ht5"]
+gradient = SubResource("Gradient_156fm")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ui55k"]
+noise_type = 2
+frequency = 0.0776
+offset = Vector3(0, -3.6, 0)
+cellular_distance_function = 1
+cellular_jitter = 1.38
+domain_warp_type = 1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1j1k8"]
+seamless = true
+seamless_blend_skirt = 0.3
+noise = SubResource("FastNoiseLite_ui55k")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yppks"]
+shader = ExtResource("2_64eh4")
+shader_parameter/voronoi = SubResource("NoiseTexture2D_1j1k8")
+
+[sub_resource type="Curve" id="Curve_4kehj"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_a6hd4"]
+curve = SubResource("Curve_4kehj")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_etf3o"]
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(100, 120, 1)
+emission_shape = 3
+emission_box_extents = Vector3(7.325, 1, 1)
+angle_min = -48.5
+angle_max = 52.0
+direction = Vector3(0, 0, 0)
+spread = 56.728
+angular_velocity_min = -1.60933e-05
+angular_velocity_max = -1.60933e-05
+gravity = Vector3(0, -5, 0)
+scale_min = 0.1
+scale_max = 0.2
+scale_curve = SubResource("CurveTexture_a6hd4")
+color = Color(1, 1, 1, 0.0941176)
+
+[sub_resource type="Theme" id="Theme_ehdvb"]
+default_base_scale = 1.0
+default_font = ExtResource("6_rls2n")
+default_font_size = 100
+
+[node name="PlayerSelect" type="Node2D"]
+script = ExtResource("1_ck5mi")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(577.953, 323.668)
+rotation = -1.5708
+scale = Vector2(10.3003, 18.0381)
+texture = SubResource("GradientTexture2D_k6ht5")
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_yppks")
+offset_left = 1151.0
+offset_top = -2.0
+offset_right = 1303.0
+offset_bottom = 1148.0
+rotation = 1.5708
+mouse_filter = 2
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+position = Vector2(448, 737)
+amount = 10
+process_material = SubResource("ParticleProcessMaterial_etf3o")
+texture = ExtResource("3_4bkf4")
+lifetime = 11.84
+preprocess = 32.1
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_q2vhn")
+autoplay = true
+bus = &"Music"
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -18.0
+offset_top = -20.0
+offset_right = 1155.0
+offset_bottom = 657.0
+mouse_filter = 1
+color = Color(0.1144, 0.239213, 0.44, 0.568627)
+
+[node name="RichTextLabel4" type="RichTextLabel" parent="."]
+offset_top = 59.0
+offset_right = 1157.0
+offset_bottom = 186.0
+theme = SubResource("Theme_ehdvb")
+bbcode_enabled = true
+text = "[center]Player Select [/center]"
+
+[node name="RichTextLabel5" type="RichTextLabel" parent="."]
+offset_left = 18.0
+offset_top = 228.0
+offset_right = 1175.0
+offset_bottom = 355.0
+theme = SubResource("Theme_ehdvb")
+bbcode_enabled = true
+text = "[center]VS. [/center]"
+
+[node name="OptionButton" type="OptionButton" parent="."]
+offset_left = 223.0
+offset_top = 220.0
+offset_right = 383.0
+offset_bottom = 356.0
+text_overrun_behavior = 2
+icon_alignment = 1
+text_direction = 1
+selected = 0
+item_count = 3
+popup/item_0/text = "Human"
+popup/item_0/id = 1
+popup/item_1/icon = ExtResource("7_8gyga")
+popup/item_1/id = 2
+popup/item_2/icon = ExtResource("8_tidc7")
+
+[node name="BackButton" type="Button" parent="."]
+offset_left = 651.0
+offset_top = 418.0
+offset_right = 969.0
+offset_bottom = 561.0
+theme = ExtResource("5_uchd8")
+text = "Back"
+
+[node name="StartButton" type="Button" parent="."]
+offset_left = 133.0
+offset_top = 419.0
+offset_right = 451.0
+offset_bottom = 562.0
+theme = ExtResource("5_uchd8")
+text = "Start"
+
+[node name="Transition" parent="." instance=ExtResource("7_tav7e")]
+
+[connection signal="item_selected" from="OptionButton" to="." method="setPlayer1"]
+[connection signal="button_down" from="BackButton" to="." method="_on_back_button_button_down"]
+[connection signal="button_down" from="StartButton" to="." method="_on_start_button_button_down"]

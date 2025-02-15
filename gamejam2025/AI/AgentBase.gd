@@ -6,6 +6,8 @@ var playerType=1
 var skip=false
 func init(board:Board):
 	pass
+func destructor(observation:Board):
+	pass
 func makeMove(observation:Board):
 	pass
 # Called when the node enters the scene tree for the first time.

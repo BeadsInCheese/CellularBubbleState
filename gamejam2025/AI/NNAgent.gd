@@ -6,7 +6,11 @@ class_name NNAgent
 
 # Called when the node enters the scene tree for the first time.
 var nnas: NeuralNetworkAdvanced = NeuralNetworkAdvanced.new(NeuralNetworkAdvanced.methods.SGD)
-
+var training=true
+func destructor(observation:Board):
+	if(training):
+		nnas.train(preprocess(observation.gridList),[observation.victor])
+		
 func init(board:Board):
 	print("hi")
 

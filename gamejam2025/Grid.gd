@@ -26,10 +26,10 @@ var p1AgentInstance
 var p2AgentInstance
 var player1Agent=load("res://AI/PlayerAgent.gd")
 var player2Agent=load("res://AI/NNAgent.gd")
-
+var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxAgent.gd")]
 var automataAgent: AutomataAgent = load("res://AI/AutomataAgent.gd").new()
 
-
+var victor=-1
 func isEnd()->bool:
 	for i in gridList:
 		if(i.tileType==0):
@@ -59,6 +59,14 @@ func changeTurn()->void:
 	if(!announced and isEnd()):
 		announced=true
 		var x = load("res://VictorAnnouncement.tscn").instantiate()
+		if player1Score==player2Score:
+			victor=0.5
+		elif player1Score>player2Score:
+			victor=0
+		else:
+			victor=1
+		for i in turnOrder:
+			i.destructor(self)
 		x.get_node("Text").text="[center]DRAW[/center]" if player1Score==player2Score  else "[center]Player 1 Wins[/center]" if player1Score>player2Score else "[center]Player 2 Wins[/center]"  
 		add_child(x)
 
@@ -77,9 +85,9 @@ func _ready() -> void:
 			add_child(x)
 			gridList.append(x)
 
-	p1AgentInstance=player1Agent.new()
+	p1AgentInstance= agentlist[Settings.P1Index].new()
 	p1AgentInstance.playerType=Players.PLAYER1
-	p2AgentInstance=player2Agent.new()
+	p2AgentInstance=agentlist[Settings.P2Index].new()
 	p2AgentInstance.playerType=Players.PLAYER2
 	
 	await p1AgentInstance.init(self)

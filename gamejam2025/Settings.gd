@@ -3,6 +3,9 @@ extends Node
 var sfxVolume:float=80
 var musicVolume:float=80
 var masterVolume:float=80
+
+var P1Index=0
+var P2Index=0
 func setSFX(volume):
 	sfxVolume=volume
 	var sfx_index= AudioServer.get_bus_index("SFX")
