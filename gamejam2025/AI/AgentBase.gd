@@ -3,6 +3,7 @@ class_name AgentBase
 var isPlayer=false
 signal moveMade(board:Board)
 var playerType=1
+var skip=false
 func init(board:Board):
 	pass
 func makeMove(observation:Board):

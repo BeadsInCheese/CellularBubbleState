@@ -50,8 +50,8 @@ func changeTurn()->void:
 	await turnOrder[currentTurn].makeMove(self)
 	currentTurn = (currentTurn+1) % 6
 	#currentTurn = (currentTurn+1) % 4
-	
-	changeTurn()
+	if(not(isEnd())):
+		changeTurn()
 
 	updateScore()
 	gui.updateSidebar(currentTurn,player1Score,player2Score)
@@ -130,3 +130,7 @@ func getGridTileType(xpos: int, ypos: int, board: Array):
 
 func _on_tree_exiting() -> void:
 	Input.set_custom_mouse_cursor(null)
+
+
+func _skip_button_pressed() -> void:
+	turnOrder[currentTurn].skip=true

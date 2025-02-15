@@ -131,4 +131,12 @@ bus = &"Music"
 
 [node name="Transition" parent="." instance=ExtResource("8_3ddsp")]
 
+[node name="Button" type="Button" parent="."]
+offset_left = 745.0
+offset_top = 583.0
+offset_right = 877.0
+offset_bottom = 633.0
+text = "Skip"
+
 [connection signal="tree_exiting" from="Board" to="Board" method="_on_tree_exiting"]
+[connection signal="pressed" from="Button" to="Board" method="_skip_button_pressed"]
