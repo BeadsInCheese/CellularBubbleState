@@ -25,7 +25,7 @@ var lastMove=[-1,-1]
 var p1AgentInstance
 var p2AgentInstance
 var player1Agent=load("res://AI/PlayerAgent.gd")
-var player2Agent=load("res://AI/PlayerAgent.gd")
+var player2Agent=load("res://AI/NNAgent.gd")
 
 var automataAgent: AutomataAgent = load("res://AI/AutomataAgent.gd").new()
 
