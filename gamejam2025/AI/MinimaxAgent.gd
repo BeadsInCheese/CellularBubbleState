@@ -5,7 +5,7 @@ class_name MinimaxAgent
 # Called when the node enters the scene tree for the first time.
 func makeMove(observation:Board):
 	game_board = observation
-	
+
 	minimax_step()
 	moveMade.emit(game_board)
 	
@@ -27,8 +27,8 @@ func minimax_step() -> void:
 	var minimax_board = []
 	for tile in tempBoard:
 		minimax_board.append([tile])
-		
-	var action: Array = minimax.action(minimax_board, 1)
+	
+	var action: Array = minimax.action(minimax_board, 3, game_board.currentTurn)
 	if len(action) == 0:
 		return
 
@@ -37,10 +37,13 @@ func minimax_step() -> void:
 
 # Simulate the result of an action on the board
 # Returns a new board state after applying the move
-func result(minimax_board: Array, action: Array, is_adversary: bool) -> Array:
+func result(minimax_board: Array, action: Array, player_state: String) -> Array:
 	var tempBoard = minimax_board.duplicate(true)
-	tempBoard[action[0]][0] = 3 if is_adversary else 1
-	automata_step_for_minimax_board(tempBoard)
+	tempBoard[action[0]][0] = 3 if player_state.begins_with("P2") else 1
+	
+	if player_state.ends_with("A"):
+		automata_step_for_minimax_board(tempBoard)
+	
 	return tempBoard
 
 
@@ -52,7 +55,7 @@ func terminal(board: Array) -> bool:
 	return true
 
 # Evaluate the board state
-func utility(board: Array, is_adversary: bool) -> float:
+func utility(board: Array) -> float:
 	var p1Score=0
 	var p2Score=0
 	for tile in board:
@@ -70,15 +73,46 @@ func possible_actions(board: Array) -> Array[Array]:
 		if board[i][0] == 0:
 			actions.append([i])
 	
-	actions.shuffle()
+	#actions.shuffle()
+	if true or len(actions) <= 20: # todo: fix
+		return actions
+
+	actions.sort_custom(func(a, b): distance_from_latest_tile_indexes(a) < distance_from_latest_tile_indexes(b))
+	actions = actions.slice(0, 20)
+	#actions.shuffle()
+	
+	#print(actions, " ", len(actions))
 	return actions
+
+func distance_from_latest_tile_indexes(action: Array):
+	var latest_indexes = game_board.latestTileIndexes.duplicate()
 	
+	var last_index = latest_indexes.pop_back()
+	if last_index == null:
+		last_index = (game_board.xsize / 2) + (game_board.ysize / 2 * game_board.ysize) # Calculate middle point index
+		
+	var second_last_index = latest_indexes.pop_back()
+	if second_last_index == null:
+		second_last_index = (game_board.xsize / 2) + (game_board.ysize / 2 * game_board.ysize)
 	
+	return min(manhattan_distance(action[0], last_index), manhattan_distance(action[0], second_last_index))
+	
+func get_xypos_for_index(index: int) -> Array[int]:
+	return [index%game_board.xsize, index/game_board.ysize]
+
+func manhattan_distance(index1: int, index2: int):
+	var i1 = get_xypos_for_index(index1)
+	var i2 = get_xypos_for_index(index2)
+	
+	return abs(i1[0] - i2[0]) + abs(i1[1] - i2[1])
+
+
 func automata_step_for_minimax_board(minimax_board: Array) -> void:
 	var board = []
 	for tile in minimax_board:
 		board.append(tile[0])
 
+	game_board.automataAgent.game_board = game_board
 	var baseBoard = board.duplicate(true)
 	
 	for i in range(len(board)):

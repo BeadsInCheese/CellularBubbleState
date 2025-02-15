@@ -3,9 +3,15 @@ class_name Bubble
 var tileType=1
 var board:Board
 var tileIndex=0
-func setTileType(type):
+
+func setTileType(type, is_automata: bool = false):
 	tileType=type
 	update_gfx(tileType)
+	
+	if not is_automata:
+		board.latestTileIndexes.append(tileIndex)
+		if len(board.latestTileIndexes) > 2:
+			board.latestTileIndexes.pop_front()
 
 func appear():
 	$AudioStreamPlayer2D.play()

@@ -6,6 +6,8 @@ var makingMove=false
 
 func makeMove(observation:Board):
 	makingMove=true
+	
+	#print("latest tile index: " + str(observation.latestTileIndex))
 
 	while makingMove:
 		if(observation!=null):

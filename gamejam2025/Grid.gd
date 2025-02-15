@@ -11,6 +11,8 @@ var xsize: int = 12
 var ysize: int = 12
 
 var gridList: Array[Bubble] = []
+var latestTileIndexes: Array[int] = []
+
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
 var turnOrder=[]
 var currentTurn=0
@@ -49,7 +51,6 @@ var announced=false
 func changeTurn()->void:
 	await turnOrder[currentTurn].makeMove(self)
 	currentTurn = (currentTurn+1) % 6
-	#currentTurn = (currentTurn+1) % 4
 	if(not(isEnd())):
 		changeTurn()
 

@@ -37,7 +37,7 @@ func automata_step() -> void:
 		var newTile = tempGrid[i]
 		
 		if currentTile != newTile:
-			game_board.gridList[i].setTileType(newTile)
+			game_board.gridList[i].setTileType(newTile, true)
 
 
 func checkRulesForPos(xpos: int, ypos: int, board: Array) -> int:
