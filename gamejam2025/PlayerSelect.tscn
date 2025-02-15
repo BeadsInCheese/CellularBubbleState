@@ -6,9 +6,9 @@
 [ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="4_q2vhn"]
 [ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="5_uchd8"]
 [ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="6_rls2n"]
-[ext_resource type="Texture2D" uid="uid://bdscg5n4f3hqd" path="res://resources/LarryTheSeaUrchin.png" id="7_8gyga"]
+[ext_resource type="PackedScene" uid="uid://82ydshkri1ic" path="res://PlayermenuComponents/Playeroption_button.tscn" id="6_t4mh3"]
+[ext_resource type="PackedScene" uid="uid://buk1ghkxjvnfv" path="res://PlayermenuComponents/option_button.tscn" id="7_dknv5"]
 [ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="7_tav7e"]
-[ext_resource type="Texture2D" uid="uid://bjb4puyp6bwp1" path="res://resources/SeraBotIcon.png" id="8_tidc7"]
 
 [sub_resource type="Gradient" id="Gradient_156fm"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -118,29 +118,9 @@ theme = SubResource("Theme_ehdvb")
 bbcode_enabled = true
 text = "[center]VS. [/center]"
 
-[node name="OptionButton" type="OptionButton" parent="."]
-offset_left = 223.0
-offset_top = 220.0
-offset_right = 383.0
-offset_bottom = 356.0
-text_overrun_behavior = 2
-icon_alignment = 1
-text_direction = 1
-selected = 0
-item_count = 3
-popup/item_0/text = "Human"
-popup/item_0/id = 1
-popup/item_1/icon = ExtResource("7_8gyga")
-popup/item_1/id = 2
-popup/item_2/icon = ExtResource("8_tidc7")
+[node name="OptionButton" parent="." instance=ExtResource("6_t4mh3")]
 
-[node name="BackButton" type="Button" parent="."]
-offset_left = 651.0
-offset_top = 418.0
-offset_right = 969.0
-offset_bottom = 561.0
-theme = ExtResource("5_uchd8")
-text = "Back"
+[node name="BackButton" parent="." instance=ExtResource("7_dknv5")]
 
 [node name="StartButton" type="Button" parent="."]
 offset_left = 133.0
@@ -150,8 +130,14 @@ offset_bottom = 562.0
 theme = ExtResource("5_uchd8")
 text = "Start"
 
+[node name="OptionButton2" parent="." instance=ExtResource("6_t4mh3")]
+offset_left = 799.0
+offset_top = 231.0
+offset_right = 959.0
+offset_bottom = 367.0
+
 [node name="Transition" parent="." instance=ExtResource("7_tav7e")]
 
 [connection signal="item_selected" from="OptionButton" to="." method="setPlayer1"]
-[connection signal="button_down" from="BackButton" to="." method="_on_back_button_button_down"]
 [connection signal="button_down" from="StartButton" to="." method="_on_start_button_button_down"]
+[connection signal="item_selected" from="OptionButton2" to="." method="_on_option_button_2_item_selected"]

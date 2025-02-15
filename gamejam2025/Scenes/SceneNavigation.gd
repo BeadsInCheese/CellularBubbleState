@@ -30,7 +30,11 @@ func _on_SettingsPressed() -> void:
 	if(get_tree()!=null):
 		await get_tree().process_frame
 		get_tree().change_scene_to_packed(load("res://Scenes/SettingsMenu.tscn"))
-
+func _on_PlayerMenuPressed() -> void:
+	await hideall()
+	if(get_tree()!=null):
+		await get_tree().process_frame
+		get_tree().change_scene_to_packed(load("res://PlayerSelect.tscn"))
 func hideall():
 	for i in range(51):
 		RenderingServer.global_shader_parameter_set("tt",i*0.02)

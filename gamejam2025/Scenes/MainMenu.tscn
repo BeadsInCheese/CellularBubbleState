@@ -139,5 +139,5 @@ offset_bottom = 673.0
 mouse_filter = 2
 script = ExtResource("8_llfhg")
 
-[connection signal="button_down" from="Button" to="." method="_onLocalMPSelected"]
+[connection signal="button_down" from="Button" to="." method="_on_PlayerMenuPressed"]
 [connection signal="button_down" from="Button2" to="." method="_on_SettingsPressed"]

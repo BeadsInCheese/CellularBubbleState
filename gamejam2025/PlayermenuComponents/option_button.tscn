@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://buk1ghkxjvnfv"]
+
+[ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="1_pxcik"]
+
+[node name="BackButton" type="Button"]
+offset_left = 651.0
+offset_top = 418.0
+offset_right = 969.0
+offset_bottom = 561.0
+theme = ExtResource("1_pxcik")
+text = "Back"

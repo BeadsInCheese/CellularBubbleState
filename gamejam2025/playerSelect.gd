@@ -20,3 +20,8 @@ func _on_start_button_button_down() -> void:
 
 func _on_back_button_button_down() -> void:
 	SceneNavigation._on_MainMenuPressed()
+
+
+func _on_option_button_2_item_selected(index: int) -> void:
+	print("setPlayer2 to "+str(index))
+	Settings.P2Index=index

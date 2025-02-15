@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://82ydshkri1ic"]
+
+[ext_resource type="Texture2D" uid="uid://bdscg5n4f3hqd" path="res://resources/LarryTheSeaUrchin.png" id="1_khg82"]
+[ext_resource type="Texture2D" uid="uid://bjb4puyp6bwp1" path="res://resources/SeraBotIcon.png" id="2_kqpx4"]
+
+[node name="OptionButton" type="OptionButton"]
+offset_left = 223.0
+offset_top = 220.0
+offset_right = 383.0
+offset_bottom = 356.0
+text_overrun_behavior = 2
+icon_alignment = 1
+text_direction = 1
+selected = 0
+item_count = 3
+popup/item_0/text = "Human"
+popup/item_0/id = 1
+popup/item_1/icon = ExtResource("1_khg82")
+popup/item_1/id = 2
+popup/item_2/icon = ExtResource("2_kqpx4")
+popup/item_2/id = 2
