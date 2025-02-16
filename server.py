@@ -39,21 +39,33 @@ def assign_roles(client1, client2):
     client1.sendall(struct.pack('i', int(roles[0])))
     client2.sendall(struct.pack('i', int(roles[1])))
     print(f"Assigned roles: Player {roles[0]} to Client 1, Player {roles[1]} to Client 2")
+lobbys={}
+
+def handleRequest(client_socket):
+    data = client_socket.recv(1024)
+    key=data.decode('utf-8')
+    print(f"Received: lobby key "+key)
+    if(key in lobbys.keys):
+        assign_roles(client_socket, lobbys[key])
+        threading.Thread(target=handle_client, args=(client_socket, lobbys[key])).start()
+        lobbys.pop(key, None)
+    else:
+        lobbys[key]=client_socket
+        
 def main():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind(("0.0.0.0", 25565))
     server.listen(2)
     print("Server listening on port 25565")
 
-    # Accept two clients
-    client1, addr1 = server.accept()
-    print(f"Client 1 connected: {addr1}")
-    client2, addr2 = server.accept()
-    print(f"Client 2 connected: {addr2}")
-    assign_roles(client1,client2)
-    # Start threads to handle each client
-    threading.Thread(target=handle_client, args=(client1, client2)).start()
-    threading.Thread(target=handle_client, args=(client2, client1)).start()
+
+    while True:
+
+        # Accept two clients
+        client1, addr1 = server.accept()
+        print(f"Client: {addr1}")
+        threading.Thread(target=handleRequest,args=(client1)).start()
+
 
 if __name__ == "__main__":
     main()
