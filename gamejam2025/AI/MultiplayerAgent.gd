@@ -31,12 +31,7 @@ func syncronizeTurnOrder(board:Board):
 	
 	
 func connect_to_server(host: String) -> void:
-	var err = await client.connect_to_host(host, 25565)
-	if err == OK:
-		connected = true
-		print("Connected to server")
-	else:
-		print("Failed to connect to server")
+	client=NetCode.client
 		
 func _blocking_read(observation:Board):
 	while connected:
@@ -98,5 +93,3 @@ func makeMove(observation:Board):
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
