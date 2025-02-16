@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://ukd2jyt4crcd"]
+[gd_scene load_steps=21 format=3 uid="uid://cj0un5t317b7y"]
 
 [ext_resource type="Script" path="res://playerSelect.gd" id="1_ck5mi"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="2_64eh4"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://buk1ghkxjvnfv" path="res://PlayermenuComponents/option_button.tscn" id="7_dknv5"]
 [ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="7_tav7e"]
 [ext_resource type="Texture2D" uid="uid://bjb4puyp6bwp1" path="res://resources/SeraBotIcon.png" id="8_vmg0i"]
+[ext_resource type="Texture2D" uid="uid://b1gvpqoynwdv1" path="res://resources/GolgathBotIcon.png" id="10_iyo5k"]
 
 [sub_resource type="Gradient" id="Gradient_156fm"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -145,6 +146,7 @@ offset_bottom = 367.0
 item_count = 4
 popup/item_1/text = "RandomBot"
 popup/item_2/text = "Golgath"
+popup/item_2/icon = ExtResource("10_iyo5k")
 popup/item_3/text = "Sera"
 popup/item_3/icon = ExtResource("8_vmg0i")
 popup/item_3/id = 2
