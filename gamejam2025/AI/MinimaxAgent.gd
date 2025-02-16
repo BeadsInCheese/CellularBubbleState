@@ -4,6 +4,9 @@ class_name MinimaxAgent
 
 # Called when the node enters the scene tree for the first time.
 func makeMove(observation:Board):
+	if observation == null:
+		return
+
 	game_board = observation
 
 	minimax_step()
@@ -28,7 +31,7 @@ func minimax_step() -> void:
 	for tile in tempBoard:
 		minimax_board.append([tile])
 	
-	var action: Array = minimax.action(minimax_board, 3, game_board.currentTurn)
+	var action: Array = minimax.action(minimax_board, game_board.currentTurn, 3, 20) # hard: 4, 16    medium: 3, 20
 	if len(action) == 0:
 		return
 
@@ -63,25 +66,27 @@ func utility(board: Array) -> float:
 			p1Score += 1
 		if(tile[0] == 3 or tile[0] == 4):
 			p2Score += 1
-	
+
 	return p1Score - p2Score
 
 # Get all possible valid moves on the current board
-func possible_actions(board: Array) -> Array[Array]:
+func possible_actions(board: Array, max_actions: int) -> Array[Array]:
 	var actions: Array[Array] = []
 	for i in range(len(board)):
 		if board[i][0] == 0:
 			actions.append([i])
 	
-	#actions.shuffle()
-	if true or len(actions) <= 20: # todo: fix
+	if max_actions < 2 or len(game_board.latestTileIndexes) < 2:
+		max_actions = 2
+	
+	actions.shuffle()
+	if len(actions) <= max_actions: # todo: fix
 		return actions
 
-	actions.sort_custom(func(a, b): distance_from_latest_tile_indexes(a) < distance_from_latest_tile_indexes(b))
-	actions = actions.slice(0, 20)
-	#actions.shuffle()
+	actions.sort_custom(func(a, b): return distance_from_latest_tile_indexes(a) < distance_from_latest_tile_indexes(b))
 	
-	#print(actions, " ", len(actions))
+	actions = actions.slice(0, max_actions)
+	actions.shuffle()
 	return actions
 
 func distance_from_latest_tile_indexes(action: Array):
