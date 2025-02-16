@@ -6,10 +6,19 @@ class_name MinimaxAgent
 func makeMove(observation:Board):
 	if observation == null:
 		return
-
+		
 	game_board = observation
+	
+	thread = Thread.new()
+	thread.start(minimax_step)
+	
+	while thread.is_alive():
+		await observation.get_tree().process_frame
 
-	minimax_step()
+	thread.wait_to_finish()
+	
+	game_board.gridList[calculated_action].setTileType(playerType)
+	
 	moveMade.emit(game_board)
 	
 func _ready() -> void:
@@ -22,8 +31,11 @@ func _process(delta: float) -> void:
 func get_custom_class_name():
 	return "MinimaxAgent"
 
+var thread: Thread
 var game_board: Board
 var minimax: Minimax = Minimax.new(Callable(result), Callable(terminal), Callable(utility), Callable(possible_actions))
+
+var calculated_action: int
 
 func minimax_step() -> void:
 	var tempBoard = game_board.getBoardCopy()
@@ -35,7 +47,7 @@ func minimax_step() -> void:
 	if len(action) == 0:
 		return
 
-	game_board.gridList[action[0]].setTileType(3)
+	calculated_action = action[0]
 	
 
 # Simulate the result of an action on the board
