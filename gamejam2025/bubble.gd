@@ -35,7 +35,6 @@ func update_gfx(type):
 		appear()
 	elif type == 2:
 		$BubbleGfx.material.set_shader_parameter("color",Vector3(0,0,1))
-		print("type2 ")
 		$BubbleGfx.set_texture(load("res://resources/bubble03b.png"))
 		$BubbleGfx.scale=Vector2(0.2,0.2)
 		appear()

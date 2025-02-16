@@ -11,6 +11,15 @@ var id
 
 var R : Array[Point] = []
 
+func init():
+	for i in range(0,9):
+		var p : Point = Point.new()
+		p.x = floor(i/3) + 1
+		p.y = i % 3 + 1
+		p.piece = 0
+		p.score = [0,0,0,0,0,0,0]
+		R.append(p)
+
 func get_points():
 	return R
 
@@ -24,12 +33,27 @@ func update(x,y,piece,R):
 	update_point(x,y,piece)
 	update_layers(R)
 
+#color player1 = 1, color player2 = 3
 func update_layers(R):
 	for point : Point in R:
-		#Layer 0 - standard scores(sum of all own pieces on the board)
+		#Layer 0 - standard scores(1 if own piece, -1 if enemy piece, 0 for empty)
 		if(point.piece != 0):
-			add(point.x,point.y,1 if point.color == color else 0,0)
-		
+			add(point.x,point.y,1 if point.color == color else -1,0)
+		#Layer 1 - default scores
+		#1.4=own bubble,
+		#1.0=own tower
+		#-2.8=opponent bubble
+		#-0.8=opponent tower
+		if(point.piece != 0):
+			if(point.piece == 1 && color == 1) || (point.piece == 3 && color == 3):
+				add(point.x,point.y,1,1)
+			if(point.piece == 3 && color == 1) || (point.piece == 1 && color == 3):
+				add(point.x,point.y,-0.8,1)
+			if(point.piece == 2 && color == 1) || (point.piece == 4 && color == 3):
+				add(point.x,point.y,1.4,1)
+			if(point.piece == 4 && color == 1) || (point.piece == 2 && color == 3):
+				add(point.x,point.y,-2.8,1)
+
 
 func update_point(posX, posY, piece):
 	R[posX-1 + 3*ceil((posY-1)/3)].piece = piece
@@ -92,13 +116,7 @@ func compute_translate_N():
 
 #################################
 
-func _init():
-	for i in range(0,9):
-		var p : Point = Point.new()
-		p.x = floor(i/3) + 1
-		p.y = i % 3 + 1
-		p.piece = 0
-		R.append(p)
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

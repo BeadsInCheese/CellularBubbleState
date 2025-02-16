@@ -1,5 +1,5 @@
-extends Node
-class_name Agent
+extends "res://AI/AgentBase.gd"
+class_name LDAgent
 
 var agentColor
 var playerColor
@@ -13,7 +13,7 @@ var DPU_list : Array[DynamicalProcessingUnit] = []
 
 func update(x,y,p):
 	for dpu: DynamicalProcessingUnit in DPU_list:
-		dpu.update(x,y,p)
+		dpu.update(x,y,p,dpu.get_points())
 
 func init_dpu():
 	var j = 1
@@ -22,6 +22,7 @@ func init_dpu():
 		u.id = i
 		u.offsetX = floor(i/10) + 1
 		u.offsetY = j
+		u.init()
 		DPU_list.append(u)
 		j = (j+1) % 10
 
@@ -52,36 +53,62 @@ func compute_heuristic(n,color,board):
 func compute_metric(n):
 	pass
 	
-func generate_move(board) -> int:
-	evaluate(board)
+func generate_move(board : Array[Bubble]) -> int:
+	
+	
+	var W : Array[float] = evaluate(board)
 	for d : DynamicalProcessingUnit in DPU_list:
-		d.R[0].score[2]
+		d.update_layers(d.get_points())
+		#for p : Point in d.get_points():
+		#	print(p.score)
+	return randi_range(0,143)
 	
 func evaluate(board) -> Array[float]:
 	var W_COEFF = [1,2]
-	var W = []
+	var W : Array[float] = []
 	var H_own = []
 	var H_opponent = []
 	for i in range(1,3):
 		H_own.append(compute_heuristic(i,agentColor,board))
 		H_opponent.append(compute_heuristic(i,playerColor,board))
-		W.append(W_COEFF*(H_own[i] - H_opponent[i]))
+		W.append(W_COEFF[i-1]*(H_own[i-1] - H_opponent[i-1]))
 	return W
 	
-func proceduralMove(currentTurn,color,board) -> Bubble:
+func proceduralMove(board : Board):
 	var result
-	agentColor = color
-	if(color == 3):
-		playerColor = 1
-	elif(color == 1):
+	var color
+	 
+	if board.currentTurn == 0 || board.currentTurn == 4:
+		color = 1
 		playerColor = 3
-		
-	result = generate_move(board)
+	elif board.currentTurn == 1 || board.currentTurn == 3:
+		color = 3
+		playerColor = 1
+
+	agentColor = color
+
+	result = generate_move(board.gridList)
+	board.gridList[result].setTileType(agentColor)
 	
-	return board[result]
+	return board
 	
-######################################################
-	
+
+func init(board):
+	init_dpu()
+
+func makeMove(observation:Board):
+	await observation.get_tree().create_timer(0.5).timeout
+	var game_board = proceduralMove(observation)
+	moveMade.emit(game_board)
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+func get_custom_class_name():
+	return "LDAgent"
