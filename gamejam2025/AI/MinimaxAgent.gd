@@ -35,7 +35,7 @@ func minimax_step() -> void:
 	if len(action) == 0:
 		return
 
-	game_board.gridList[action[0]].setTileType(3)
+	game_board.gridList[action[0]].setTileType(playerType)
 	
 
 # Simulate the result of an action on the board
