@@ -6,9 +6,13 @@ var client = StreamPeerTCP.new()
 var connected = false
 func init(board:Board):
 	await connect_to_server("127.0.0.1")
+	connected=true
 	await syncronizeTurnOrder(board)
+	print("MultiplayerAgent Ready")
 func syncronizeTurnOrder(board:Board):
 	while connected:
+		print(client.get_available_bytes())
+		await board.get_tree().process_frame
 		if client.get_available_bytes() >= 4:
 			client.poll()
 			var x=client.get_32()
@@ -26,13 +30,12 @@ func syncronizeTurnOrder(board:Board):
 			else:
 				return
 		else:		# Sleep for a short duration to avoid busy-waiting
-			await board.get_tree().get_frame()
+			await board.get_tree().process_frame
 
 	
 	
 func connect_to_server(host: String) -> void:
 	client=NetCode.client
-		
 func _blocking_read(observation:Board):
 	while connected:
 		if client.get_available_bytes() >= 4:
@@ -75,6 +78,7 @@ var done=false
 func makeMove(observation:Board):
 	while !done and connected:
 		client.poll()
+		print(client.get_available_bytes())
 		if client.get_available_bytes() >0:
 				print("message")
 				var x=client.get_32()
@@ -87,7 +91,9 @@ func makeMove(observation:Board):
 			await observation.get_tree().process_frame
 		else:
 			return
-	pass
+			
+	if(observation!=null):
+		await observation.get_tree().process_frame
 	#await send(observation.lastMove[0],observation.lastMove[1])
 	#await syncronize(observation)
 
