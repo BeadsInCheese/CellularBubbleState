@@ -7,6 +7,9 @@ func makeMove(observation:Board):
 	if observation == null:
 		return
 
+	for i in range(30):
+		await observation.get_tree().process_frame
+		
 	game_board = observation
 
 	minimax_step()
