@@ -6,6 +6,7 @@ var masterVolume:float=80
 
 var P1Index=0
 var P2Index=0
+var MPKey=""
 func setSFX(volume):
 	sfxVolume=volume
 	var sfx_index= AudioServer.get_bus_index("SFX")

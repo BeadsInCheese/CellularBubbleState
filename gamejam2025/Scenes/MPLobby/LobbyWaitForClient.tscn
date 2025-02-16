@@ -1,14 +1,15 @@
-[gd_scene load_steps=21 format=3 uid="uid://d0q8tr7g0mqks"]
+[gd_scene load_steps=22 format=3 uid="uid://i6kgoh1cv7oc"]
 
-[ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="1_nwb4t"]
-[ext_resource type="Script" path="res://Scenes/SceneNavigation.gd" id="1_ygpmw"]
-[ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="2_lpkp4"]
-[ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_2omr8"]
-[ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="4_1qja7"]
-[ext_resource type="Shader" path="res://Scenes/MainMenu.gdshader" id="4_3l6nv"]
-[ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="5_ga2sp"]
-[ext_resource type="Shader" path="res://Scenes/Transition.gdshader" id="7_phqtp"]
-[ext_resource type="Script" path="res://Scenes/transition.gd" id="8_llfhg"]
+[ext_resource type="Script" path="res://Scenes/MPLobby/NetCode.gd" id="1_brlfs"]
+[ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="1_uk8h5"]
+[ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="2_0ync1"]
+[ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="3_47075"]
+[ext_resource type="Shader" path="res://Scenes/MainMenu.gdshader" id="4_12big"]
+[ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="5_yibmp"]
+[ext_resource type="Script" path="res://Scenes/MPLobby/LobbyDisplayKeyCode.gd" id="6_gj6dc"]
+[ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="7_6ayo4"]
+[ext_resource type="Shader" path="res://Scenes/Transition.gdshader" id="8_3w2jm"]
+[ext_resource type="Script" path="res://Scenes/transition.gd" id="9_2c3u5"]
 
 [sub_resource type="Gradient" id="Gradient_blu0u"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -30,7 +31,7 @@ seamless_blend_skirt = 0.3
 noise = SubResource("FastNoiseLite_0jmjm")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_scnbl"]
-shader = ExtResource("2_lpkp4")
+shader = ExtResource("1_uk8h5")
 shader_parameter/voronoi = SubResource("NoiseTexture2D_ucuru")
 
 [sub_resource type="Curve" id="Curve_34mbh"]
@@ -58,18 +59,18 @@ scale_curve = SubResource("CurveTexture_giy07")
 color = Color(1, 1, 1, 0.0941176)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dd348"]
-shader = ExtResource("4_3l6nv")
+shader = ExtResource("4_12big")
 
 [sub_resource type="Theme" id="Theme_5h72o"]
 default_base_scale = 1.0
-default_font = ExtResource("4_1qja7")
+default_font = ExtResource("5_yibmp")
 default_font_size = 100
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_o7cbw"]
-shader = ExtResource("7_phqtp")
+shader = ExtResource("8_3w2jm")
 
-[node name="MainMenu" type="Node2D"]
-script = ExtResource("1_ygpmw")
+[node name="LobbyWaitForClient" type="Node2D"]
+script = ExtResource("1_brlfs")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(577.953, 323.668)
@@ -90,31 +91,21 @@ mouse_filter = 2
 position = Vector2(448, 737)
 amount = 10
 process_material = SubResource("ParticleProcessMaterial_7w6on")
-texture = ExtResource("3_2omr8")
+texture = ExtResource("2_0ync1")
 lifetime = 11.84
 preprocess = 32.1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-offset_left = 384.0
-offset_top = 260.0
-offset_right = 746.0
-offset_bottom = 457.0
+offset_left = 388.0
+offset_top = 531.0
+offset_right = 750.0
+offset_bottom = 728.0
 theme_override_constants/separation = 40
-
-[node name="Button" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("1_nwb4t")
-text = "Play"
 
 [node name="Button3" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-theme = ExtResource("1_nwb4t")
-text = "Multiplayer"
-
-[node name="Button2" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("1_nwb4t")
-text = "Settings"
+theme = ExtResource("3_47075")
+text = "Back"
 
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_left = -10.0
@@ -131,10 +122,21 @@ offset_right = 1157.0
 offset_bottom = 231.0
 theme = SubResource("Theme_5h72o")
 bbcode_enabled = true
-text = "[center]Cellular bubble state [/center]"
+text = "[center]Lobby [/center]"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="."]
+offset_left = -2.0
+offset_top = 214.0
+offset_right = 1155.0
+offset_bottom = 519.0
+theme = SubResource("Theme_5h72o")
+theme_override_font_sizes/normal_font_size = 61
+bbcode_enabled = true
+text = "[center]Lobby [/center]"
+script = ExtResource("6_gj6dc")
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("5_ga2sp")
+stream = ExtResource("7_6ayo4")
 autoplay = true
 bus = &"Music"
 
@@ -143,9 +145,6 @@ material = SubResource("ShaderMaterial_o7cbw")
 offset_right = 1167.0
 offset_bottom = 673.0
 mouse_filter = 2
-script = ExtResource("8_llfhg")
+script = ExtResource("9_2c3u5")
 
-[connection signal="button_down" from="VBoxContainer/Button" to="." method="_on_PlayerMenuPressed"]
-[connection signal="button_down" from="VBoxContainer/Button3" to="." method="_on_PlayerMenuPressed"]
-[connection signal="button_down" from="VBoxContainer/Button3" to="." method="_on_MPbutton_3_button_down"]
-[connection signal="button_down" from="VBoxContainer/Button2" to="." method="_on_SettingsPressed"]
+[connection signal="pressed" from="VBoxContainer/Button3" to="." method="_on_button_3_pressed"]
