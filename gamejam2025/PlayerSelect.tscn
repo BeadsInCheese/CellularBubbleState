@@ -124,6 +124,7 @@ text = "[center]VS. [/center]"
 item_count = 4
 popup/item_1/text = "random bot"
 popup/item_2/text = "Golgath"
+popup/item_2/icon = ExtResource("10_iyo5k")
 popup/item_3/text = "Sera"
 popup/item_3/icon = ExtResource("8_vmg0i")
 popup/item_3/id = 2
