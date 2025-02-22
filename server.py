@@ -10,6 +10,9 @@ def handle_client(client_socket, other_client_socket):
             data = client_socket.recv(4)  # 2 integers = 8 bytes (4 bytes each)
             print(data)
             if not data:
+                print("connection issue disconnecting")
+                client_socket.close()
+                other_client_socket.close()
                 break
 
             # Unpack the received data into two integers
@@ -28,8 +31,12 @@ def handle_client(client_socket, other_client_socket):
             # Send the data to the other client
             other_client_socket.sendall(struct.pack("i",int(int1[0])))
             other_client_socket.sendall(struct.pack("i",int(int2[0])))
+            
         except Exception as e:
             print(traceback.format_exc())
+            print("connection issue disconnecting")
+            client_socket.close()
+            other_client_socket.close()
             break
 
     client_socket.close()

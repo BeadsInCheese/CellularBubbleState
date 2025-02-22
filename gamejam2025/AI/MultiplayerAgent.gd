@@ -78,7 +78,7 @@ var done=false
 func makeMove(observation:Board):
 	while !done and connected:
 		client.poll()
-		print(client.get_available_bytes())
+		#print(client.get_available_bytes())
 		if client.get_available_bytes() >0:
 				print("message")
 				var x=client.get_32()

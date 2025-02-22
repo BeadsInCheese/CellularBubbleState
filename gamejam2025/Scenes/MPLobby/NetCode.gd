@@ -77,7 +77,9 @@ func _process(delta: float) -> void:
 			client.STATUS_ERROR:
 				print("Error with socket stream.")
 				emit_signal("_error")
-
+func _exit_tree() -> void:
+	client.disconnect_from_host()
+	pass
 
 func _on_button_3_pressed() -> void:
 	SceneNavigation.goToMultiplayerSelection()

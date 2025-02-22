@@ -23,6 +23,7 @@ func makeRandomMove(observation:Board):
 			if(offset>100000):
 				return
 	observation.gridList[(x+offset-1)%len(observation.gridList)].setTileType(playerType)
+	observation.lastMove=[(x+offset-1)%len(observation.gridList),observation.turnOrder[observation.currentTurn].playerType]
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
