@@ -41,8 +41,15 @@ func connect_to_server(host: String) -> void:
 		print("Connected to server")
 	else:
 		print("Failed to connect to server")
-		
+func getServerIp()->void:
+	var config = ConfigFile.new()
+	var err = config.load("res://config/INI_Settings.cfg")
+	if err == OK: 
+		var ip=config.get_value("MULTIPLAYER","SERVER_IP","127.0.0.1")
+		print("loaded IP: "+ip+" fron config")
+		serverIP=ip
 func _ready() -> void:
+	getServerIp()
 	client=StreamPeerTCP.new()
 	await connect_to_server(serverIP)
 	print(client.get_status())
