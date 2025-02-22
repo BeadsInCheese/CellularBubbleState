@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cj0un5t317b7y"]
+[gd_scene load_steps=21 format=3 uid="uid://ukd2jyt4crcd"]
 
 [ext_resource type="Script" path="res://playerSelect.gd" id="1_ck5mi"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="2_64eh4"]
@@ -155,5 +155,6 @@ popup/item_3/id = 2
 [node name="Transition" parent="." instance=ExtResource("7_tav7e")]
 
 [connection signal="item_selected" from="OptionButton" to="." method="setPlayer1"]
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="button_down" from="StartButton" to="." method="_on_start_button_button_down"]
 [connection signal="item_selected" from="OptionButton2" to="." method="_on_option_button_2_item_selected"]
