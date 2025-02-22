@@ -152,4 +152,4 @@ func _on_tree_exiting() -> void:
 
 
 func _skip_button_pressed() -> void:
-	turnOrder[currentTurn].skip=true
+	turnOrder[currentTurn].skip=!turnOrder[currentTurn].skip
