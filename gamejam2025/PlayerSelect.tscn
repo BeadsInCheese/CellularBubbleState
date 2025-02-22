@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://ukd2jyt4crcd"]
+[gd_scene load_steps=21 format=3 uid="uid://cj0un5t317b7y"]
 
 [ext_resource type="Script" path="res://playerSelect.gd" id="1_ck5mi"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="2_64eh4"]
