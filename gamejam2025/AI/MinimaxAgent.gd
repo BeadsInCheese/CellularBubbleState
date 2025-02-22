@@ -43,7 +43,7 @@ func minimax_step() -> void:
 	for tile in tempBoard:
 		minimax_board.append([tile])
 	
-	var action: Array = minimax.action(minimax_board, game_board.currentTurn, 3, 20) # hard: 4, 16    medium: 3, 20
+	var action: Array = minimax.action(minimax_board, game_board.currentTurn, 3, 18, 4) # hard: 4, 16    medium: 3, 20
 	if len(action) == 0:
 		return
 
