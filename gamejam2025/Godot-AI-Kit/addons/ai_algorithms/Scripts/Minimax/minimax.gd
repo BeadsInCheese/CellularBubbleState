@@ -7,10 +7,10 @@ var possible_actions_func: Callable
 
 var states_explored: int = 0
 var max_depth: int
+var max_actions_decay: int
 
 var turn_order: Array[String] = ["P1", "P2A", "A", "P2", "P1A", "A"]
 
-var states: Dictionary = {}
 var print_count = 0
 
 func get_next_turn_index(turn: int):
@@ -18,24 +18,23 @@ func get_next_turn_index(turn: int):
 	if turn == 4: return 0
 	return turn + 1
 
-func _init(result_func: Callable, terminal_func: Callable, utility_func: Callable, possible_actions_func: Callable, max_depth: int = -1):
+func _init(result_func: Callable, terminal_func: Callable, utility_func: Callable, possible_actions_func: Callable):
 	# Initialize the minimax algorithm with game-specific functions and a depth limit.
 	self.result_func = result_func
 	self.terminal_func = terminal_func
 	self.utility_func = utility_func
 	self.possible_actions_func = possible_actions_func
-	self.max_depth = max_depth
 
-func action(state: Array, max_depth: int, current_turn: int) -> Array:
+func action(state: Array, current_turn: int, max_depth: int, max_actions: int, max_actions_decay: int) -> Array:
 	# Find the best action from the current state using minimax with alpha-beta pruning.
 	var is_adversary = turn_order[current_turn].begins_with("P2")
 	
-	var possible_actions: Array = possible_actions_func.call(state)
+	var possible_actions: Array = possible_actions_func.call(state, max_actions)
 	var optimal_action: Array
 	var optimal_value: float = -INF if not is_adversary else INF
 	
-	states.clear()
 	self.max_depth = max_depth
+	self.max_actions_decay = max_actions_decay
 	var current_depth = 1
 
 	# Initialize alpha and beta for pruning.
@@ -48,7 +47,7 @@ func action(state: Array, max_depth: int, current_turn: int) -> Array:
 	# Evaluate each possible action and update optimal values based on pruning.
 	for _action in possible_actions:
 		var result_state = result_func.call(state, _action, turn_order[current_turn])
-		var value_of_result_state: float = self.minimax(result_state, get_next_turn_index(current_turn), alpha, beta, current_depth + 1)
+		var value_of_result_state: float = self.minimax(result_state, get_next_turn_index(current_turn), alpha, beta, current_depth + 1, max_actions - max_actions_decay)
 	
 		#print("     ", str(result_state), " value: ", value_of_result_state, " ADVERSARY " if is_adversary else " NON-A ")
 		if is_adversary:
@@ -68,7 +67,7 @@ func action(state: Array, max_depth: int, current_turn: int) -> Array:
 
 	return optimal_action
 
-func minimax(state: Array, turn: int, alpha: float, beta: float, current_depth: int) -> float:
+func minimax(state: Array, turn: int, alpha: float, beta: float, current_depth: int, max_actions: int) -> float:
 	# Recursively evaluate the state using minimax with alpha-beta pruning.
 	var is_adversary = turn_order[turn].begins_with("P2")
 	
@@ -76,7 +75,7 @@ func minimax(state: Array, turn: int, alpha: float, beta: float, current_depth: 
 		# If terminal state or max depth reached, return the utility value of the state.
 		return utility_func.call(state)
 
-	var possible_actions: Array = possible_actions_func.call(state)
+	var possible_actions: Array = possible_actions_func.call(state, max_actions)
 	var optimal_value: float = -INF if not is_adversary else INF
 
 	# Evaluate possible actions recursively using alpha-beta pruning.
@@ -84,16 +83,7 @@ func minimax(state: Array, turn: int, alpha: float, beta: float, current_depth: 
 		var result_state = result_func.call(state, _action, turn_order[turn])
 		states_explored += 1
 
-		var value_of_result_state: float = 0.0
-		var s = str(result_state) + ("A" if is_adversary else "N")
-		var stored_result = states.get(s)
-		
-		if stored_result != null:
-			value_of_result_state = stored_result
-			#print("Hit stored state: ", s, " result: ", stored_result)
-		else:
-			value_of_result_state = self.minimax(result_state, get_next_turn_index(turn), alpha, beta, current_depth + 1)
-			states[s] = value_of_result_state
+		var value_of_result_state = self.minimax(result_state, get_next_turn_index(turn), alpha, beta, current_depth + 1, max_actions - max_actions_decay)
 		
 		#print("--", current_depth, "- ", str(result_state), " value: ", value_of_result_state, " ADVERSARY " if _is_adversary else " NON-A ")
 

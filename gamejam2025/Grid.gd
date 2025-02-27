@@ -30,8 +30,8 @@ var lastMove=[-1,-1]
 var p1AgentInstance
 var p2AgentInstance
 var player1Agent=load("res://AI/PlayerAgent.gd")
-var player2Agent=load("res://AI/LDAgent.gd")
-var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxAgent.gd"), load("res://AI/LDAgent.gd")]
+var player2Agent=load("res://AI/NNAgent.gd")
+var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxAgent.gd"),load("res://AI/LDAgent.gd")]
 var automataAgent: AutomataAgent = load("res://AI/AutomataAgent.gd").new()
 
 var victor=-1
@@ -86,7 +86,11 @@ func updateCursor():
 	Input.set_custom_mouse_cursor(new_cursor_image, Input.CURSOR_ARROW, Vector2(15,15))
 
 # Called when the node enters the scene tree for the first time.
+static var mp=true
+var temp=load("res://AI/PlayerAgent.gd")
+var temp2=load("res://AI/MultiplayerAgent.gd")
 func _ready() -> void:
+	
 	for i in range(xsize):
 		for j in range(ysize):
 			var x:Bubble=bubble.instantiate()
@@ -97,11 +101,17 @@ func _ready() -> void:
 			gridList.append(x)
 			
 	boardHistory.append(DataUtility.get_board_string(gridList,currentTurn))
+	if(mp):
 
-	p1AgentInstance= agentlist[Settings.P1Index].new()
-	p1AgentInstance.playerType=Players.PLAYER1
-	p2AgentInstance=agentlist[Settings.P2Index].new()
-	p2AgentInstance.playerType=Players.PLAYER2
+		p1AgentInstance= temp.new()
+		p1AgentInstance.playerType=Players.PLAYER1
+		p2AgentInstance=temp2.new()
+		p2AgentInstance.playerType=Players.PLAYER2
+	else:
+		p1AgentInstance= agentlist[Settings.P1Index].new()
+		p1AgentInstance.playerType=Players.PLAYER1
+		p2AgentInstance=agentlist[Settings.P2Index].new()
+		p2AgentInstance.playerType=Players.PLAYER2
 	
 	await p1AgentInstance.init(self)
 	await p2AgentInstance.init(self)
@@ -161,7 +171,7 @@ func _on_tree_exiting() -> void:
 
 
 func _skip_button_pressed() -> void:
-	turnOrder[currentTurn].skip=true
+	turnOrder[currentTurn].skip=!turnOrder[currentTurn].skip
 
 func _save_button_pressed() -> void:
 	DataUtility.save_to_file(boardHistory, Time.get_datetime_string_from_system())

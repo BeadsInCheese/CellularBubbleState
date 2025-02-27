@@ -12,42 +12,36 @@ func _process(delta: float) -> void:
 
 
 func _onLocalMPSelected() -> void:
-	await hideall()
-	if(get_tree()!=null):
-		await get_tree().process_frame
-		get_tree().change_scene_to_packed(load("res://MainGame.tscn"))
-	
+	goToScene("res://MainGame.tscn")
 
 func _on_MainMenuPressed() -> void:
-	await hideall()
-	if(get_tree()!=null):
-		await get_tree().process_frame
-		get_tree().change_scene_to_packed(load("res://Scenes/MainMenu.tscn"))
+	goToScene("res://Scenes/MainMenu.tscn")
+		
 func goToMultiplayerSelection():
-	await hideall()
-	if(get_tree()!=null):
-		await get_tree().process_frame
-		get_tree().change_scene_to_packed(load("res://Scenes/MPLobby/MultiplayerLobby.tscn"))	
+	goToScene("res://Scenes/MPLobby/MultiplayerLobby.tscn")
+		
 func goToWait():
-	await hideall()
-	if(get_tree()!=null):
-		await get_tree().process_frame
-		get_tree().change_scene_to_packed(load("res://Scenes/MPLobby/LobbyWaitForClient.tscn"))	
+	goToScene("res://Scenes/MPLobby/LobbyWaitForClient.tscn")
+
 func _on_SettingsPressed() -> void:
-	await hideall()
-	if(get_tree()!=null):
-		await get_tree().process_frame
-		get_tree().change_scene_to_packed(load("res://Scenes/SettingsMenu.tscn"))
+	goToScene("res://Scenes/SettingsMenu.tscn")
+		
 func _on_PlayerMenuPressed() -> void:
-	await hideall()
-	if(get_tree()!=null):
-		await get_tree().process_frame
-		get_tree().change_scene_to_packed(load("res://PlayerSelect.tscn"))
-func hideall():
+	goToScene("res://PlayerSelect.tscn")
+
+
+func goToScene(scene: String):
+	# Wait hide animation
 	for i in range(51):
 		RenderingServer.global_shader_parameter_set("tt",i*0.02)
 		if(get_tree()!=null):
 			await get_tree().process_frame
+	
+	# Change scene
+	if(get_tree()!=null):
+		await get_tree().process_frame
+		get_tree().change_scene_to_packed(load(scene))
+
 func showall():
 	for i in range(51):
 		RenderingServer.global_shader_parameter_set("tt",1-i*0.02)
@@ -55,5 +49,14 @@ func showall():
 			await get_tree().process_frame
 
 
-func _on_MPbutton_3_button_down() -> void:
-	SceneNavigation.goToMultiplayerSelection()
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed("Quit"):
+		get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
+		get_tree().quit()
+		
+	if Input.is_action_just_pressed("Mute"):
+		print(Settings.masterVolume)
+		if Settings.masterVolume == 0:
+			Settings.setMaster(80)
+		else:
+			Settings.setMaster(0)

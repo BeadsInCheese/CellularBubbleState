@@ -1,13 +1,13 @@
 extends Node2D
 class_name NetCode
-var serverIP="127.1.1.1"
+var serverIP="127.0.0.1"
 static var client
 var connected=false
 # Called when the node enters the scene tree for the first time.
 var scene = preload("res://MainGame.tscn")
 func sendkey(message:String) -> bool:
 	print("sending data...")
-	client.put_string(message)
+	client.put_data(message.to_utf8_buffer())
 	print("Sent: ", message)
 	return true
 	print("connection lost")
@@ -41,8 +41,15 @@ func connect_to_server(host: String) -> void:
 		print("Connected to server")
 	else:
 		print("Failed to connect to server")
-		
+func getServerIp()->void:
+	var config = ConfigFile.new()
+	var err = config.load("res://config/INI_Settings.cfg")
+	if err == OK: 
+		var ip=config.get_value("MULTIPLAYER","SERVER_IP","127.0.0.1")
+		print("loaded IP: "+ip+" fron config")
+		serverIP=ip
 func _ready() -> void:
+	getServerIp()
 	client=StreamPeerTCP.new()
 	await connect_to_server(serverIP)
 	print(client.get_status())
@@ -56,24 +63,30 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 var _status=-1
+signal _connected
+signal _error
+signal _disconnected
 func _process(delta: float) -> void:
 	var new_status: int = client.get_status()
+	client.poll()
 	if new_status != _status:
 		_status = new_status
 		match _status:
 			client.STATUS_NONE:
 				print("Disconnected from host.")
-				emit_signal("disconnected")
+				emit_signal("_disconnected")
 			client.STATUS_CONNECTING:
 				print("Connecting to host.")
 			client.STATUS_CONNECTED:
 				print("Connected to host.")
-				emit_signal("connected")
+				emit_signal("_connected")
 				connected = true
 			client.STATUS_ERROR:
 				print("Error with socket stream.")
-				emit_signal("error")
-
+				emit_signal("_error")
+func _exit_tree() -> void:
+	client.disconnect_from_host()
+	pass
 
 func _on_button_3_pressed() -> void:
 	SceneNavigation.goToMultiplayerSelection()

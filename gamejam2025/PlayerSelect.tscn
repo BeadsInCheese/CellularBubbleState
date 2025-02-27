@@ -1,15 +1,16 @@
-[gd_scene load_steps=20 format=3 uid="uid://dif0oxtgn1fu5"]
+[gd_scene load_steps=21 format=3 uid="uid://cj0un5t317b7y"]
 
 [ext_resource type="Script" path="res://playerSelect.gd" id="1_ck5mi"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="2_64eh4"]
 [ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_4bkf4"]
 [ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="4_q2vhn"]
-[ext_resource type="Theme" path="res://FontArtistic.tres" id="5_uchd8"]
+[ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="5_uchd8"]
 [ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="6_rls2n"]
 [ext_resource type="PackedScene" uid="uid://82ydshkri1ic" path="res://PlayermenuComponents/Playeroption_button.tscn" id="6_t4mh3"]
 [ext_resource type="PackedScene" uid="uid://buk1ghkxjvnfv" path="res://PlayermenuComponents/option_button.tscn" id="7_dknv5"]
-[ext_resource type="PackedScene" path="res://transition.tscn" id="7_tav7e"]
+[ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="7_tav7e"]
 [ext_resource type="Texture2D" uid="uid://bjb4puyp6bwp1" path="res://resources/SeraBotIcon.png" id="8_vmg0i"]
+[ext_resource type="Texture2D" uid="uid://b1gvpqoynwdv1" path="res://resources/GolgathBotIcon.png" id="10_iyo5k"]
 
 [sub_resource type="Gradient" id="Gradient_156fm"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -123,6 +124,7 @@ text = "[center]VS. [/center]"
 item_count = 4
 popup/item_1/text = "random bot"
 popup/item_2/text = "Golgath"
+popup/item_2/icon = ExtResource("10_iyo5k")
 popup/item_3/text = "Sera"
 popup/item_3/icon = ExtResource("8_vmg0i")
 popup/item_3/id = 2
@@ -145,6 +147,7 @@ offset_bottom = 367.0
 item_count = 4
 popup/item_1/text = "RandomBot"
 popup/item_2/text = "Golgath"
+popup/item_2/icon = ExtResource("10_iyo5k")
 popup/item_3/text = "Sera"
 popup/item_3/icon = ExtResource("8_vmg0i")
 popup/item_3/id = 2
@@ -152,5 +155,6 @@ popup/item_3/id = 2
 [node name="Transition" parent="." instance=ExtResource("7_tav7e")]
 
 [connection signal="item_selected" from="OptionButton" to="." method="setPlayer1"]
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="button_down" from="StartButton" to="." method="_on_start_button_button_down"]
 [connection signal="item_selected" from="OptionButton2" to="." method="_on_option_button_2_item_selected"]

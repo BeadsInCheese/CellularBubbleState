@@ -4,9 +4,21 @@ class_name MinimaxAgent
 
 # Called when the node enters the scene tree for the first time.
 func makeMove(observation:Board):
+	if observation == null:
+		return
+		
 	game_board = observation
+	
+	thread = Thread.new()
+	thread.start(minimax_step)
+	
+	while thread.is_alive():
+		await observation.get_tree().process_frame
 
-	minimax_step()
+	thread.wait_to_finish()
+	
+	game_board.gridList[calculated_action].setTileType(playerType)
+	
 	moveMade.emit(game_board)
 	
 func _ready() -> void:
@@ -19,8 +31,11 @@ func _process(delta: float) -> void:
 func get_custom_class_name():
 	return "MinimaxAgent"
 
+var thread: Thread
 var game_board: Board
 var minimax: Minimax = Minimax.new(Callable(result), Callable(terminal), Callable(utility), Callable(possible_actions))
+
+var calculated_action: int
 
 func minimax_step() -> void:
 	var tempBoard = game_board.getBoardCopy()
@@ -28,11 +43,11 @@ func minimax_step() -> void:
 	for tile in tempBoard:
 		minimax_board.append([tile])
 	
-	var action: Array = minimax.action(minimax_board, 3, game_board.currentTurn)
+	var action: Array = minimax.action(minimax_board, game_board.currentTurn, 3, 18, 4) # hard: 4, 16    medium: 3, 20
 	if len(action) == 0:
 		return
 
-	game_board.gridList[action[0]].setTileType(3)
+	calculated_action = action[0]
 	
 
 # Simulate the result of an action on the board
@@ -63,25 +78,27 @@ func utility(board: Array) -> float:
 			p1Score += 1
 		if(tile[0] == 3 or tile[0] == 4):
 			p2Score += 1
-	
+
 	return p1Score - p2Score
 
 # Get all possible valid moves on the current board
-func possible_actions(board: Array) -> Array[Array]:
+func possible_actions(board: Array, max_actions: int) -> Array[Array]:
 	var actions: Array[Array] = []
 	for i in range(len(board)):
 		if board[i][0] == 0:
 			actions.append([i])
 	
-	#actions.shuffle()
-	if true or len(actions) <= 20: # todo: fix
+	if max_actions < 2 or len(game_board.latestTileIndexes) < 2:
+		max_actions = 2
+	
+	actions.shuffle()
+	if len(actions) <= max_actions: # todo: fix
 		return actions
 
-	actions.sort_custom(func(a, b): distance_from_latest_tile_indexes(a) < distance_from_latest_tile_indexes(b))
-	actions = actions.slice(0, 20)
-	#actions.shuffle()
+	actions.sort_custom(func(a, b): return distance_from_latest_tile_indexes(a) < distance_from_latest_tile_indexes(b))
 	
-	#print(actions, " ", len(actions))
+	actions = actions.slice(0, max_actions)
+	actions.shuffle()
 	return actions
 
 func distance_from_latest_tile_indexes(action: Array):
