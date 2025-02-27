@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://dlnherpu7c0p8"]
+
+[ext_resource type="Script" path="res://load_item.gd" id="1_46f0i"]
+
+[node name="Button" type="Button"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 31.0
+grow_horizontal = 2
+text = "save 1"
+script = ExtResource("1_46f0i")
+
+[connection signal="pressed" from="." to="." method="_button_pressed"]

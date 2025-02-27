@@ -8,23 +8,24 @@ var G_default_own_coeff1 : float
 var G_default_own_coeff2 : float
 var G_default_opponent_coeff1 : float
 var G_default_opponent_coeff2 : float
-
+var W_target = [true,false]
 var DPU_list : Array[DynamicalProcessingUnit] = []
 
-func update(x,y,p):
-	for dpu: DynamicalProcessingUnit in DPU_list:
-		dpu.update(x,y,p,dpu.get_points())
+static var N_ROUNDS = 1200
+static var DL_UNITS = 8
 
 func init_dpu():
 	var j = 1
-	for i in range(1,100):
-		var u : DynamicalProcessingUnit = DynamicalProcessingUnit.new()
-		u.id = i
-		u.offsetX = floor(i/10) + 1
-		u.offsetY = j
-		u.init()
-		DPU_list.append(u)
-		j = (j+1) % 10
+	for k in range(0,DL_UNITS):
+		for m in range(0,16):
+			for i in range(0,100):
+				var u : DynamicalProcessingUnit = DynamicalProcessingUnit.new()
+				u.id = i + 100*m + 16*100*k
+				u.offsetX = floor(i/10) + 1
+				u.offsetY = j
+				u.init()
+				DPU_list.append(u)
+				j = (j+1) % 10
 
 func compute_heuristic(n,color,board):
 	var result = 0
@@ -52,16 +53,69 @@ func compute_heuristic(n,color,board):
 
 func compute_metric(n):
 	pass
+
+func update_grids(board):
+	var i = 0
+	while(i < 144):
+		var x = i%12
+		var y = i/12
+		
+		for j in range(x-1,x+1):
+			if(j <= 0 || j >= 11):
+				break
+			for k in range(y-1,y+1):
+				if(k <= 0 || k >= 11):
+					break
+
+				if sqrt((x-j)**2+(y-k)**2) < 1.5:
+					DPU_list[j-1 + 10*(k-1)].update(j-x,k-y,board[i].tileType)
+
+		i += 1
+
 	
 func generate_move(board : Array[Bubble]) -> int:
-	
-	
 	var W : Array[float] = evaluate(board)
-	for d : DynamicalProcessingUnit in DPU_list:
-		d.update_layers(d.get_points())
-		#for p : Point in d.get_points():
-		#	print(p.score)
-	return randi_range(0,143)
+	var W_b : Array[bool] = parse(W)
+	update_grids(board)
+	
+	for dpu: DynamicalProcessingUnit in DPU_list:
+		dpu.update_layers()
+	
+	var n = 0
+	while(n < N_ROUNDS):
+		for dpu: DynamicalProcessingUnit in DPU_list:
+			for w in W:
+				for p : Point in dpu.get_points():
+					for layer : float in p.score:
+						pass
+						#dpu.inference_generic(p,layer,w)
+						
+						
+				
+				#for p1 : Point in dpu.get_points():
+					#for p2 : Point in dpu.get_points():
+						#
+						#for layer1 : float in p1.score:
+							#for layer2 : float in p2.score:
+								#dpu.inference_internal(p1,p2,layer1,layer2)
+								
+								#d.x, d.y, layer z <-> G_xy(z)
+		n += 1
+		
+	var j = randi() % 144
+	while board[j].tileType != 0:
+		j = randi() % 144
+
+	return j
+	
+func parse(w_array):
+	var b_array = []
+	for i in range(len(w_array)):
+		if(w_array[i] < 0):
+			b_array.append(false)
+		else:
+			b_array.append(true)
+	return b_array
 	
 func evaluate(board) -> Array[float]:
 	var W_COEFF = [1,2]
@@ -76,7 +130,9 @@ func evaluate(board) -> Array[float]:
 	
 func proceduralMove(board : Board):
 	var result
-	var color
+	var color 
+	
+	print("agent is playing as: "+playerType)
 	 
 	if board.currentTurn == 0 || board.currentTurn == 4:
 		color = 1

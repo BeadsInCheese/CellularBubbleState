@@ -10,8 +10,11 @@ var xsize: int = 12
 @export
 var ysize: int = 12
 
+
 var gridList: Array[Bubble] = []
 var latestTileIndexes: Array[int] = []
+static var boardHistory : Array[String] = []
+var currentBoardStatePointer = 0
 
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
 var turnOrder=[]
@@ -51,6 +54,11 @@ var announced=false
 func changeTurn()->void:
 	await turnOrder[currentTurn].makeMove(self)
 	currentTurn = (currentTurn+1) % 6
+	
+	boardHistory.resize(currentBoardStatePointer+1)
+	boardHistory.append(DataUtility.get_board_string(gridList,currentTurn))
+	currentBoardStatePointer += 1
+	
 	if(not(isEnd())):
 		changeTurn()
 
@@ -70,6 +78,8 @@ func changeTurn()->void:
 			i.destructor(self)
 		x.get_node("Text").text="[center]DRAW[/center]" if player1Score==player2Score  else "[center]Player 1 Wins[/center]" if player1Score>player2Score else "[center]Player 2 Wins[/center]"  
 		add_child(x)
+		
+	
 
 func updateCursor():
 	var new_cursor_image =p1cursor if(turnOrder[currentTurn].playerType==Players.PLAYER1) else p2cursor
@@ -85,6 +95,8 @@ func _ready() -> void:
 			
 			add_child(x)
 			gridList.append(x)
+			
+	boardHistory.append(DataUtility.get_board_string(gridList,currentTurn))
 
 	p1AgentInstance= agentlist[Settings.P1Index].new()
 	p1AgentInstance.playerType=Players.PLAYER1
@@ -136,6 +148,13 @@ func getGridTileType(xpos: int, ypos: int, board: Array):
 
 	return board[xpos + ypos * ysize]
 
+func decode_board():
+	var s = boardHistory[currentBoardStatePointer]
+	currentTurn = int(s[len(s) - 1])
+	s = DataUtility.decode(s.substr(0,len(s)-1))
+	for i in range(0,len(s)):
+		gridList[i].setTileType(int(s[i]))
+	print("board history ",boardHistory)
 
 func _on_tree_exiting() -> void:
 	Input.set_custom_mouse_cursor(null)
@@ -143,3 +162,46 @@ func _on_tree_exiting() -> void:
 
 func _skip_button_pressed() -> void:
 	turnOrder[currentTurn].skip=true
+
+func _save_button_pressed() -> void:
+	DataUtility.save_to_file(boardHistory, Time.get_datetime_string_from_system())
+	
+func _load_button_pressed() -> void:
+	var x : Node2D = load("res://LoadGame.tscn").instantiate()
+	add_child(x)
+
+
+func _mute_button_pressed() -> void:
+	if Settings.masterVolume == 0:
+		Settings.setMaster(80)
+	else:
+		Settings.setMaster(0)
+
+func _exit_button_pressed() -> void:
+	boardHistory.clear()
+	SceneNavigation._on_MainMenuPressed()
+
+func _input(event):
+	if event is InputEventKey and event.pressed:
+		if (event.as_text() == "Left" && (turnOrder[(len(boardHistory)-1)%6].get_is_player() || isEnd())):
+			currentBoardStatePointer -= 1
+			currentBoardStatePointer = clampi(currentBoardStatePointer,0,len(boardHistory)-1)
+			#print("pointer=",currentBoardStatePointer," turn=",currentTurn)
+			decode_board()
+			update_meta()
+		elif(event.as_text() == "Right" && (turnOrder[(len(boardHistory)-1)%6].get_is_player() || isEnd())):
+			currentBoardStatePointer += 1
+			currentBoardStatePointer = clampi(currentBoardStatePointer,0,len(boardHistory)-1)
+			#print("pointer=",currentBoardStatePointer," turn=",currentTurn)
+			decode_board()
+			update_meta()
+
+func update_meta():
+	updateScore()
+	gui.updateSidebar(currentTurn,player1Score,player2Score)
+	updateCursor()
+
+
+func _on_reset_button_pressed() -> void:
+	pass
+	

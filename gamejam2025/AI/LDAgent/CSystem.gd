@@ -3,6 +3,7 @@ class_name Parameters
 
 static var MAX_TRIES = 1600
 static var metric_coeff = 50
+static var HEUR_NO = 10
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

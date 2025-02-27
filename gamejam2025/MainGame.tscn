@@ -5,9 +5,9 @@
 [ext_resource type="Script" path="res://PlayerController.gd" id="2_eflv5"]
 [ext_resource type="AudioStream" uid="uid://bopl44gp5ld8e" path="res://resources/loop_bubbles_1.ogg" id="2_s7r41"]
 [ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_w1ryg"]
-[ext_resource type="PackedScene" uid="uid://cdp1ptkk1qkda" path="res://sidebar.tscn" id="3_xlshu"]
+[ext_resource type="PackedScene" uid="uid://b4rgdo55qhhue" path="res://sidebar.tscn" id="3_xlshu"]
 [ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="7_nmuy5"]
-[ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="8_3ddsp"]
+[ext_resource type="PackedScene" path="res://transition.tscn" id="8_3ddsp"]
 
 [sub_resource type="Gradient" id="Gradient_ubn5m"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -131,12 +131,40 @@ bus = &"Music"
 
 [node name="Transition" parent="." instance=ExtResource("8_3ddsp")]
 
-[node name="Button" type="Button" parent="."]
-offset_left = 745.0
-offset_top = 583.0
-offset_right = 877.0
-offset_bottom = 633.0
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_left = 910.0
+offset_top = 606.0
+offset_right = 1149.0
+offset_bottom = 642.0
+size_flags_horizontal = 0
+size_flags_stretch_ratio = 2.74
+
+[node name="Button" type="Button" parent="HBoxContainer"]
+layout_mode = 2
 text = "Skip"
 
+[node name="Button4" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Mute"
+
+[node name="Button2" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_stretch_ratio = 3.46
+text = "Save"
+
+[node name="Button3" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Load"
+
+[node name="Button5" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Exit"
+
 [connection signal="tree_exiting" from="Board" to="Board" method="_on_tree_exiting"]
-[connection signal="pressed" from="Button" to="Board" method="_skip_button_pressed"]
+[connection signal="gui_input" from="HBoxContainer" to="Board" method="_on_h_box_container_gui_input"]
+[connection signal="pressed" from="HBoxContainer/Button" to="Board" method="_skip_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Button4" to="Board" method="_mute_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Button2" to="Board" method="_save_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Button3" to="Board" method="_load_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Button5" to="Board" method="_exit_button_pressed"]

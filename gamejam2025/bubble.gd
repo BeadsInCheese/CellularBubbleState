@@ -60,9 +60,10 @@ func _process(delta: float) -> void:
 
 
 func _on_button_button_down() -> void:
-	print(board.turnOrder[board.currentTurn].get_custom_class_name())
+	print("clicked bubble, player=",board.turnOrder[board.currentTurn].playerType)
+	if(board.currentBoardStatePointer < len(board.boardHistory)-1):
+		return
 	if(board.turnOrder[board.currentTurn].get_is_player()==true and not(board.turnOrder[board.currentTurn].skip)):
-		#print(tileType)
 		setTileType(board.turnOrder[board.currentTurn].playerType)
 		board.lastMove=[tileIndex,board.turnOrder[board.currentTurn].playerType]
 		board.turnOrder[board.currentTurn].makingMove=false
