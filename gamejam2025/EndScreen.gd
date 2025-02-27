@@ -12,4 +12,5 @@ func _process(delta: float) -> void:
 
 
 func _on_button_down() -> void:
+	get_tree().root.get_node("root/Board").boardHistory.clear()
 	SceneNavigation._on_MainMenuPressed()

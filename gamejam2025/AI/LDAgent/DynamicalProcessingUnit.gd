@@ -21,11 +21,13 @@ func init():
 				Q.append(1)
 	for i in range(0,9):
 		var p : Point = Point.new()
-		p.x = floor(i/3) + 1
-		p.y = i % 3 + 1
+		p.y = floor(i/3) 
+		p.x = i % 3
 		p.piece = 0
 		p.score = [0,0,0,0,0,0,0]
+		p.dpu = self
 		R.append(p)
+	for p in R:
 		p.add_adjacents(p.x,p.y)
 
 func get_points():
@@ -90,14 +92,14 @@ func update_point(posX, posY, piece):
 
 func inference_generic(p_coord_x, p_coord_y, layer_index, diff, w_index, old_data : Array[Point]) -> int:
 	#TODO compute z_0 by Q values
-	var z = max(old_data)*randf()
+	var z = old_data[0].score[layer_index]*randf()
 	var t = randi_range(5,10)
 	print("z = ",z)
 	print("starting inference:", "w_index=",w_index,"G_",p_coord_x,p_coord_y,"(",layer_index,")")
 	
-	var j = randi() % len(old_data)
-	var p : Point = old_data[j]
-	var tr_chain = process(p.score[layer_index],layer_index,len(old_data) - j + t)
+	#var j = randi() % len(old_data)
+	#var p : Point = old_data[j]
+	#var tr_chain = process(p.score[layer_index],layer_index,len(old_data) - j + t)
 	
 	return 0
 

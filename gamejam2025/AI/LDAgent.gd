@@ -10,6 +10,7 @@ var G_default_opponent_coeff1 : float
 var G_default_opponent_coeff2 : float
 var W_target = [true,false]
 var DPU_list : Array[DynamicalProcessingUnit] = []
+var history = []
 
 static var N_ROUNDS = 1200
 static var DL_UNITS = 8
@@ -84,11 +85,15 @@ func generate_move(board : Array[Bubble]) -> int:
 	var n = 0
 	while(n < N_ROUNDS):
 		for dpu: DynamicalProcessingUnit in DPU_list:
-			for w in W:
-				for p : Point in dpu.get_points():
-					for layer : float in p.score:
-						pass
-						#dpu.inference_generic(p,layer,w)
+			for p : Point in dpu.get_points():
+				for layer : float in p.score:
+					#history.append(p)
+					var old_data : Array[Point] = []
+					old_data.append(p)
+					#for j in range(len(history),-1,-7):
+					#	old_data.append(history[j])
+					for i in len(W):
+						dpu.inference_generic(p.x,p.y,layer,W[i],i,old_data)
 						
 						
 				
@@ -109,7 +114,7 @@ func generate_move(board : Array[Bubble]) -> int:
 	return j
 	
 func parse(w_array):
-	var b_array = []
+	var b_array : Array[bool] = []
 	for i in range(len(w_array)):
 		if(w_array[i] < 0):
 			b_array.append(false)
@@ -132,7 +137,7 @@ func proceduralMove(board : Board):
 	var result
 	var color 
 	
-	print("agent is playing as: "+playerType)
+	print("agent is playing as: ",playerType)
 	 
 	if board.currentTurn == 0 || board.currentTurn == 4:
 		color = 1

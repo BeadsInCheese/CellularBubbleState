@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://d0m7td6t45bii"]
 
-[ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="1_7b2p2"]
+[ext_resource type="Theme" path="res://FontArtistic.tres" id="1_7b2p2"]
 [ext_resource type="Script" path="res://EndScreen.gd" id="2_300fv"]
 
 [node name="VictorAnnouncement" type="Node2D"]

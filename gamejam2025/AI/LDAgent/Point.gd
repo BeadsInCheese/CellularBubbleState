@@ -29,14 +29,14 @@ func chk_wsen_t_own(x,y,color) -> Array[Point]:
 
 func add_adjacents(posX,posY):
 	
-	if posY < 2 && dpu.get_points() [posX][posY+1] != 0:
-		adj.append(dpu.get_points()[posX][posY+1])
-	if posX < 2 && dpu.get_points()[posX+1][posY] != 0:
-		adj.append(dpu.get_points()[posX+1][posY])
-	if posY > 0 && dpu.get_points()[posX][posY-1] != 0:
-		adj.append(dpu.get_points()[posX][posY-1])
-	if posX > 0 && dpu.get_points()[posX-1][posY] != 0:
-		adj.append(dpu.get_points()[posX-1][posY])
+	if (posY < 2) && (dpu.get_points()[posX+3*(posY+1)].piece != 0):
+		adj.append(dpu.get_points()[posX+3*(posY+1)])
+	if (posX < 2) && (dpu.get_points()[posX+1+3*posY].piece != 0):
+		adj.append(dpu.get_points()[posX+1+3*posY])
+	if (posY > 0) && (dpu.get_points()[posX+3*(posY-1)].piece != 0):
+		adj.append(dpu.get_points()[posX+3*(posY-1)])
+	if posX > 0 && dpu.get_points()[posX-1+3*posY].piece != 0:
+		adj.append(dpu.get_points()[posX-1+3*posY])
 
 func next(from : Point):
 	return region.get_point(x-sign(from.x - x),y-sign(from.y - y))

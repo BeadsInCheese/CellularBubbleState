@@ -59,6 +59,7 @@ func diag_invert():
 			if(sign(p.y-d.y) == 1):
 				if(sign(p.x-d.x) == 1):
 					pass
+					#R.append()
 
 func corner_diag():
 	for d in data:
