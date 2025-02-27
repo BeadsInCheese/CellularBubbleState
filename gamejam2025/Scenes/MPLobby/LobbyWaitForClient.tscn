@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://i6kgoh1cv7oc"]
+[gd_scene load_steps=21 format=3 uid="uid://i6kgoh1cv7oc"]
 
 [ext_resource type="Script" path="res://Scenes/MPLobby/NetCode.gd" id="1_brlfs"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="1_uk8h5"]
@@ -7,7 +7,6 @@
 [ext_resource type="Shader" path="res://Scenes/MainMenu.gdshader" id="4_12big"]
 [ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="5_yibmp"]
 [ext_resource type="Script" path="res://Scenes/MPLobby/LobbyDisplayKeyCode.gd" id="6_gj6dc"]
-[ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="7_6ayo4"]
 [ext_resource type="Shader" path="res://Scenes/Transition.gdshader" id="8_3w2jm"]
 [ext_resource type="Script" path="res://Scenes/transition.gd" id="9_2c3u5"]
 
@@ -134,11 +133,6 @@ theme_override_font_sizes/normal_font_size = 61
 bbcode_enabled = true
 text = "[center]Lobby [/center]"
 script = ExtResource("6_gj6dc")
-
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("7_6ayo4")
-autoplay = true
-bus = &"Music"
 
 [node name="Transition" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_o7cbw")
