@@ -58,9 +58,14 @@ func _ready() -> void:
 	
 	var game=scene.instantiate()
 	get_tree().root.add_child(game)
+	_send_keep_alive()
 	pass # Replace with function body.
 
-
+func _send_keep_alive():
+	var packet = 9000
+	client.put_32(packet)
+	await get_tree().create_timer(5.0).timeout  # Send keep-alive every 5 seconds
+	_send_keep_alive()
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 var _status=-1
 signal _connected

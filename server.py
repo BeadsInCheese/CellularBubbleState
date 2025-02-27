@@ -29,6 +29,8 @@ def handle_client(client_socket, other_client_socket):
             # Unpack the received data into two integers
             int1 = struct.unpack('i', data)
             print(f"Received integers: {int1}")
+            if int1[0]==9000:
+                continue
             # Receive data from the client
             data = reliable_recv(client_socket,4)  # 2 integers = 8 bytes (4 bytes each)
             print("data: "+str(data))
