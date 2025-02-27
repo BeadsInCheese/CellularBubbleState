@@ -3,11 +3,22 @@ import socket
 import struct
 import threading
 import traceback
+
+
+def reliable_recv(sock, num_bytes):
+    buffer = b''
+    while len(buffer) < num_bytes:
+        chunk = sock.recv(num_bytes - len(buffer))
+        if not chunk:
+            raise RuntimeError("Connection closed")
+        buffer += chunk
+    return buffer
+
 def handle_client(client_socket, other_client_socket):
     while True:
         try:
             # Receive data from the client
-            data = client_socket.recv(4)  # 2 integers = 8 bytes (4 bytes each)
+            data = reliable_recv(client_socket,4)  # 2 integers = 8 bytes (4 bytes each)
             print(data)
             if not data:
                 print("connection issue disconnecting")
@@ -19,7 +30,7 @@ def handle_client(client_socket, other_client_socket):
             int1 = struct.unpack('i', data)
             print(f"Received integers: {int1}")
             # Receive data from the client
-            data = client_socket.recv(4)  # 2 integers = 8 bytes (4 bytes each)
+            data = reliable_recv(client_socket,4)  # 2 integers = 8 bytes (4 bytes each)
             print("data: "+str(data))
             if not data:
                 break
@@ -50,7 +61,7 @@ lobbys={}
 
 def handleRequest(client_socket):
     print("recieving key")
-    data = client_socket.recv(5)
+    data = reliable_recv(client_socket,5)
     key=data.decode('utf-8')
     print(f"Received: lobby key "+key)
     if(key in lobbys.keys()):
@@ -65,7 +76,7 @@ def handleRequest(client_socket):
         
 def main():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(("0.0.0.0", 25565))
+    server.bind(("0.0.0.0", 1256))
     server.listen(2)
     print("Server listening on port 25565")
 
