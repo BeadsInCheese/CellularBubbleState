@@ -87,8 +87,8 @@ func updateCursor():
 
 # Called when the node enters the scene tree for the first time.
 static var mp=true
-var temp=load("res://AI/LDAgent.gd")
-var temp2=load("res://AI/PlayerAgent.gd")
+var temp=load("res://AI/PlayerAgent.gd")
+var temp2=load("res://AI/MultiplayerAgent.gd")
 func _ready() -> void:
 	
 	for i in range(xsize):
