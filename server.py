@@ -76,7 +76,7 @@ def handleRequest(client_socket):
         
 def main():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(("0.0.0.0", 1256))
+    server.bind(("0.0.0.0", 25565))
     server.listen(2)
     print("Server listening on port 25565")
 
