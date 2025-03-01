@@ -49,13 +49,12 @@ func showall():
 			await get_tree().process_frame
 
 
-func _input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed("Quit"):
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("Quit"):
 		get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
 		get_tree().quit()
-		
-	if Input.is_action_just_pressed("Mute"):
-		print(Settings.masterVolume)
+
+	if event.is_action_pressed("Mute"):
 		if Settings.masterVolume == 0:
 			Settings.setMaster(80)
 		else:
