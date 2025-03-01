@@ -14,6 +14,7 @@ func _process(delta: float) -> void:
 func _on_text_changed() -> void:
 	if(len(text)>5):
 		text=text.substr(0,5)
+	text=text.to_upper()
 
 var rng = RandomNumberGenerator.new()
 func _on_host_button_pressed() -> void:

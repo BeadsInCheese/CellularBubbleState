@@ -33,7 +33,7 @@ func _blocking_read():
 			# Sleep for a short duration to avoid busy-waiting
 			await get_tree().process_frame
 func connect_to_server(host: String) -> void:
-	var err = await client.connect_to_host(host, 1256)
+	var err = await client.connect_to_host(host, 25565)
 	while  connected==false:
 		await get_tree().process_frame
 	if err == OK:
