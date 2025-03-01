@@ -143,6 +143,21 @@ var t = -1   # shortcut for Tower
 var b = -2   # shortcut for Bubble
 var rules: Dictionary = {
 	[
+		[ o, 1, o],
+		[ 3, 0, 3],
+		[ o, 1, o]
+	]: 0,
+	
+	[
+		[ o, t, o],
+		[ o, 0, o],
+		[ o, t, o]
+	]: b,
+	[
+		[t, 0, t],
+	]: 0,
+	
+	[
 		[ 2, 4],
 		[ 4, o]
 	]: 4,
@@ -177,15 +192,6 @@ var rules: Dictionary = {
 	[
 		[0, b, t],
 	]: b,
-	
-	[
-		[ o, t, o],
-		[ o, 0, o],
-		[ o, t, o]
-	]: b,
-	[
-		[t, 0, t],
-	]: 0,
 	
 	[
 		[ 0, t],
