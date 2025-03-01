@@ -10,11 +10,12 @@ var xsize: int = 12
 @export
 var ysize: int = 12
 
-
+var currentAgent
 var gridList: Array[Bubble] = []
 var latestTileIndexes: Array[int] = []
 static var boardHistory : Array[String] = []
 var currentBoardStatePointer = 0
+var loading = false
 
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
 var turnOrder=[]
@@ -52,12 +53,18 @@ func updateScore():
 
 var announced=false
 func changeTurn()->void:
+	currentAgent = turnOrder[currentTurn]
 	await turnOrder[currentTurn].makeMove(self)
-	currentTurn = (currentTurn+1) % 6
 	
-	boardHistory.resize(currentBoardStatePointer+1)
-	boardHistory.append(DataUtility.get_board_string(gridList,currentTurn))
-	currentBoardStatePointer += 1
+	print("type",currentAgent.playerType)
+	if(!loading):
+		currentTurn = (currentTurn+1) % 6
+		boardHistory.resize(currentBoardStatePointer+1)
+		boardHistory.append(DataUtility.get_board_string(gridList,currentTurn))
+		currentBoardStatePointer += 1
+	else:
+		print("false")
+		loading = false
 	
 	if(not(isEnd())):
 		changeTurn()

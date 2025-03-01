@@ -11,21 +11,27 @@ var score : Array[float]
 var piece
 var color : int
 
-enum Piece{EMPTY,TOWER_OWN,BUBBLE_OWN,TOWER_OPPONENT,BUBBLE_OPPONENT,TOWER,BUBBLE}
+enum {EMPTY,TOWER_OWN,BUBBLE_OWN,TOWER_OPPONENT,BUBBLE_OPPONENT,TOWER,BUBBLE}
 
 func chk_wsen_o_own(x,y,color) -> Array[Point]:
 	var G : Array[Point] = []
 	for p : Point in dpu.get_points()[x][y].adj:
-		if(p.piece == Piece.BUBBLE_OWN):
+		if(p.piece == BUBBLE_OWN):
 			G.append(p)
 	return G
 	
 func chk_wsen_t_own(x,y,color) -> Array[Point]:
 	var G : Array[Point] = []
 	for p : Point in dpu.get_points()[x][y].adj:
-		if(p.piece == Piece.TOWER_OWN):
+		if(p.piece == TOWER_OWN):
 			G.append(p)
 	return G
+
+func get_adj_intersect(L : Region):
+	var Q : Region = Region.new()
+	
+	Q.add_data(adj)
+	return Q.subtract(Q.intersect(L))
 
 func add_adjacents(posX,posY):
 	

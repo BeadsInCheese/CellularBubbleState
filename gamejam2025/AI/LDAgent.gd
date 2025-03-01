@@ -3,7 +3,7 @@ class_name LDAgent
 
 var agentColor
 var playerColor
-
+var time_step_player
 var G_default_own_coeff1 : float
 var G_default_own_coeff2 : float
 var G_default_opponent_coeff1 : float
@@ -25,6 +25,7 @@ func init_dpu():
 				u.offsetX = floor(i/10) + 1
 				u.offsetY = j
 				u.init()
+				u.currentTurn = time_step_player
 				DPU_list.append(u)
 				j = (j+1) % 10
 

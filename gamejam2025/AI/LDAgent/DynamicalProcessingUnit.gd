@@ -4,6 +4,7 @@ class_name DynamicalProcessingUnit
 var INS:Instruction
 var param:Parameters
 var color : int
+var currentTurn
 
 var offsetX
 var offsetY
@@ -11,7 +12,6 @@ var id
 
 var R : Array[Point] = []
 var Q : Array[float]#coefficients for Rel(h_u,R_ij(y)) Q[k+9*j+9*7*w]
-enum Piece {EMPTY,TOWER_OWN,BUBBLE_OWN,TOWER_OPPONENT,BUBBLE_OPPONENT,TOWER,BUBBLE}
 
 
 func init():
@@ -41,6 +41,7 @@ func get_N0(grid):
 
 func update(x,y,piece):
 	update_point(x,y,piece)
+	currentTurn += 1
 	
 
 #color player1 = 1, color player2 = 3
@@ -48,9 +49,9 @@ func update_layers():
 	for point : Point in R:
 		#Layer 0 - standard scores(1 if own piece, -1 if enemy piece, 0 for empty)
 		#Rule0(Diag-capture)
-		if(point.piece == Piece.BUBBLE_OWN):
+		if(point.piece == Point.BUBBLE_OWN):
 			for p in point.adj_diag:
-				if(p.piece == Piece.BUBBLE_OWN):
+				if(p.piece == Point.BUBBLE_OWN):
 					pass
 		#if(point.piece != 0):
 			#add(point.x,point.y,1 if point.color == color else -1,0)
@@ -70,24 +71,24 @@ func update_layers():
 				add(point.x,point.y,-2.8,1)
 		#Layer2 - rule-dependent scores
 		
-		if(point.piece == Piece.TOWER_OWN):
+		if(point.piece == Point.TOWER_OWN):
 			for p in point.adj:
-				if(p.piece == Piece.BUBBLE_OWN):
+				if(p.piece == Point.BUBBLE_OWN):
 					pass
 
 
 func update_point(posX, posY, piece):
 	var B = [[0,1,2],[3,4,5],[6,7,8]]
 	if(piece == 1 && color == 1) || (piece == 3 && color == 3):
-		R[B[posX+1][posY+1]].piece = Piece.TOWER_OWN
+		R[B[posX+1][posY+1]].piece = Point.TOWER_OWN
 	elif(piece == 1 && color == 3) || (piece == 1 && color == 3):
-		R[B[posX+1][posY+1]].piece = Piece.TOWER_OPPONENT
+		R[B[posX+1][posY+1]].piece = Point.TOWER_OPPONENT
 	elif(piece == 2 && color == 1) || (piece == 4 && color == 3):
-		R[B[posX+1][posY+1]].piece = Piece.BUBBLE_OWN
+		R[B[posX+1][posY+1]].piece = Point.BUBBLE_OWN
 	elif(piece == 2 && color == 3) || (piece == 4 && color == 1):
-		R[B[posX+1][posY+1]].piece = Piece.BUBBLE_OPPONENT
+		R[B[posX+1][posY+1]].piece = Point.BUBBLE_OPPONENT
 	elif(piece == 0):
-		R[B[posX+1][posY+1]].piece = Piece.EMPTY
+		R[B[posX+1][posY+1]].piece = Point.EMPTY
 
 
 func inference_generic(p_coord_x, p_coord_y, layer_index, diff, w_index, old_data : Array[Point]) -> int:
@@ -99,11 +100,12 @@ func inference_generic(p_coord_x, p_coord_y, layer_index, diff, w_index, old_dat
 	
 	#var j = randi() % len(old_data)
 	#var p : Point = old_data[j]
-	#var tr_chain = process(p.score[layer_index],layer_index,len(old_data) - j + t)
+	#var turn = (currentTurn + t) % 6
+	#var tr_chain = process(p.score[layer_index],layer_index,len(old_data) - j + t,turn)
 	
 	return 0
 
-func process(metricTarget,layer,span):
+func process(metricTarget,layer,span,turn):
 	var tries = 0
 	var gamma = []
 	var g
@@ -111,7 +113,7 @@ func process(metricTarget,layer,span):
 	var final_ins_list
 	#TODO (h_i,h_j) functions
 	while(tries < param.MAX_TRIES):
-		ins_list = INS.get_list(R,span) #[instr#1_move1,instr#1_move2,...]
+		ins_list = INS.get_list(R,span,turn) #[instr#1_move1,instr#1_move2,...]
 		var E = R
 		g = 0
 		for i in range(len(ins_list)):

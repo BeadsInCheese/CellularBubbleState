@@ -5,7 +5,7 @@ var x
 var y
 var value_change
 
-func get_list(R,n):
+func get_list(R,n,turn):
 	#TODO use R in I generation
 	var list = []
 	for i in range(0,n):

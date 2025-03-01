@@ -6,9 +6,18 @@ var list : Array[String]
 
 func _button_pressed():
 	
-	var board = find_parent("Board")#get_parent().get_parent().get_parent().get_parent()
+	var board : Board = find_parent("Board")
+	
+	print("currentAgent",board.currentAgent.playerType)
+	
 	board.boardHistory = DataUtility.load_from_file(n)
+	board.currentBoardStatePointer = len(board.boardHistory)-1
 	board.decode_board()
+
+	board.loading = true
+	print("true")
+	board.currentAgent.makingMove = false
+	
 	get_tree().root.get_node("root/Sidebar/statusLabel").set_text("save loaded!")
 	
 
