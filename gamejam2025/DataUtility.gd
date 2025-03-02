@@ -19,7 +19,6 @@ static func get_board_string(b : Array[Bubble], currentTurn):
 
 static func save_to_file(b : Array[String], title : String):
 	DirAccess.make_dir_absolute("Saves")
-	print(DirAccess.get_open_error())
 		
 	var file = FileAccess.open("Saves/save-"+title, FileAccess.WRITE)
 	
@@ -81,8 +80,6 @@ static func compute_format(b : Array[Bubble]):
 	return char_map(s)
 	
 static func char_map(s):
-	
-	
 	var sine_transform = ""
 	for i in range(0,len(s),2):
 		var n

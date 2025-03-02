@@ -7,6 +7,9 @@ func setPlayer1(index):
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	Board.mp=false
+	
+	Settings.P1Index = 0
+	Settings.P2Index = 0
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
