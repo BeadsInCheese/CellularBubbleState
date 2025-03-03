@@ -146,6 +146,15 @@ bus = &"Music"
 
 [node name="Transition" parent="." instance=ExtResource("8_3ddsp")]
 
+[node name="SaveTrain" type="Button" parent="."]
+offset_left = 1094.0
+offset_top = 12.0
+offset_right = 1138.0
+offset_bottom = 48.0
+size_flags_horizontal = 0
+size_flags_stretch_ratio = 3.46
+text = "SaveTrain"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 offset_left = 910.0
 offset_top = 606.0
@@ -177,6 +186,7 @@ layout_mode = 2
 text = "Exit"
 
 [connection signal="tree_exiting" from="Board" to="Board" method="_on_tree_exiting"]
+[connection signal="pressed" from="SaveTrain" to="Board" method="_trainSave_button_pressed"]
 [connection signal="gui_input" from="HBoxContainer" to="Board" method="_on_h_box_container_gui_input"]
 [connection signal="pressed" from="HBoxContainer/Button" to="Board" method="_skip_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/Button4" to="Board" method="_mute_button_pressed"]

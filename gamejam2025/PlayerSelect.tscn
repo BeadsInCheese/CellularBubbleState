@@ -121,13 +121,15 @@ bbcode_enabled = true
 text = "[center]VS. [/center]"
 
 [node name="OptionButton" parent="." instance=ExtResource("6_t4mh3")]
-item_count = 4
+item_count = 5
 popup/item_1/text = "random bot"
 popup/item_2/text = "Golgath"
 popup/item_2/icon = ExtResource("10_iyo5k")
 popup/item_3/text = "Sera"
 popup/item_3/icon = ExtResource("8_vmg0i")
 popup/item_3/id = 2
+popup/item_4/text = "Walter"
+popup/item_4/id = 4
 
 [node name="BackButton" parent="." instance=ExtResource("7_dknv5")]
 
@@ -144,13 +146,15 @@ offset_left = 799.0
 offset_top = 231.0
 offset_right = 959.0
 offset_bottom = 367.0
-item_count = 4
+item_count = 5
 popup/item_1/text = "RandomBot"
 popup/item_2/text = "Golgath"
 popup/item_2/icon = ExtResource("10_iyo5k")
 popup/item_3/text = "Sera"
 popup/item_3/icon = ExtResource("8_vmg0i")
 popup/item_3/id = 2
+popup/item_4/text = "Walter"
+popup/item_4/id = 4
 
 [node name="Transition" parent="." instance=ExtResource("7_tav7e")]
 

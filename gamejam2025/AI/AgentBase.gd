@@ -24,7 +24,8 @@ func makeRandomMove(observation:Board):
 				return
 	observation.gridList[(x+offset-1)%len(observation.gridList)].setTileType(playerType)
 	observation.lastMove=[(x+offset-1)%len(observation.gridList),observation.turnOrder[observation.currentTurn].playerType]
-
+func onTrainEnd(history,label):
+	pass
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass

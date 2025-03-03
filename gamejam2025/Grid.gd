@@ -32,7 +32,7 @@ var p1AgentInstance
 var p2AgentInstance
 var player1Agent=load("res://AI/LDAgent.gd")
 var player2Agent=load("res://AI/PlayerAgent.gd")
-var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxAgent.gd"),load("res://AI/LDAgent.gd")]
+var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxAgent.gd"),load("res://AI/LDAgent.gd"),load("res://AI/NNAgent.gd")]
 var automataAgent: AutomataAgent = load("res://AI/AutomataAgent.gd").new()
 
 var victor=-1
@@ -52,11 +52,22 @@ func updateScore():
 			player2Score += 1
 
 var announced=false
+func getVictor():
+	var v
+	if player1Score==player2Score:
+		v=0.5
+	elif player1Score>player2Score:
+		v=0
+	else:
+		v=1
+	return v
+var dataAquisition=true
+var  dataCounter=0
 func changeTurn()->void:
 	currentAgent = turnOrder[currentTurn]
 	await turnOrder[currentTurn].makeMove(self)
 	
-	print("type",currentAgent.playerType)
+	#print("type",currentAgent.playerType)
 	if(!loading):
 		currentTurn = (currentTurn+1) % 6
 		boardHistory.resize(currentBoardStatePointer+1)
@@ -66,10 +77,26 @@ func changeTurn()->void:
 		print("false")
 		loading = false
 	
+	updateScore()
+	#print(player1Score,"   ",player2Score)
 	if(not(isEnd())):
 		changeTurn()
-
-	updateScore()
+	
+	if dataAquisition and isEnd():
+		#print(boardHistory)
+		#_trainSave_button_pressed()
+		turnOrder[0].onTrainEnd(boardHistory,getVictor())
+		for i in gridList:
+			i.setTileType(0)
+		currentBoardStatePointer=0
+		boardHistory=[]
+		turnOrder[1].nnas=turnOrder[0].nnas
+		#trainer.delete_folder_contents("Train/TrainingData")
+		dataCounter+=1
+			
+			
+		changeTurn()
+		pass
 	gui.updateSidebar(currentTurn,player1Score,player2Score)
 	updateCursor()
 	if(!announced and isEnd()):
@@ -181,7 +208,9 @@ func _skip_button_pressed() -> void:
 	turnOrder[currentTurn].skip=!turnOrder[currentTurn].skip
 
 func _save_button_pressed() -> void:
-	DataUtility.save_to_file(boardHistory, Time.get_datetime_string_from_system())
+	DataUtility.save_to_file(boardHistory, "save-"+Time.get_datetime_string_from_system(),"res://Saves")
+func _trainSave_button_pressed() -> void:
+	DataUtility.save_to_file(boardHistory, str(getVictor())+Time.get_datetime_string_from_system(),"res://Train/TrainingData")
 	
 func _load_button_pressed() -> void:
 	var x : Node2D = load("res://LoadGame.tscn").instantiate()

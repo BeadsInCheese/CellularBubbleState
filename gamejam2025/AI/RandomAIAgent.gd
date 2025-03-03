@@ -5,7 +5,7 @@ class_name RandomAI
 func makeMove(observation:Board):
 	var x=randi()%100
 	var offset=0
-	await observation.get_tree().create_timer(1.0).timeout
+	await observation.get_tree().create_timer(0.10).timeout
 	for i in range(x):
 		while(observation.gridList[(i+offset)%len(observation.gridList)].tileType!=0):
 			offset+=1

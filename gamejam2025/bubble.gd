@@ -17,7 +17,8 @@ func appear():
 	$AudioStreamPlayer2D.play()
 	for i in range(100):
 		$BubbleGfx.material.set_shader_parameter("treshold",0.05*(10-i))
-		await get_tree().process_frame
+		if get_tree()!=null:
+			await get_tree().process_frame
 
 func update_gfx(type):
 	#print("update called "+str(type))

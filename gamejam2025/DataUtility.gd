@@ -17,11 +17,12 @@ static func get_board_string(b : Array[Bubble], currentTurn):
 	return str
 	
 
-static func save_to_file(b : Array[String], title : String):
+static func save_to_file(b : Array[String], title : String,path : String):
 	DirAccess.make_dir_absolute("Saves")
-		
-	var file = FileAccess.open("Saves/save-"+title, FileAccess.WRITE)
-	
+	print(title.replace(":","-"))
+	var file = FileAccess.open(path+"/"+title.replace(":","-"), FileAccess.WRITE)
+	if(file==null):
+		print(error_string(FileAccess.get_open_error()))
 	for i in range(len(b)):
 		file.store_line(b[i])
 	
@@ -73,7 +74,7 @@ static func compute_format(b : Array[Bubble]):
 			
 	
 	
-	print("test decode:",decode(char_map(s)))
+	#print("test decode:",decode(char_map(s)))
 	
 	
 	
