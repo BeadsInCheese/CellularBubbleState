@@ -50,7 +50,11 @@ func updateScore():
 			player1Score += 1
 		if(i.tileType == 3 or i.tileType == 4):
 			player2Score += 1
-
+func asArray():
+	var arr=[]
+	for i in gridList:
+		arr.append(i.tileType)
+	return arr
 var announced=false
 func getVictor():
 	var v
@@ -61,7 +65,7 @@ func getVictor():
 	else:
 		v=1
 	return v
-var dataAquisition=true
+var dataAquisition=false
 var  dataCounter=0
 func changeTurn()->void:
 	currentAgent = turnOrder[currentTurn]
@@ -86,11 +90,11 @@ func changeTurn()->void:
 		#print(boardHistory)
 		#_trainSave_button_pressed()
 		turnOrder[0].onTrainEnd(boardHistory,getVictor())
+		turnOrder[1].onTrainEnd(boardHistory,getVictor())
 		for i in gridList:
 			i.setTileType(0)
 		currentBoardStatePointer=0
 		boardHistory=[]
-		turnOrder[1].nnas=turnOrder[0].nnas
 		#trainer.delete_folder_contents("Train/TrainingData")
 		dataCounter+=1
 			
@@ -149,6 +153,7 @@ func _ready() -> void:
 	
 	await p1AgentInstance.init(self)
 	await p2AgentInstance.init(self)
+	await automataAgent.init(self)
 	
 	turnOrder.append(p1AgentInstance)
 	turnOrder.append(p2AgentInstance)
@@ -191,6 +196,12 @@ func getGridTileType(xpos: int, ypos: int, board: Array):
 		return null
 
 	return board[xpos + ypos * ysize]
+static func getGridTileTypeStatic(xsize:int,ysize:int,xpos: int, ypos: int, board: Array):
+	if xpos < 0 or ypos < 0 or xpos >= xsize or ypos >= ysize:
+		return null
+
+	return board[xpos + ypos * ysize]
+
 
 func decode_board():
 	var s = boardHistory[currentBoardStatePointer]
