@@ -8,7 +8,10 @@ func makeMove(observation:Board):
 	moveMade.emit(game_board)
 var automata:Automata=null
 func init(board:Board):
+	game_board=board
 	automata=board.get_child(0)
+	automata.printRules()
+	compareProcessingTime()
 func _ready() -> void:
 	pass # Replace with function body.
 
@@ -21,19 +24,49 @@ func _process(delta: float) -> void:
 func get_custom_class_name():
 	return "AutomataAgent"
 	
-
+func compareProcessingTime():
+	var iter=1
+	var baseGrid = game_board.getBoardCopy()
+	var tempGrid = baseGrid.duplicate(true)
+	
+	var start_time: float = Time.get_unix_time_from_system()
+	for k in iter:
+		automata.AutomataStep(tempGrid)
+	var end_time: float = Time.get_unix_time_from_system()
+	var result=end_time-start_time
+	print("time took: "+str(result))
+	start_time = Time.get_unix_time_from_system()
+	for k in iter:
+		for i in range(len(tempGrid)):
+			var xpos:int=i%game_board.xsize
+			var ypos:int=i/game_board.ysize
+			#print(len(baseGrid))
+			var r = checkRulesForPos(xpos, ypos, baseGrid)#automata.checkRuleForPos(xpos, ypos, baseGrid,rules)#
+			#print(result)
+			if result != -1:
+				tempGrid[i] = result
+	end_time = Time.get_unix_time_from_system()
+	result=end_time-start_time
+	print("time took: "+str(result))
+	
+	
+	
+	
+	
 func automata_step() -> void:
 	#print("automata")
 	var baseGrid = game_board.getBoardCopy()
 	var tempGrid = baseGrid.duplicate(true)
-	for i in range(len(tempGrid)):
-		var xpos:int=i%game_board.xsize
-		var ypos:int=i/game_board.ysize
-		
-		var result = checkRulesForPos(xpos, ypos, baseGrid)#automata.checkRuleForPos(xpos, ypos, baseGrid,rules)#
-		#print(result)
-		if result != -1:
-			tempGrid[i] = result
+	var result=automata.AutomataStep(tempGrid)
+	print(tempGrid)
+	#for i in range(len(tempGrid)):
+	#	var xpos:int=i%game_board.xsize
+	#	var ypos:int=i/game_board.ysize
+	#	print(len(baseGrid))
+	#	var result = automata.AutomataStep(baseGrid)#checkRulesForPos(xpos, ypos, baseGrid)#automata.checkRuleForPos(xpos, ypos, baseGrid,rules)#
+	#	#print(result)
+	#	if result != -1:
+	#		tempGrid[i] = result
 	
 	for i in range(len(tempGrid)):
 		var currentTile = game_board.gridList[i].tileType

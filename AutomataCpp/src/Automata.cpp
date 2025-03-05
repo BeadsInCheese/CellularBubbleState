@@ -4,6 +4,12 @@
 using namespace godot;
 
 void Automata::_bind_methods() {
+    
+    ClassDB::bind_method(D_METHOD("AutomataStep", "board"),&Automata::AutomataStep);
+    ClassDB::bind_method(D_METHOD("printRules"),&Automata::printRules);
+
+
+
     ClassDB::bind_method(D_METHOD("checkRuleForPos", "xpos", "ypos", "board", "rules"), &Automata::checkRuleForPosStatic);
     ClassDB::bind_method(D_METHOD("checkRule", "matchGrid", "matchResult", "xpos", "ypos", "xmark", "ymark", "board"), &Automata::checkRuleStatic);
     ClassDB::bind_method(D_METHOD("getGridTileType", "xsize", "ysize", "xpos", "ypos", "board"), &Automata::getGridTileTypeStatic);
@@ -13,14 +19,346 @@ void Automata::_bind_methods() {
     ClassDB::bind_method(D_METHOD("rotate1x3Grid", "grid"), &Automata::rotate1x3Grid);
     ClassDB::bind_method(D_METHOD("rotate3x3Grid", "grid"), &Automata::rotate3x3Grid);
     ClassDB::bind_method(D_METHOD("getMarkIndexes", "matchGrid"), &Automata::getMarkIndexes);
-}
 
-Automata::Automata() {
+
+
+
 }
+std::vector<rule> rules;
+
 
 Automata::~Automata() {
     // Cleanup code.
 }
+
+
+
+rule Automata::rotate( rule& r) {
+    rule rotated; 
+    
+
+        // Perform a 90-degree clockwise rotation:
+        rotated.rows[0] = r.rows[6];
+        rotated.rows[1] = r.rows[3];
+        rotated.rows[2] = r.rows[0];
+        
+        rotated.rows[3] = r.rows[7];
+        rotated.rows[4] = r.rows[4]; // Center remains the same
+        rotated.rows[5] = r.rows[1];
+        
+        rotated.rows[6] = r.rows[8];
+        rotated.rows[7] = r.rows[5];
+        rotated.rows[8] = r.rows[2];
+        
+        // Copy other fields if any
+        rotated.result = r.result;
+    
+        return rotated;
+}
+
+void Automata::printRules(){
+
+    for(auto &i :rules){
+        UtilityFunctions::print("Rule: ");
+        for(int j=0;j<3; j++){
+            UtilityFunctions::print(String::num(i.rows[j*3])+" , "+String::num(i.rows[j*3+1])+" , "+String::num(i.rows[j*3+2]));
+        }
+
+        UtilityFunctions::print("Result: "+String::num(i.result));
+    }
+
+}
+std::vector<rule> Automata::getRules(){
+    std::vector<rule> rules;
+
+    rule r;
+    r.rows={-1,2,-1,
+            2,4,-1,
+            -1,-1,-1};
+    r.result=0;
+    rules.push_back(r);
+    rule r2;
+    r2.rows={2,2,2,
+            -1,-1,-1,
+            -1,-1,-1};
+    r2.result=2;
+    rules.push_back(r2);
+    
+    rule r3;
+    r3.rows={-1,-1,-1,
+            -1,-1,1,
+            -1,1,2};
+    r3.result=2;
+    rules.push_back(r3);
+
+    rule r4;
+    r4.rows={-1,1,-1,
+            -1,0,-1,
+            -1,1,-1};
+    r4.result=2;
+    rules.push_back(r4);
+
+    
+    rule r5;
+    r5.rows={-1,-1,-1,
+            -1,0,2,
+            -1,1,2};
+    r5.result=2;
+    rules.push_back(r5);
+
+    rule r6;
+    r6.rows={-1,-1,-1,
+            -1,2,0,
+            -1,1,2};
+    r6.result=0;
+    rules.push_back( r6);
+    int rl=rules.size();
+    for (int j=0; j<rl;j++){
+        rule nr;
+        bool changed=false;
+        for(int k=0; k<9; k++){
+            auto x=rules[j].rows[k];
+            if(x==2){
+
+                nr.rows[k]=4;
+                changed=true;
+            }
+            else if(x==1){
+                changed=true;
+                nr.rows[k]=3;
+            }
+            else if(x==3){
+                changed=true;
+                nr.rows[k]=1;
+            }
+            else if(x==4){
+                changed=true;
+                nr.rows[k]=2;
+            }else{
+                nr.rows[k]=x;
+            }
+           
+        }
+        nr.result=rules[j].result;
+        if(rules[j].result==1){
+            nr.result=3;
+        }
+        else if(rules[j].result==2){
+            nr.result=4;
+        }else if(rules[j].result==3){
+            nr.result=1;
+        }else if(rules[j].result==4){
+            nr.result=2;
+        }else{
+            nr.result=rules[j].result;
+        }
+        
+        if(changed){
+            rules.push_back(nr);
+        }
+    }
+    rl=rules.size();
+    
+    for (int j=0; j<rl;j++){ 
+        rule rot=rules[j];
+        for(int i=0; i<4;i++){
+            rot=rotate(rot);
+            rules.push_back(rot);
+
+        }
+    }
+    return rules;
+}
+Automata::Automata() {
+    auto r=getRules();
+    UtilityFunctions::print("Automata rules initiated rulecount "+String::num(r.size()));
+    rules=r;
+}
+int Automata::getTile(int xpos,int ypos,int xsize,int ysize,std::array<int,144> &board){
+    if (xpos < 0 || ypos < 0 || xpos >= xsize || ypos >= ysize) {
+        return 5;
+    }
+    return board[xpos + ypos * ysize];
+}
+
+bool Automata::match3x3(int posx,int posy,std::array<int,144> &board,rule &r){
+    
+    for(int i=0; i<3;i++){
+        for(int j=0; j<3;j++){
+            
+            int a=r.rows[i+j*3];
+            int b=getTile(posx-1+i,posy+j-1,12,12,board);
+            
+            if(a==-1){
+                continue;
+            }
+            if(b!=a){
+                return false;
+            }
+            
+        }
+        
+        
+    }
+    return true;
+
+    
+}
+int Automata::evaluateTile(int xpos,int ypos,std::array<int,144> &board,Array &target){
+        int pos=xpos+ypos*12;
+        //push rule
+        if(board[pos]==0){
+            if(getTile(xpos+1,ypos,12,12,board)==2){
+                if(getTile(xpos+2,ypos,12,12,board)==1){
+                    target[pos]=2;
+                    return 0;
+                }
+            }
+
+            else if(getTile(xpos-1,ypos,12,12,board)==2){
+                if(getTile(xpos-2,ypos,12,12,board)==1){
+                    target[pos]=2;
+                    return 0;
+                }
+            }
+            else if(getTile(xpos,ypos+1,12,12,board)==2){
+                if(getTile(xpos,ypos+2,12,12,board)==1){
+                    target[pos]=2;
+
+                    return 0;
+                }
+            }
+
+            else if(getTile(xpos,ypos-1,12,12,board)==2){
+                if(getTile(xpos,ypos-2,12,12,board)==1){
+                    target[pos]=2;
+                    return 0;
+                }
+            }
+
+            else if(getTile(xpos+1,ypos,12,12,board)==4){
+                if(getTile(xpos+2,ypos,12,12,board)==3){
+                    target[pos]=4;
+                    return 0;
+                }
+            }
+
+            else if(getTile(xpos-1,ypos,12,12,board)==4){
+                if(getTile(xpos-2,ypos,12,12,board)==3){
+                    target[pos]=4;
+                    return 0;
+                }
+            }
+            else if(getTile(xpos,ypos+1,12,12,board)==4){
+                if(getTile(xpos,ypos+2,12,12,board)==3){
+                    target[pos]=4;
+                    return 0;
+                }
+            }
+
+            else if(getTile(xpos,ypos-1,12,12,board)==4){
+                if(getTile(xpos,ypos-2,12,12,board)==3){
+                    target[pos]=4;
+                    return 0;
+                }
+            }
+        }
+        //birth Destroy 1
+        else if(board[pos]==1){
+            if(getTile(xpos+1,ypos,12,12,board)==0){
+                if(getTile(xpos+2,ypos,12,12,board)==1){
+                    target[pos]=0;
+                    return 0;
+                }
+            }
+
+             if(getTile(xpos-1,ypos,12,12,board)==0){
+                if(getTile(xpos-2,ypos,12,12,board)==1){
+                    target[pos]=0;
+                    return 0;
+                }
+            }
+             if(getTile(xpos,ypos+1,12,12,board)==0){
+                if(getTile(xpos,ypos+2,12,12,board)==1){
+                    target[pos]=0;
+                    return 0;
+                }
+            }
+
+             if(getTile(xpos,ypos-1,12,12,board)==0){
+                if(getTile(xpos,ypos-2,12,12,board)==1){
+                    target[pos]=0;
+                    return 0;
+                }
+            }
+
+            //birth destroy 2
+        }else if(board[pos]==3) {
+            if(getTile(xpos+1,ypos,12,12,board)==0){
+                if(getTile(xpos+2,ypos,12,12,board)==3){
+                    target[pos]=0;
+                    return 0;
+                }
+            }
+
+             if(getTile(xpos-1,ypos,12,12,board)==0){
+                if(getTile(xpos-2,ypos,12,12,board)==3){
+                    target[pos]=0;
+                    return 0;
+                }
+            }
+             if(getTile(xpos,ypos+1,12,12,board)==0){
+                if(getTile(xpos,ypos+2,12,12,board)==3){
+                    target[pos]=0;
+                    return 0;
+                }
+            }
+
+             if(getTile(xpos,ypos-1,12,12,board)==0){
+                if(getTile(xpos,ypos-2,12,12,board)==3){
+                    target[pos]=0;
+                    return 0;
+                }
+            }
+
+        }
+
+
+        for(rule &j :rules){
+            if(match3x3(xpos,ypos,board,j)){
+               target[xpos+ypos*12]= j.result;
+               break;
+
+
+            }
+        }
+        return 0;
+}
+void Automata::runStep(std::array<int,144> &board,Array& target){
+    for(int i=0; i< board.size(); i++){
+        int x=i%12;
+        int y=i/12;
+
+        evaluateTile(x,y,board,target);
+    }
+
+}
+Array Automata::AutomataStep(Array board){
+    std::array<int, 144> b;
+    for(int i=0; i<144; i++){
+        b[i]=int(board[i]);
+
+    }
+
+    runStep(b,board);
+
+    return board;
+
+}
+
+
+
+
 
 int Automata::checkRuleForPosStatic(int xpos, int ypos, Array board,Dictionary rules) {
     for (int idx = 0; idx < rules.size(); ++idx) {

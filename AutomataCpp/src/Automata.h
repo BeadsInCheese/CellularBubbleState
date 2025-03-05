@@ -8,6 +8,11 @@
 static constexpr int o = 5; //# shortcut for Any
 static constexpr int t = -1;   //# shortcut for Tower
 static constexpr int b = -2;   //# shortcut for Bubble
+struct rule{
+    std::array<int,9> rows;
+    int result;
+};
+
 namespace godot {
 
   
@@ -23,6 +28,16 @@ protected:
     static void _bind_methods();
 
 public:
+
+    void printRules();
+    rule rotate(rule& r);
+    std::vector<rule> getRules();
+    int getTile(int xpos,int ypos,int xsize,int ysize,std::array<int,144> &board);
+
+    bool match3x3(int posx,int posy,std::array<int,144> &board,rule &r);
+    int evaluateTile(int xpos,int ypos,std::array<int,144> &board,Array &target);
+    void runStep(std::array<int,144> &board,Array &target);
+    Array AutomataStep(Array board);
 
 
 
