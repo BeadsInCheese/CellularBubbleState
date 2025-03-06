@@ -120,13 +120,8 @@ func rotate3x1Grid(grid: Array) -> Array:
 func rotate1x3Grid(grid: Array) -> Array:
 	return [[grid[0][0]], [grid[0][1]], [grid[0][2]]]
 
-func rotate3x3Grid(grid: Array) -> Array:
-	var result = []
-	for i in range(3):
-		result.append([])
-		for j in range(3):
-			result[-1].append(grid[j][2-i])
-	return result
+func rotate3x3Grid(g: Array) -> Array:
+	return [[g[0][2],g[1][2],g[2][2]], [g[0][1],g[1][1],g[2][1]], [g[0][0], g[1][0], g[2][0]]]
 	
 
 func getMarkIndexes(matchGrid: Array) -> Array:
