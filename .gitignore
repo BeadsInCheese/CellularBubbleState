@@ -16,3 +16,6 @@ data_*/
 mono_crash.*.json
 
 gamejam2025/Saves/
+
+AutomataCpp/godot-cpp/
+

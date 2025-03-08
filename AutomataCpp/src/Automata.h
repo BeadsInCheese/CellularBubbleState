@@ -1,7 +1,7 @@
 #ifndef AUTOMATA
 #define AUTOMATA
 
-#include <godot_cpp/classes/Node2D.hpp>
+#include <godot_cpp/classes/node2d.hpp>
 #include <map>
 #include <vector>
 
