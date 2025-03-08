@@ -56,7 +56,7 @@ func MCTS(depth,board,observation:Board):
 		if(board[i]==0):
 			temp[i]=playerType
 			var value=1
-			for j in range (100):
+			for j in range (1000):
 				var v=simulateRandom(depth,temp,observation,observation.currentTurn)
 
 				value+=v
@@ -66,7 +66,7 @@ func MCTS(depth,board,observation:Board):
 			if(value>bestMove[0]):
 				bestMove[0]=value
 				bestMove[1]=i
-			print(bestMove)
+			#print(bestMove)
 	if bestMove[0]==-1:
 		return null
 
