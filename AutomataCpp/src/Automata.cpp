@@ -108,10 +108,10 @@ std::vector<rule> Automata::getRules(){
 
     rule r6;
     r6.rows={-1,-1,-1,
-            -1,2,0,
-            -1,1,2};
+            0,2,-1,
+            1,2,-1};
     r6.result=0;
-    rules.push_back( r6);
+    rules.push_back(r6);
     rule r7;
     r7.rows={-1,-1,-1,
             2,0,-1,
@@ -121,10 +121,10 @@ std::vector<rule> Automata::getRules(){
 
     rule r8;
     r8.rows={-1,-1,-1,
-            0,2,-1,
-            2,1,-1};
+            -1,2,0,
+            -1,2,1};
     r8.result=0;
-    rules.push_back( r8);
+    rules.push_back(r8);
     int rl=rules.size();
     for (int j=0; j<rl;j++){
         rule nr;
