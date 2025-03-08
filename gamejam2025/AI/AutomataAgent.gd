@@ -76,15 +76,8 @@ func automata_step() -> void:
 			game_board.gridList[i].setTileType(newTile, true)
 
 static func simulateAutomataStep(board:Array):
-		var tempGrid = board.duplicate(true)
-		var result = automata.AutomataStep(tempGrid)
+		board = automata.AutomataStep(board)
 		
-		for i in range(len(tempGrid)):
-			var currentTile = board[i]
-			var newTile = tempGrid[i]
-			
-			if currentTile != newTile:
-				board[i]=newTile
 static func checkRulesForPosStatic(xpos: int, ypos: int, board: Array) -> int:
 	for matchGrid in rules.keys():
 		var grid = matchGrid
