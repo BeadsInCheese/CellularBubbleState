@@ -6,7 +6,7 @@ func makeMove(observation:Board):
 	game_board = observation
 	automata_step()
 	moveMade.emit(game_board)
-var automata:Automata=null
+static var automata:Automata=null
 func init(board:Board):
 	game_board=board
 	automata=board.get_child(0)
@@ -77,13 +77,7 @@ func automata_step() -> void:
 
 static func simulateAutomataStep(board:Array):
 		var tempGrid = board.duplicate(true)
-		for i in range(len(tempGrid)):
-			var xpos:int=i%12
-			var ypos:int=i/12
-			
-			var result = checkRulesForPosStatic(xpos, ypos, board)
-			if result != -1:
-				tempGrid[i] = result
+		var result = automata.AutomataStep(tempGrid)
 		
 		for i in range(len(tempGrid)):
 			var currentTile = board[i]
