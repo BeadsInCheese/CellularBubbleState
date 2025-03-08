@@ -210,7 +210,6 @@ func decode_board():
 	for i in range(0,len(s)):
 		if gridList[i].tileType != int(s[i]):
 			gridList[i].setTileType(int(s[i]))
-	print("board history ",boardHistory)
 
 func _on_tree_exiting() -> void:
 	Input.set_custom_mouse_cursor(null)
