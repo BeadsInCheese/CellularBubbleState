@@ -208,7 +208,8 @@ func decode_board():
 	currentTurn = int(s[len(s) - 1])
 	s = DataUtility.decode(s.substr(0,len(s)-1))
 	for i in range(0,len(s)):
-		gridList[i].setTileType(int(s[i]))
+		if gridList[i].tileType != int(s[i]):
+			gridList[i].setTileType(int(s[i]))
 	print("board history ",boardHistory)
 
 func _on_tree_exiting() -> void:
