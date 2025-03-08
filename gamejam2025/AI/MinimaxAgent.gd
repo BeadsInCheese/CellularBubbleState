@@ -39,11 +39,8 @@ var calculated_action: int
 
 func minimax_step() -> void:
 	var tempBoard = game_board.getBoardCopy()
-	var minimax_board = []
-	for tile in tempBoard:
-		minimax_board.append([tile])
 	
-	var action: Array = minimax.action(minimax_board, game_board.currentTurn, 3, 18, 4) # hard: 4, 16    medium: 3, 20
+	var action: Array = minimax.action(tempBoard, game_board.currentTurn, 5, 18, 2) # hard: 4, 16    medium: 3, 20
 	if len(action) == 0:
 		return
 
@@ -54,10 +51,10 @@ func minimax_step() -> void:
 # Returns a new board state after applying the move
 func result(minimax_board: Array, action: Array, player_state: String) -> Array:
 	var tempBoard = minimax_board.duplicate(true)
-	tempBoard[action[0]][0] = 3 if player_state.begins_with("P2") else 1
+	tempBoard[action[0]] = 3 if player_state.begins_with("P2") else 1
 	
 	if player_state.ends_with("A"):
-		automata_step_for_minimax_board(tempBoard)
+		game_board.automataAgent.simulateAutomataStep(tempBoard)
 	
 	return tempBoard
 
@@ -65,7 +62,7 @@ func result(minimax_board: Array, action: Array, player_state: String) -> Array:
 # Check if the game has reached a terminal state (win/draw)
 func terminal(board: Array) -> bool:
 	for tile in board:
-		if(tile[0] == 0):
+		if(tile == 0):
 			return false
 	return true
 
@@ -74,9 +71,9 @@ func utility(board: Array) -> float:
 	var p1Score=0
 	var p2Score=0
 	for tile in board:
-		if(tile[0] == 1 or tile[0] == 2):
+		if(tile == 1 or tile == 2):
 			p1Score += 1
-		if(tile[0] == 3 or tile[0] == 4):
+		if(tile == 3 or tile == 4):
 			p2Score += 1
 
 	return p1Score - p2Score
@@ -85,7 +82,7 @@ func utility(board: Array) -> float:
 func possible_actions(board: Array, max_actions: int) -> Array[Array]:
 	var actions: Array[Array] = []
 	for i in range(len(board)):
-		if board[i][0] == 0:
+		if board[i] == 0:
 			actions.append([i])
 	
 	if max_actions < 2 or len(game_board.latestTileIndexes) < 2:
@@ -122,27 +119,3 @@ func manhattan_distance(index1: int, index2: int):
 	var i2 = get_xypos_for_index(index2)
 	
 	return abs(i1[0] - i2[0]) + abs(i1[1] - i2[1])
-
-
-func automata_step_for_minimax_board(minimax_board: Array) -> void:
-	var board = []
-	for tile in minimax_board:
-		board.append(tile[0])
-
-	game_board.automataAgent.game_board = game_board
-	var baseBoard = board.duplicate(true)
-	
-	for i in range(len(board)):
-		var xpos:int=i%game_board.xsize
-		var ypos:int=i/game_board.ysize
-		
-		var result = game_board.automataAgent.checkRulesForPos(xpos, ypos, baseBoard)
-		if result != -1:
-			board[i] = result
-	
-	for i in range(len(minimax_board)):
-		var currentTile = minimax_board[i][0]
-		var newTile = board[i]
-		
-		if currentTile != newTile:
-			minimax_board[i][0] = newTile

@@ -126,6 +126,8 @@ autoplay = true
 script = ExtResource("1_aixle")
 gui = NodePath("../Sidebar")
 
+[node name="Automata" type="Automata" parent="Board"]
+
 [node name="PlayerController" type="Node2D" parent="."]
 script = SubResource("GDScript_vi183")
 

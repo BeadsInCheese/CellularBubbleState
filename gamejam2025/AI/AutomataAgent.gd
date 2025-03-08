@@ -4,10 +4,14 @@ class_name AutomataAgent
 # Called when the node enters the scene tree for the first time.
 func makeMove(observation:Board):
 	game_board = observation
-	
 	automata_step()
 	moveMade.emit(game_board)
-	
+static var automata:Automata=null
+func init(board:Board):
+	game_board=board
+	automata=board.get_child(0)
+	automata.printRules()
+	compareProcessingTime()
 func _ready() -> void:
 	pass # Replace with function body.
 
@@ -20,17 +24,49 @@ func _process(delta: float) -> void:
 func get_custom_class_name():
 	return "AutomataAgent"
 	
-
-func automata_step() -> void:
+func compareProcessingTime():
+	var iter=1
 	var baseGrid = game_board.getBoardCopy()
 	var tempGrid = baseGrid.duplicate(true)
-	for i in range(len(tempGrid)):
-		var xpos:int=i%game_board.xsize
-		var ypos:int=i/game_board.ysize
-		
-		var result = checkRulesForPos(xpos, ypos, baseGrid)
-		if result != -1:
-			tempGrid[i] = result
+	
+	var start_time: float = Time.get_unix_time_from_system()
+	for k in iter:
+		automata.AutomataStep(tempGrid)
+	var end_time: float = Time.get_unix_time_from_system()
+	var result=end_time-start_time
+	print("time took: "+str(result))
+	start_time = Time.get_unix_time_from_system()
+	for k in iter:
+		for i in range(len(tempGrid)):
+			var xpos:int=i%game_board.xsize
+			var ypos:int=i/game_board.ysize
+			#print(len(baseGrid))
+			var r = checkRulesForPos(xpos, ypos, baseGrid)#automata.checkRuleForPos(xpos, ypos, baseGrid,rules)#
+			#print(result)
+			if result != -1:
+				tempGrid[i] = result
+	end_time = Time.get_unix_time_from_system()
+	result=end_time-start_time
+	print("time took: "+str(result))
+	
+	
+	
+	
+	
+func automata_step() -> void:
+	#print("automata")
+	var baseGrid = game_board.getBoardCopy()
+	var tempGrid = baseGrid.duplicate(true)
+	var result=automata.AutomataStep(tempGrid)
+	print(tempGrid)
+	#for i in range(len(tempGrid)):
+	#	var xpos:int=i%game_board.xsize
+	#	var ypos:int=i/game_board.ysize
+	#	print(len(baseGrid))
+	#	var result = automata.AutomataStep(baseGrid)#checkRulesForPos(xpos, ypos, baseGrid)#automata.checkRuleForPos(xpos, ypos, baseGrid,rules)#
+	#	#print(result)
+	#	if result != -1:
+	#		tempGrid[i] = result
 	
 	for i in range(len(tempGrid)):
 		var currentTile = game_board.gridList[i].tileType
@@ -39,7 +75,60 @@ func automata_step() -> void:
 		if currentTile != newTile:
 			game_board.gridList[i].setTileType(newTile, true)
 
+static func simulateAutomataStep(board:Array):
+		board = automata.AutomataStep(board)
+		
+static func checkRulesForPosStatic(xpos: int, ypos: int, board: Array) -> int:
+	for matchGrid in rules.keys():
+		var grid = matchGrid
+		var marks = getMarkIndexes(grid)
+		
+		for rot in range(4):
+			var result = checkRuleStatic(grid, rules[matchGrid], xpos, ypos, marks[rot][0], marks[rot][1], board)
+			if result != -1:
+				return result
+			if rot < 3:
+				grid = rotateGrid(grid)
+	return -1
+static func checkRuleStatic(matchGrid: Array, matchResult: int, xpos: int, ypos: int, xmark: int, ymark: int, board: Array) -> int:
+	var matchPlayer: int = 0  # 0: no-player, 1: player-1, 2: player-2
+	
+	for j in range(len(matchGrid[0])):
+		for i in range(len(matchGrid)):
+			var matchRef = matchGrid[i][j]
+			
+			# Ignore matches marked with "any"
+			if matchRef == null:
+				continue
+			
+			var tile = Board.getGridTileTypeStatic(12,12,i + xpos - xmark, j + ypos - ymark, board)
+			#print(i, j, "  ", matchRef, "\t\t", tile)
+			
+			if matchRef == t:
+				# Matching any tower and tile is not a tower, or matching different player tower
+				if (tile != 1 and tile != 3) or (matchPlayer == 1 and tile == 3) or (matchPlayer == 2 and tile == 1):
+					return -1
+				
+				matchPlayer = 1 if tile == 1 else 2
+				
+			elif matchRef == b:
+				# Matching any bubble and tile is not a bubble, or matching different player bubble
+				if (tile != 2 and tile != 4) or (matchPlayer == 1 and tile == 4) or (matchPlayer == 2 and tile == 2):
+					return -1
+				
+				matchPlayer = 1 if tile == 2 else 2
+			
+			# Matching empty tile or specific player tile	
+			elif (matchRef != tile):
+				return -1
+	
+	# Return bubble/tower with the matched player color
+	if matchResult == b:
+		return 2 if matchPlayer == 1 else 4
+	if matchResult == t:
+		return 1 if matchPlayer == 1 else 3
 
+	return matchResult
 func checkRulesForPos(xpos: int, ypos: int, board: Array) -> int:
 	for matchGrid in rules.keys():
 		var grid = matchGrid
@@ -101,7 +190,7 @@ func rotateMatchGrid(matchGrid: Array):
 		grid = rotateGrid(grid)
 		print(grid)
 
-func rotateGrid(grid: Array) -> Array:
+static func rotateGrid(grid: Array) -> Array:
 	if len(grid) == 2:
 		return rotate2x2Grid(grid)
 	elif len(grid) == 1:
@@ -111,20 +200,25 @@ func rotateGrid(grid: Array) -> Array:
 	else:
 		return rotate3x3Grid(grid)
 
-func rotate2x2Grid(grid: Array) -> Array:
+static func rotate2x2Grid(grid: Array) -> Array:
 	return [[grid[0][1], grid[1][1]], [grid[0][0], grid[1][0]]]
 
-func rotate3x1Grid(grid: Array) -> Array:
+static func rotate3x1Grid(grid: Array) -> Array:
 	return [[grid[2][0], grid[1][0], grid[0][0]]]
 	
-func rotate1x3Grid(grid: Array) -> Array:
+static func rotate1x3Grid(grid: Array) -> Array:
 	return [[grid[0][0]], [grid[0][1]], [grid[0][2]]]
 
-func rotate3x3Grid(g: Array) -> Array:
-	return [[g[0][2],g[1][2],g[2][2]], [g[0][1],g[1][1],g[2][1]], [g[0][0], g[1][0], g[2][0]]]
+static func rotate3x3Grid(grid: Array) -> Array:
+	var result = []
+	for i in range(3):
+		result.append([])
+		for j in range(3):
+			result[-1].append(grid[j][2-i])
+	return result
 	
 
-func getMarkIndexes(matchGrid: Array) -> Array:
+static func getMarkIndexes(matchGrid: Array) -> Array:
 	if len(matchGrid) == 2:
 		return [[0,0],[1,0],[1,1],[0,1]]
 	elif len(matchGrid) == 1:
@@ -133,10 +227,10 @@ func getMarkIndexes(matchGrid: Array) -> Array:
 		return [[1,1],[1,1],[1,1],[1,1]]
 
 
-var o = null # shortcut for Any
-var t = -1   # shortcut for Tower
-var b = -2   # shortcut for Bubble
-var rules: Dictionary = {
+static var o = null # shortcut for Any
+static var t = -1   # shortcut for Tower
+static var b = -2   # shortcut for Bubble
+static var rules: Dictionary = {
 	[
 		[ o, 1, o],
 		[ 3, 0, 3],
