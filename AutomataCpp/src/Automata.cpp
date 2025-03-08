@@ -75,18 +75,18 @@ std::vector<rule> Automata::getRules(){
     r.rows={-1,2,-1,
             2,4,-1,
             -1,-1,-1};
-    r.result=0;
+    r.result=2;
     rules.push_back(r);
     rule r2;
     r2.rows={2,2,2,
-            -1,-1,-1,
+            -1,0,-1,
             -1,-1,-1};
     r2.result=2;
     rules.push_back(r2);
     
     rule r3;
     r3.rows={-1,-1,-1,
-            -1,-1,1,
+            -1,0,1,
             -1,1,2};
     r3.result=2;
     rules.push_back(r3);
