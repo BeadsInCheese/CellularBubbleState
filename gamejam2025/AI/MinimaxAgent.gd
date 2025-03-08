@@ -43,7 +43,7 @@ func minimax_step() -> void:
 	for tile in tempBoard:
 		minimax_board.append([tile])
 	
-	var action: Array = minimax.action(minimax_board, game_board.currentTurn, 3, 18, 4) # hard: 4, 16    medium: 3, 20
+	var action: Array = minimax.action(minimax_board, game_board.currentTurn, 5, 18, 2) # hard: 4, 16    medium: 3, 20
 	if len(action) == 0:
 		return
 
@@ -130,19 +130,12 @@ func automata_step_for_minimax_board(minimax_board: Array) -> void:
 		board.append(tile[0])
 
 	game_board.automataAgent.game_board = game_board
-	var baseBoard = board.duplicate(true)
+	var baseBoard = game_board.automataAgent.automata.AutomataStep(board)
 	
-	for i in range(len(board)):
-		var xpos:int=i%game_board.xsize
-		var ypos:int=i/game_board.ysize
-		
-		var result = game_board.automataAgent.checkRulesForPos(xpos, ypos, baseBoard)
-		if result != -1:
-			board[i] = result
 	
 	for i in range(len(minimax_board)):
 		var currentTile = minimax_board[i][0]
-		var newTile = board[i]
+		var newTile = baseBoard[i]
 		
 		if currentTile != newTile:
 			minimax_board[i][0] = newTile
