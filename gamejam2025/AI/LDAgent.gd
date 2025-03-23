@@ -159,6 +159,9 @@ func init(board):
 	init_dpu()
 
 func makeMove(observation:Board):
+	await makeRandomMove(observation)
+	await observation.get_tree().process_frame
+	return
 	await observation.get_tree().create_timer(0.5).timeout
 	var game_board = proceduralMove(observation)
 	moveMade.emit(game_board)

@@ -114,7 +114,7 @@ func changeTurn()->void:
 			victor=1
 		for i in turnOrder:
 			i.destructor(self)
-		x.get_node("Text").text="[center]DRAW[/center]" if player1Score==player2Score  else "[center]Player 1 Wins[/center]" if player1Score>player2Score else "[center]Player 2 Wins[/center]"  
+		x.get_node("ColorRect/VBoxContainer/Text").text="[center]DRAW[/center]" if player1Score==player2Score  else "[center]Player 1 Wins[/center]" if player1Score>player2Score else "[center]Player 2 Wins[/center]"  
 		add_child(x)
 		
 	

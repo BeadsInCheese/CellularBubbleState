@@ -67,8 +67,7 @@ func MCTS(depth,board,observation:Board):
 				bestMove[0]=value
 				bestMove[1]=i
 			#print(bestMove)
-	if bestMove[0]==-1:
-		return null
+
 
 	return bestMove[1]
 func destructor(observation:Board):
