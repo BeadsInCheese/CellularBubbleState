@@ -101,7 +101,7 @@ func changeTurn()->void:
 			
 		changeTurn()
 		pass
-	gui.updateSidebar(currentTurn,player1Score,player2Score)
+	gui.updateSidebar(currentTurn,player1Score,player2Score,turnOrder[currentTurn].get_is_player())
 	updateCursor()
 	if(!announced and isEnd()):
 		announced=true
@@ -255,7 +255,7 @@ func _input(event):
 
 func update_meta():
 	updateScore()
-	gui.updateSidebar(currentTurn,player1Score,player2Score)
+	gui.updateSidebar(currentTurn,player1Score,player2Score,turnOrder[currentTurn].get_is_player())
 	updateCursor()
 
 

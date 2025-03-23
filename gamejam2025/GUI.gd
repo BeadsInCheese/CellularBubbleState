@@ -1,7 +1,7 @@
 extends Node
 class_name GUI
 
-func updateSidebar(turn,score1,score2):
+func updateSidebar(turn,score1,score2,isPlayer):
 	$contUpper1/Score_player1.text = str(score1)
 	$contUpper2/Score_player2.text = str(score2)
 	#print("Gui debug")
@@ -26,6 +26,8 @@ func updateSidebar(turn,score1,score2):
 	elif(turn == 5):
 		$TurnValue.text="Automata turn"
 		$contLower/NextTurnValue.text="Player 1"
+	print(isPlayer)
+	$statusLabel.text="thinking..." if not(isPlayer) else "" 
 
 	
 # Called when the node enters the scene tree for the first time.

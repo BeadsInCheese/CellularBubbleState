@@ -149,6 +149,7 @@ bus = &"Music"
 [node name="Transition" parent="." instance=ExtResource("8_3ddsp")]
 
 [node name="SaveTrain" type="Button" parent="."]
+visible = false
 offset_left = 1094.0
 offset_top = 12.0
 offset_right = 1138.0
