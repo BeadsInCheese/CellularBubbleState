@@ -112,23 +112,23 @@ bbcode_enabled = true
 text = "[center]Player Select [/center]"
 
 [node name="RichTextLabel5" type="RichTextLabel" parent="."]
-offset_left = 18.0
+offset_left = -4.0
 offset_top = 228.0
-offset_right = 1175.0
+offset_right = 1153.0
 offset_bottom = 355.0
 theme = SubResource("Theme_ehdvb")
 bbcode_enabled = true
 text = "[center]VS. [/center]"
 
 [node name="OptionButton" parent="." instance=ExtResource("6_t4mh3")]
+offset_left = 213.0
+offset_top = 231.0
+offset_right = 373.0
+offset_bottom = 367.0
 item_count = 5
-popup/item_1/text = "random bot"
-popup/item_2/text = "Golgath"
 popup/item_2/icon = ExtResource("10_iyo5k")
-popup/item_3/text = "Sera"
 popup/item_3/icon = ExtResource("8_vmg0i")
 popup/item_3/id = 2
-popup/item_4/text = "Walter"
 popup/item_4/id = 4
 
 [node name="BackButton" parent="." instance=ExtResource("7_dknv5")]
@@ -142,18 +142,14 @@ theme = ExtResource("5_uchd8")
 text = "Start"
 
 [node name="OptionButton2" parent="." instance=ExtResource("6_t4mh3")]
-offset_left = 799.0
+offset_left = 733.0
 offset_top = 231.0
-offset_right = 959.0
+offset_right = 893.0
 offset_bottom = 367.0
 item_count = 5
-popup/item_1/text = "RandomBot"
-popup/item_2/text = "Golgath"
 popup/item_2/icon = ExtResource("10_iyo5k")
-popup/item_3/text = "Sera"
 popup/item_3/icon = ExtResource("8_vmg0i")
 popup/item_3/id = 2
-popup/item_4/text = "Walter"
 popup/item_4/id = 4
 
 [node name="Transition" parent="." instance=ExtResource("7_tav7e")]
