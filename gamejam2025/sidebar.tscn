@@ -98,4 +98,3 @@ texture = ExtResource("3_sdivc")
 
 [node name="statusLabel" type="Label" parent="."]
 layout_mode = 2
-text = "thinking.."
