@@ -50,6 +50,7 @@ func getServerIp()->void:
 		var ip=config.get_value("MULTIPLAYER","SERVER_IP","127.0.0.1")
 		print("loaded IP: "+ip+" fron config")
 		serverIP=ip
+var game
 func _ready() -> void:
 	getServerIp()
 	client=StreamPeerTCP.new()
@@ -58,7 +59,7 @@ func _ready() -> void:
 	sendkey(Settings.MPKey)
 	var status=await  _blocking_read()
 	
-	var game=scene.instantiate()
+	game=scene.instantiate()
 	get_tree().root.add_child(game)
 	_send_keep_alive()
 	pass # Replace with function body.
@@ -95,7 +96,9 @@ func _process(delta: float) -> void:
 func _exit_tree() -> void:
 	connected=false
 	client.disconnect_from_host()
+	game.queue_free()
 	pass
 
 func _on_button_3_pressed() -> void:
+	game.queue_free()
 	SceneNavigation.goToMultiplayerSelection()

@@ -78,6 +78,8 @@ func syncronize(observation:Board):
 # Called when the node enters the scene tree for the first time.
 var done=false
 func makeMove(observation:Board):
+	if(observation!=null):
+		await observation.get_tree().process_frame
 	while !done and connected:
 		client.poll()
 		#print(client.get_available_bytes())
