@@ -93,6 +93,7 @@ func _process(delta: float) -> void:
 				emit_signal("_error")
 				connected=false
 func _exit_tree() -> void:
+	connected=false
 	client.disconnect_from_host()
 	pass
 
