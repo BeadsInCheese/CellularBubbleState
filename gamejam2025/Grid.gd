@@ -56,14 +56,13 @@ func changeTurn()->void:
 	currentAgent = turnOrder[currentTurn]
 	await turnOrder[currentTurn].makeMove(self)
 	
-	print("type",currentAgent.playerType)
+
 	if(!loading):
 		currentTurn = (currentTurn+1) % 6
 		boardHistory.resize(currentBoardStatePointer+1)
 		boardHistory.append(DataUtility.get_board_string(gridList,currentTurn))
 		currentBoardStatePointer += 1
 	else:
-		print("false")
 		loading = false
 	
 	if(not(isEnd())):
@@ -165,13 +164,14 @@ func getGridTileType(xpos: int, ypos: int, board: Array):
 
 	return board[xpos + ypos * ysize]
 
-func decode_board():
-	var s = boardHistory[currentBoardStatePointer]
+func decode_board(pointer):
+	var s = boardHistory[pointer]
 	currentTurn = int(s[len(s) - 1])
 	s = DataUtility.decode(s.substr(0,len(s)-1))
 	for i in range(0,len(s)):
 		gridList[i].setTileType(int(s[i]))
 	print("board history ",boardHistory)
+
 
 func _on_tree_exiting() -> void:
 	Input.set_custom_mouse_cursor(null)
@@ -204,13 +204,13 @@ func _input(event):
 			currentBoardStatePointer -= 1
 			currentBoardStatePointer = clampi(currentBoardStatePointer,0,len(boardHistory)-1)
 			#print("pointer=",currentBoardStatePointer," turn=",currentTurn)
-			decode_board()
+			decode_board(currentBoardStatePointer)
 			update_meta()
 		elif(event.as_text() == "Right" && (turnOrder[(len(boardHistory)-1)%6].get_is_player() || isEnd())):
 			currentBoardStatePointer += 1
 			currentBoardStatePointer = clampi(currentBoardStatePointer,0,len(boardHistory)-1)
 			#print("pointer=",currentBoardStatePointer," turn=",currentTurn)
-			decode_board()
+			decode_board(currentBoardStatePointer)
 			update_meta()
 
 func update_meta():

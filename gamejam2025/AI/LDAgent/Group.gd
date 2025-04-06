@@ -4,7 +4,10 @@ class_name Region
 
 var data = []
 var G = [[0,0,0],[0,0,0],[0,0,0]]
-
+var n = 0
+static var MATCH : Point
+var ACC : Region = Region.new()
+var LAST : Region = Region.new()
 enum Regions{COMPLEMENT}
 
 func initialize(r : Regions, L : Region) -> Region:
@@ -17,20 +20,22 @@ func initialize(r : Regions, L : Region) -> Region:
 						Z.data.append(p)
 	return Z
 
+func process(a ):
+	pass
 
 func check(L, pattern) -> Region:
-	var Q : Region = Region.new()
 	for p in L:
 		if(p.piece == pattern):
-			Q.data.append(p)
-	return Q
+			data.append(p)
+	ACC.add(self)
+	return self
 	
 func n_check(L, pattern) -> Region:
-	var Q : Region = Region.new()
 	for p in L:
 		if(p.piece != pattern):
-			Q.data.append(p)
-	return Q
+			data.append(p)
+	ACC.add(self)
+	return self
 	
 func get_point(x,y):
 	if(x < 0 || x > 2 || y < 0 || y > 2):
@@ -42,11 +47,21 @@ func get_point(x,y):
 func liner(start : Point,S : Region) -> Region:
 	var R : Region = Region.new()
 	
+	ACC.add(R)
+	return R
+	
+func next(from):
+	var R : Region = Region.new()
+	for p in data:
+		for n in from.data:
+			R.add_point(p.next(n))
+			R.LAST.add_point(p)
 	return R
 	
 func skip_from_dir(p : Point) -> Region:
 	var R : Region = Region.new()
 	
+	ACC.add(R)
 	return R
 	
 func get_neighbors(L : Region) -> Region:
@@ -54,8 +69,9 @@ func get_neighbors(L : Region) -> Region:
 	var O : Region = Region.new()
 	O = O.initialize(Regions.COMPLEMENT, L)
 	for d in data:
-		Z.add(Z,liner(d,O))
+		Z.add(liner(d,O))
 
+	ACC.add(Z)
 	return Z
 
 
@@ -71,19 +87,43 @@ func diag_invert():
 			R.data.append(R.corner_diag())
 	R.data.pop_front()
 	R.data.pop_front()
+	ACC.add(R)
 	return R
 
+func has_adj(piece):
+	var R : Region = Region.new()
+	for p : Point in data:
+		for a in p.adj:
+			if(a.piece == piece):
+				LAST.add_point(p)
+				R.data.append(a)
+	ACC.add(R)
+	return R
 
-func corner_diag():
+func has_diag(piece):
+	var R : Region = Region.new()
+	for p : Point in data:
+		for a in p.adj_diag:
+			if(a.piece == piece):
+				LAST.add_point(p)
+				R.data.append(a)
+	ACC.add(R)
+	return R
+
+func corner_diag() -> Region:
+	var R : Region = Region.new()
 	for p in n_check(self,0).data:
 		var diagonals = Region.new()
 		diagonals.add_data(p.adj_diag)
 		for d : Point in n_check(diagonals,0).data:
 			if(get_point(d.x - sign(d.x-p.x),d.y).piece != Point.EMPTY):
-				return get_point(d.x, d.y - sign(d.y-p.y))
+				R.append(get_point(d.x, d.y - sign(d.y-p.y)))
 			else:
-				return get_point(d.x - sign(d.x-p.x),d.y)
+				R.append(get_point(d.x - sign(d.x-p.x),d.y))
 					
+					
+	#ACC.add(R)
+	return R
 					
 func set_data_cond(L:Region,pattern,d):
 	for p in check(L,pattern).data:
@@ -93,16 +133,27 @@ func set_data_cond(L:Region,pattern,d):
 	return L.data
 		
 
+func flush_acc():
+	ACC = Region.new()
+
+func refresh_from(data):
+	flush_acc()
+	self.data.clear()
+	self.data = data
+
 #Concatenate list onto existing data
 func add_data(list : Array[Point]):
 	data.append_array(list)
 	
+func add_point(p : Point):
+	data.append(p)
+	
 # Add two Regions onto one
-func add(G1 : Region,G2 : Region) -> Region:
+func add(G1 : Region) -> Region:
 	var R : Region = Region.new()
 	for p in G1.data:
 		R.data.append(p)
-	for p in G2.data:
+	for p in self.data:
 		for r in G1.data:
 			if(p.id != r.id):
 				R.data.append(p)

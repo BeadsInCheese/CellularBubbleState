@@ -12,7 +12,7 @@ func _button_pressed():
 	
 	board.boardHistory = DataUtility.load_from_file(n)
 	board.currentBoardStatePointer = len(board.boardHistory)-1
-	board.decode_board()
+	board.decode_board(board.currentBoardStatePointer)
 
 	board.loading = true
 	print("true")

@@ -4,7 +4,7 @@ class_name DynamicalProcessingUnit
 var INS:Instruction
 var param:Parameters
 var color : int
-var currentTurn
+var currentTurn = 0
 
 var offsetX
 var offsetY
@@ -46,13 +46,52 @@ func update(x,y,piece):
 
 #color player1 = 1, color player2 = 3
 func update_layers():
+	
+	
+	var G : Region = Region.new()
+	G.add_data(R)
+	#diag-capture
+	#G.process_str("chk2_diag2_set&dinv-2,2_rR")
+	#G.process(["check",2],["has_diag",2],["set","diag_invert",-2,2],["refresh",R])
+	G.check(G,Point.BUBBLE_OWN)
+	G.has_diag(Point.BUBBLE_OWN)
+	G.set_data_cond(G.diag_invert(),Point.BUBBLE_OPPONENT,Point.BUBBLE_OWN)
+	G.refresh_from(R)
+	#bubble shifting rule
+	#G.process_str("chk2_adj2_adj1_set&ACC@cdiag0,2_set&int&ACC@cdiag&adj2&2,0_rR")
+	G = G.check(G,Point.BUBBLE_OWN)
+	G = G.has_adj(Point.BUBBLE_OWN)
+	G = G.has_adj(Point.TOWER_OWN)
+	G.set_data_cond(G.ACC.corner_diag(),Point.EMPTY,Point.BUBBLE_OWN)
+	G.set_data_cond(G.intersect(G.ACC.corner_diag().has_adj(Point.BUBBLE_OWN)),Point.BUBBLE_OWN,Point.EMPTY)
+	G.refresh_from(R)
+	#3-in-a-row addition rule
+	G = G.check(G,Point.BUBBLE_OWN)
+	G = G.has_adj(Point.BUBBLE_OWN)
+	G.check(G.next(G.LAST),Point.BUBBLE_OWN)
+	G.set_data_cond(G.LAST.has_adj(Point.EMPTY),Point.EMPTY,Point.BUBBLE_OWN)
+	G.refresh_from(R)
+	#tower-growing rule
+	G.check(G,Point.TOWER_OWN)
+	G = G.has_adj(Point.BUBBLE_OWN)
+	G.set_data_cond(G.next(G.LAST),Point.EMPTY,Point.BUBBLE_OWN)
+	G.refresh_from(R)
+	#bubble creation rule
+	G = G.check(G,Point.TOWER_OWN)
+	G.check(G.next(G),Point.TOWER_OWN)
+	G.set_data_cond(G.LAST,Point.EMPTY,Point.BUBBLE_OWN)
+	G.refresh_from(R)
+	#diagonal rule
+	G = G.check(G,Point.TOWER_OWN)
+	G.has_diag(Point.TOWER_OWN)
+	G = G.add(G.check(G.ACC.diag_invert(),Point.BUBBLE_OWN))
+	G.set_data_cond(G.corner_diag(),Point.EMPTY,Point.BUBBLE_OWN)
+	
 	for point : Point in R:
 		#Layer 0 - standard scores(1 if own piece, -1 if enemy piece, 0 for empty)
 		#Rule0(Diag-capture)
-		if(point.piece == Point.BUBBLE_OWN):
-			for p in point.adj_diag:
-				if(p.piece == Point.BUBBLE_OWN):
-					pass
+		
+		
 		#if(point.piece != 0):
 			#add(point.x,point.y,1 if point.color == color else -1,0)
 		#Layer 1 - default scores
@@ -94,43 +133,45 @@ func update_point(posX, posY, piece):
 func inference_generic(p_coord_x, p_coord_y, layer_index, diff, w_index, old_data : Array[Point]) -> int:
 	#TODO compute z_0 by Q values
 	var z = old_data[0].score[layer_index]*randf()
-	var t = randi_range(5,10)
+	var t = 3
 	print("z = ",z)
-	print("starting inference:", "w_index=",w_index,"G_",p_coord_x,p_coord_y,"(",layer_index,")")
+	print("starting inference:", "w_index=",w_index,"G_",p_coord_x,p_coord_y,"(",layer_index,")","for t = ",t)
 	
-	#var j = randi() % len(old_data)
-	#var p : Point = old_data[j]
-	#var turn = (currentTurn + t) % 6
-	#var tr_chain = process(p.score[layer_index],layer_index,len(old_data) - j + t,turn)
+	
+	var j = randi() % len(old_data)
+	var p : Point = old_data[j]
+	var turn = (currentTurn + t) % 6
+	var tr_chain = process(p.score[layer_index],layer_index,len(old_data) - j + t,turn,old_data)
 	
 	return 0
 
-func process(metricTarget,layer,span,turn):
+func process(metricTarget,layer,span,turn,data):
 	var tries = 0
 	var gamma = []
 	var g
 	var ins_list
 	var final_ins_list
-	#TODO (h_i,h_j) functions
+	var t = 10
+
+	var data_o = []
+
 	while(tries < param.MAX_TRIES):
-		ins_list = INS.get_list(R,span,turn) #[instr#1_move1,instr#1_move2,...]
-		var E = R
-		g = 0
-		for i in range(len(ins_list)):
-			var original = E
-			E = play(E,ins_list[i],layer)
-			#update_layers()
-			#var metric = abs(metricTarget)
-			g += abs(evaluate(layer,E,original)) - param.metricCoeff*sign(metricTarget)
-		gamma.append(g)
-		tries = tries + 1
-		final_ins_list = ins_list
-		var min = 500
-		for i in range(len(gamma)):
-			if(gamma[i] < min):
-				min = i
+		for h in range(0,63):
+			var y = h/9 #layer
+			var k = h%9 #index
+			var i = k/3
+			var j = k%3
+			var T = FSystem.convert(Q[h])
+			data_o = preprocess(data,y,k,i,j)
+			var z = T[0] + T[1]*t
+			#Forward Inference START
+			#STEP 0. compute interval X_t_i
+			var X_t = 2.55 * (max(data_o)-min(data_o)) / t + 1.44
+			#STEP 1. 
 			
-	print(min)
+		
+		tries = tries + 1
+
 	
 	return final_ins_list
 #
@@ -158,6 +199,9 @@ func process(metricTarget,layer,span,turn):
 			#
 	#print(min)
 	
+
+func preprocess(data : Array[Point],layer,index,i,j):
+	pass
 
 #gamma_ij
 #-5 -> heuristic: 5, change: negative

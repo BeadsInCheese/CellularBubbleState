@@ -27,6 +27,8 @@ func chk_wsen_t_own(x,y,color) -> Array[Point]:
 			G.append(p)
 	return G
 
+
+
 func get_adj_intersect(L : Region):
 	var Q : Region = Region.new()
 	

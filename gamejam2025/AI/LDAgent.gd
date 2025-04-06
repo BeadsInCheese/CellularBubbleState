@@ -15,6 +15,8 @@ var history = []
 static var N_ROUNDS = 1200
 static var DL_UNITS = 8
 
+
+
 func init_dpu():
 	var j = 1
 	for k in range(0,DL_UNITS):
@@ -87,14 +89,15 @@ func generate_move(board : Array[Bubble]) -> int:
 	while(n < N_ROUNDS):
 		for dpu: DynamicalProcessingUnit in DPU_list:
 			for p : Point in dpu.get_points():
-				for layer : float in p.score:
+				for value : float in p.score:
 					#history.append(p)
-					var old_data : Array[Point] = []
-					old_data.append(p)
+					#get_tree().root.get_node("root/Board").get_history()
+					var old_data : Array = []
+					old_data.append(value)
 					#for j in range(len(history),-1,-7):
 					#	old_data.append(history[j])
 					for i in len(W):
-						dpu.inference_generic(p.x,p.y,layer,W[i],i,old_data)
+						dpu.inference_generic(p.x,p.y,value,W[i],i,old_data)
 						
 						
 				
@@ -138,7 +141,6 @@ func proceduralMove(board : Board):
 	var result
 	var color 
 	
-	print("agent is playing as: ",playerType)
 	 
 	if board.currentTurn == 0 || board.currentTurn == 4:
 		color = 1
@@ -157,6 +159,8 @@ func proceduralMove(board : Board):
 
 func init(board):
 	init_dpu()
+	Parameters.SEED = randi()
+	FSystem.randomize_tables(Parameters.SEED)
 
 func makeMove(observation:Board):
 	await observation.get_tree().create_timer(0.5).timeout
