@@ -20,10 +20,11 @@ func _on_text_changed() -> void:
 
 var rng = RandomNumberGenerator.new()
 func _on_host_button_pressed() -> void:
-	var charaterList="ABCDEFGHIJKLMNOPQRSTUVXYZ1234567890"
+	var characterList="ABCDEFGHIJKLMNOPQRSTUVXYZ1234567890"
 	var key=""
 	for i in range(5):
-		key+=charaterList[rng.randi_range(0,len(charaterList)-1)]
+		key+=characterList[rng.randi_range(0,len(characterList)-1)]
+
 	print(key)
 	Settings.MPKey=key
 	SceneNavigation.goToWait()
@@ -34,8 +35,13 @@ func _on_back_button_pressed() -> void:
 
 func _on_join_button_pressed() -> void:
 	var key=text.to_upper()
-	while len(key)<5:
-		key+="0"
+	if len(key) < 5:
+		return
+
 	print(key)
 	Settings.MPKey=key
 	SceneNavigation.goToWait()
+
+func _input(event):
+	if event.is_action_pressed("ui_text_submit"):
+		_on_join_button_pressed()
