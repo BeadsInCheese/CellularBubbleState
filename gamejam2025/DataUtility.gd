@@ -10,6 +10,7 @@ static func get_saves() -> Array[String]:
 	
 	var saves: Array[String]
 	saves.assign(DirAccess.open("Saves").get_files())
+	saves.reverse()
 	return saves
 
 static func get_board_string(b : Array[Bubble], currentTurn):
