@@ -74,8 +74,9 @@ func syncronize(observation:Board):
 		done=true
 	else:
 		print("DESYNC")
-		
-# Called when the node enters the scene tree for the first time.
+
+
+var latestBoardHistory = null
 var done=false
 func makeMove(observation:Board):
 	if(observation!=null):
@@ -85,7 +86,9 @@ func makeMove(observation:Board):
 		#print(client.get_available_bytes())
 		client.poll()
 		if client.get_status() != StreamPeerTCP.STATUS_CONNECTED:
+			DataUtility.save_to_file(latestBoardHistory, "save-"+Time.get_datetime_string_from_system(),"res://Saves")
 			SceneNavigation.goToMultiplayerSelection()
+			connected = false
 		
 		if client.get_available_bytes() >0:
 				print("message")
@@ -93,6 +96,7 @@ func makeMove(observation:Board):
 				var v=client.get_32()
 				print("Received data: ", x,"  , ",v)
 				observation.gridList[x].setTileType(observation.turnOrder[observation.currentTurn].playerType)
+				latestBoardHistory = observation.boardHistory
 				
 				return [x,v]
 		if(observation!=null):
