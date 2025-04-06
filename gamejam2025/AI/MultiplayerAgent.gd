@@ -26,6 +26,8 @@ func syncronizeTurnOrder(board:Board):
 				
 				board.p1AgentInstance=board.p2AgentInstance
 				board.p2AgentInstance=temp
+				board.p1AgentInstance.playerType=3
+				board.p2AgentInstance.playerType=1
 				return
 			else:
 				return
@@ -79,6 +81,10 @@ func makeMove(observation:Board):
 	while !done and connected:
 		client.poll()
 		#print(client.get_available_bytes())
+		client.poll()
+		if client.get_status() != StreamPeerTCP.STATUS_CONNECTED:
+			SceneNavigation.goToMultiplayerSelection()
+		
 		if client.get_available_bytes() >0:
 				print("message")
 				var x=client.get_32()
