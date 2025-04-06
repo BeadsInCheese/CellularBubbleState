@@ -221,59 +221,54 @@ int Automata::evaluateTile(int xpos,int ypos,std::array<int,144> &board,Array &t
         int pos=xpos+ypos*12;
         //push rule
         if(board[pos]==0){
-            if(getTile(xpos+1,ypos,12,12,board)==2){
-                if(getTile(xpos+2,ypos,12,12,board)==1){
+            if(getTile(xpos+1,ypos,12,12,board)==2 && getTile(xpos+2,ypos,12,12,board)==1){
+                
                     target[pos]=2;
                     return 0;
-                }
+                
             }
-
-            else if(getTile(xpos-1,ypos,12,12,board)==2){
-                if(getTile(xpos-2,ypos,12,12,board)==1){
+            else if(getTile(xpos+1,ypos,12,12,board)==4 && getTile(xpos+2,ypos,12,12,board)==3){
+                
+                    target[pos]=4;
+                    return 0;
+                
+            }
+            else if(getTile(xpos-1,ypos,12,12,board)==2 && getTile(xpos-2,ypos,12,12,board)==1){
                     target[pos]=2;
                     return 0;
-                }
+                
             }
-            else if(getTile(xpos,ypos+1,12,12,board)==2){
-                if(getTile(xpos,ypos+2,12,12,board)==1){
+            else if(getTile(xpos-1,ypos,12,12,board)==4 && getTile(xpos-2,ypos,12,12,board)==3){
+                
+                    target[pos]=4;
+                    return 0;
+                
+            }
+            else if(getTile(xpos,ypos+1,12,12,board)==2 && getTile(xpos,ypos+2,12,12,board)==1){
+                
                     target[pos]=2;
 
                     return 0;
-                }
+                
             }
-
-            else if(getTile(xpos,ypos-1,12,12,board)==2){
-                if(getTile(xpos,ypos-2,12,12,board)==1){
+            else if(getTile(xpos,ypos+1,12,12,board)==4 && getTile(xpos,ypos+2,12,12,board)==3){
+                
+                    target[pos]=4;
+                    return 0;
+                
+            }
+            else if(getTile(xpos,ypos-1,12,12,board)==2 && getTile(xpos,ypos-2,12,12,board)==1){
+                
                     target[pos]=2;
                     return 0;
-                }
+                
             }
 
-            else if(getTile(xpos+1,ypos,12,12,board)==4){
-                if(getTile(xpos+2,ypos,12,12,board)==3){
-                    target[pos]=4;
-                    return 0;
-                }
-            }
 
-            else if(getTile(xpos-1,ypos,12,12,board)==4){
-                if(getTile(xpos-2,ypos,12,12,board)==3){
+            else if(getTile(xpos,ypos-1,12,12,board)==4 && getTile(xpos,ypos-2,12,12,board)==3){
                     target[pos]=4;
                     return 0;
-                }
-            }
-            else if(getTile(xpos,ypos+1,12,12,board)==4){
-                if(getTile(xpos,ypos+2,12,12,board)==3){
-                    target[pos]=4;
-                    return 0;
-                }
-            }
-
-            else if(getTile(xpos,ypos-1,12,12,board)==4){
-                if(getTile(xpos,ypos-2,12,12,board)==3){
-                    target[pos]=4;
-                    return 0;
-                }
+                
             }
         }
         //birth Destroy 1
