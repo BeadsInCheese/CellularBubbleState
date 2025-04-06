@@ -26,8 +26,8 @@ func syncronizeTurnOrder(board:Board):
 				
 				board.p1AgentInstance=board.p2AgentInstance
 				board.p2AgentInstance=temp
-				board.p1AgentInstance.playerType=3
-				board.p2AgentInstance.playerType=1
+				board.p1AgentInstance.playerType=1
+				board.p2AgentInstance.playerType=3
 				return
 			else:
 				return
