@@ -235,9 +235,11 @@ func _mute_button_pressed() -> void:
 		Settings.setMaster(0)
 
 func _exit_button_pressed() -> void:
-	boardHistory.clear()
+	#boardHistory.clear()
 	SceneNavigation._on_MainMenuPressed()
-
+func _exit_tree() -> void:
+	print("cleared history")
+	boardHistory.clear()
 func _input(event):
 	if event is InputEventKey and event.pressed:
 		if (event.as_text() == "Left" && (turnOrder[(len(boardHistory)-1)%6].get_is_player() || isEnd())):
