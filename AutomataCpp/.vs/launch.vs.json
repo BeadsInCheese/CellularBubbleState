@@ -1,0 +1,19 @@
+{
+    "version": "0.2.1",
+    "defaults": {},
+    "configurations": [
+     {
+      "type": "default",
+      "project": "D:\\Steam\\steamapps\\common\\Godot Engine\\godot.windows.opt.tools.64.exe",
+      "name": "Godot Game",
+      "args": [ "--path", "D:\\AutomataCellular\\CellularBubbleState\\gamejam2025" ]
+     },
+   
+     {
+      "type": "default",
+      "project": "C:\\Godot\\Godot_v4.2.1-stable_win64.exe",
+      "name": "Godot Editor",
+      "args": [ "C:/Godot/GDExtensionDev/extension_test2/a_beavers_tale_cpp2/demo/project.godot" ]
+     }
+    ]
+   }

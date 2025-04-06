@@ -23,6 +23,7 @@ func send(x:float,v:int) -> bool:
 	return false
 func _blocking_read():
 	while connected:
+		
 		if client.get_available_bytes() >= 4:
 			print("message")
 			client.poll()
@@ -33,7 +34,7 @@ func _blocking_read():
 			# Sleep for a short duration to avoid busy-waiting
 			await get_tree().process_frame
 func connect_to_server(host: String) -> void:
-	var err = await client.connect_to_host(host, 1256)
+	var err = await client.connect_to_host(host, 25565)
 	while  connected==false:
 		await get_tree().process_frame
 	if err == OK:
@@ -41,6 +42,7 @@ func connect_to_server(host: String) -> void:
 		print("Connected to server")
 	else:
 		print("Failed to connect to server")
+		_on_button_3_pressed()
 func getServerIp()->void:
 	var config = ConfigFile.new()
 	var err = config.load("res://config/INI_Settings.cfg")
@@ -48,6 +50,7 @@ func getServerIp()->void:
 		var ip=config.get_value("MULTIPLAYER","SERVER_IP","127.0.0.1")
 		print("loaded IP: "+ip+" fron config")
 		serverIP=ip
+var game
 func _ready() -> void:
 	getServerIp()
 	client=StreamPeerTCP.new()
@@ -56,7 +59,7 @@ func _ready() -> void:
 	sendkey(Settings.MPKey)
 	var status=await  _blocking_read()
 	
-	var game=scene.instantiate()
+	game=scene.instantiate()
 	get_tree().root.add_child(game)
 	_send_keep_alive()
 	pass # Replace with function body.
@@ -89,9 +92,13 @@ func _process(delta: float) -> void:
 			client.STATUS_ERROR:
 				print("Error with socket stream.")
 				emit_signal("_error")
+				connected=false
 func _exit_tree() -> void:
+	connected=false
 	client.disconnect_from_host()
+	game.queue_free()
 	pass
 
 func _on_button_3_pressed() -> void:
+	game.queue_free()
 	SceneNavigation.goToMultiplayerSelection()

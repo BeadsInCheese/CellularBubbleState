@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7dwv5rf4tqt6"]
+
+[ext_resource type="Script" path="res://automata.gd" id="1_neqi4"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Automata" type="Node2D" parent="."]
+script = ExtResource("1_neqi4")

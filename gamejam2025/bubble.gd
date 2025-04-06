@@ -13,11 +13,28 @@ func setTileType(type, is_automata: bool = false):
 		if len(board.latestTileIndexes) > 2:
 			board.latestTileIndexes.pop_front()
 
+var appearing = false
+
 func appear():
+	appearing = true
 	$AudioStreamPlayer2D.play()
 	for i in range(100):
 		$BubbleGfx.material.set_shader_parameter("treshold",0.05*(10-i))
-		await get_tree().process_frame
+		if get_tree()!=null:
+			await get_tree().process_frame
+		if not appearing:
+			return
+			
+	appearing = false
+
+func disappear():
+	appearing = false
+	
+	$AudioStreamPlayer2D.play()
+	for i in range(100):
+		$BubbleGfx.material.set_shader_parameter("treshold",0.05*(i))
+		if get_tree()!=null:
+			await get_tree().process_frame
 
 func update_gfx(type):
 	#print("update called "+str(type))
@@ -44,7 +61,8 @@ func update_gfx(type):
 		$BubbleGfx.scale=Vector2(0.2,0.2)
 		appear()
 	elif type == 0:
-		$BubbleGfx.set_texture(null)
+		disappear()
+		#$BubbleGfx.set_texture(null)
 		$Button.visible=true
 	
 # Called when the node enters the scene tree for the first time.

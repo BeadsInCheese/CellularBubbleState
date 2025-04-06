@@ -4,34 +4,30 @@ class_name DataUtility
 static var l = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
 static var l2 = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 
-static func get_saves() -> Array[String]:
-	var file2 = FileAccess.open("res://Saves/saves_data", FileAccess.READ)
-	var D : Array[String] = []
-	
-	while(file2.get_position() < file2.get_length()):
-		var str = file2.get_line()
-		D.append(str)
 
-	file2.close()
-	return D
+static func get_saves() -> Array[String]:
+	DirAccess.make_dir_absolute("Saves")
+	
+	var saves: Array[String]
+	saves.assign(DirAccess.open("Saves").get_files())
+	saves.reverse()
+	return saves
 
 static func get_board_string(b : Array[Bubble], currentTurn):
 	var str = compute_format(b) + str(currentTurn)
 	return str
 	
 
-static func save_to_file(b : Array[String], title : String):
-	var file = FileAccess.open("res://Saves/save-"+title, FileAccess.WRITE)
-	
+static func save_to_file(b : Array[String], title : String,path : String):
+	DirAccess.make_dir_absolute("Saves")
+	print(title.replace(":","-"))
+	var file = FileAccess.open(path+"/"+title.replace(":","-"), FileAccess.WRITE)
+	if(file==null):
+		print(error_string(FileAccess.get_open_error()))
 	for i in range(len(b)):
 		file.store_line(b[i])
 	
 	file.close()
-	
-	var file3 = FileAccess.open("res://Saves/saves_data", FileAccess.READ_WRITE)
-	file3.seek_end()
-	file3.store_line(title)
-	file3.close()
 	
 static func load_from_file(index) -> Array[String]:
 	var lines : Array[String] = []
@@ -39,9 +35,10 @@ static func load_from_file(index) -> Array[String]:
 	if(len(saves) < index):
 		return lines
 	else:
-		#var file = FileAccess.open("res://Saves/"+saves[i],FileAccess.READ)
-		var file = FileAccess.open("res://Saves/save-"+saves[index],FileAccess.READ)
+		print(saves[index])
+		var file = FileAccess.open("Saves/"+saves[index],FileAccess.READ)
 		lines = []
+		print(FileAccess.get_open_error())
 		
 		while(file.get_position() < file.get_length()):
 			var str = file.get_line()
@@ -78,15 +75,13 @@ static func compute_format(b : Array[Bubble]):
 			
 	
 	
-	print("test decode:",decode(char_map(s)))
+	#print("test decode:",decode(char_map(s)))
 	
 	
 	
 	return char_map(s)
 	
 static func char_map(s):
-	
-	
 	var sine_transform = ""
 	for i in range(0,len(s),2):
 		var n

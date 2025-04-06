@@ -26,6 +26,8 @@ func syncronizeTurnOrder(board:Board):
 				
 				board.p1AgentInstance=board.p2AgentInstance
 				board.p2AgentInstance=temp
+				board.p1AgentInstance.playerType=1
+				board.p2AgentInstance.playerType=3
 				return
 			else:
 				return
@@ -76,9 +78,15 @@ func syncronize(observation:Board):
 # Called when the node enters the scene tree for the first time.
 var done=false
 func makeMove(observation:Board):
+	if(observation!=null):
+		await observation.get_tree().process_frame
 	while !done and connected:
 		client.poll()
 		#print(client.get_available_bytes())
+		client.poll()
+		if client.get_status() != StreamPeerTCP.STATUS_CONNECTED:
+			SceneNavigation.goToMultiplayerSelection()
+		
 		if client.get_available_bytes() >0:
 				print("message")
 				var x=client.get_32()

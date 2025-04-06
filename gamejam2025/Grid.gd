@@ -32,7 +32,7 @@ var p1AgentInstance
 var p2AgentInstance
 var player1Agent=load("res://AI/LDAgent.gd")
 var player2Agent=load("res://AI/PlayerAgent.gd")
-var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxAgent.gd"),load("res://AI/LDAgent.gd")]
+var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxAgent.gd"),load("res://AI/LDAgent.gd"),load("res://AI/NNAgent.gd")]
 var automataAgent: AutomataAgent = load("res://AI/AutomataAgent.gd").new()
 
 var victor=-1
@@ -50,13 +50,28 @@ func updateScore():
 			player1Score += 1
 		if(i.tileType == 3 or i.tileType == 4):
 			player2Score += 1
-
+func asArray():
+	var arr=[]
+	for i in gridList:
+		arr.append(i.tileType)
+	return arr
 var announced=false
+func getVictor():
+	var v
+	if player1Score==player2Score:
+		v=0.5
+	elif player1Score>player2Score:
+		v=0
+	else:
+		v=1
+	return v
+var dataAquisition=false
+var  dataCounter=0
 func changeTurn()->void:
 	currentAgent = turnOrder[currentTurn]
 	await turnOrder[currentTurn].makeMove(self)
 	
-
+	#print("type",currentAgent.playerType)
 	if(!loading):
 		currentTurn = (currentTurn+1) % 6
 		boardHistory.resize(currentBoardStatePointer+1)
@@ -65,11 +80,27 @@ func changeTurn()->void:
 	else:
 		loading = false
 	
+	updateScore()
+	#print(player1Score,"   ",player2Score)
 	if(not(isEnd())):
 		changeTurn()
-
-	updateScore()
-	gui.updateSidebar(currentTurn,player1Score,player2Score)
+	
+	if dataAquisition and isEnd():
+		#print(boardHistory)
+		#_trainSave_button_pressed()
+		turnOrder[0].onTrainEnd(boardHistory,getVictor())
+		turnOrder[1].onTrainEnd(boardHistory,getVictor())
+		for i in gridList:
+			i.setTileType(0)
+		currentBoardStatePointer=0
+		boardHistory=[]
+		#trainer.delete_folder_contents("Train/TrainingData")
+		dataCounter+=1
+			
+			
+		changeTurn()
+		pass
+	gui.updateSidebar(currentTurn,player1Score,player2Score,turnOrder[currentTurn].get_is_player())
 	updateCursor()
 	if(!announced and isEnd()):
 		announced=true
@@ -82,7 +113,7 @@ func changeTurn()->void:
 			victor=1
 		for i in turnOrder:
 			i.destructor(self)
-		x.get_node("Text").text="[center]DRAW[/center]" if player1Score==player2Score  else "[center]Player 1 Wins[/center]" if player1Score>player2Score else "[center]Player 2 Wins[/center]"  
+		x.get_node("ColorRect/VBoxContainer/Text").text="[center]DRAW[/center]" if player1Score==player2Score  else "[center]Player 1 Wins[/center]" if player1Score>player2Score else "[center]Player 2 Wins[/center]"  
 		add_child(x)
 		
 	
@@ -121,6 +152,7 @@ func _ready() -> void:
 	
 	await p1AgentInstance.init(self)
 	await p2AgentInstance.init(self)
+	await automataAgent.init(self)
 	
 	turnOrder.append(p1AgentInstance)
 	turnOrder.append(p2AgentInstance)
@@ -163,14 +195,20 @@ func getGridTileType(xpos: int, ypos: int, board: Array):
 		return null
 
 	return board[xpos + ypos * ysize]
+static func getGridTileTypeStatic(xsize:int,ysize:int,xpos: int, ypos: int, board: Array):
+	if xpos < 0 or ypos < 0 or xpos >= xsize or ypos >= ysize:
+		return null
+
+	return board[xpos + ypos * ysize]
+
 
 func decode_board(pointer):
 	var s = boardHistory[pointer]
 	currentTurn = int(s[len(s) - 1])
 	s = DataUtility.decode(s.substr(0,len(s)-1))
 	for i in range(0,len(s)):
-		gridList[i].setTileType(int(s[i]))
-	print("board history ",boardHistory)
+		if gridList[i].tileType != int(s[i]):
+			gridList[i].setTileType(int(s[i]))
 
 
 func _on_tree_exiting() -> void:
@@ -181,7 +219,9 @@ func _skip_button_pressed() -> void:
 	turnOrder[currentTurn].skip=!turnOrder[currentTurn].skip
 
 func _save_button_pressed() -> void:
-	DataUtility.save_to_file(boardHistory, Time.get_datetime_string_from_system())
+	DataUtility.save_to_file(boardHistory, "save-"+Time.get_datetime_string_from_system(),"res://Saves")
+func _trainSave_button_pressed() -> void:
+	DataUtility.save_to_file(boardHistory, str(getVictor())+Time.get_datetime_string_from_system(),"res://Train/TrainingData")
 	
 func _load_button_pressed() -> void:
 	var x : Node2D = load("res://LoadGame.tscn").instantiate()
@@ -215,7 +255,7 @@ func _input(event):
 
 func update_meta():
 	updateScore()
-	gui.updateSidebar(currentTurn,player1Score,player2Score)
+	gui.updateSidebar(currentTurn,player1Score,player2Score,turnOrder[currentTurn].get_is_player())
 	updateCursor()
 
 
