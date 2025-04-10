@@ -1,8 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://cdp1ptkk1qkda"]
+[gd_scene load_steps=4 format=3 uid="uid://b4rgdo55qhhue"]
 
 [ext_resource type="Script" path="res://GUI.gd" id="1_50b85"]
-[ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="2_7aq0k"]
-[ext_resource type="Texture2D" uid="uid://dxmmo6dsch0qk" path="res://resources/finitebubblestate_rules02d.png" id="3_sdivc"]
+[ext_resource type="Theme" path="res://FontArtistic.tres" id="2_7aq0k"]
+[ext_resource type="Texture2D" uid="uid://cu4fk7dnuh5ci" path="res://resources/finitebubblestate_rules02e.png" id="3_pycpc"]
 
 [node name="Sidebar" type="VBoxContainer"]
 custom_minimum_size = Vector2(100, 100)
@@ -94,7 +94,7 @@ autowrap_mode = 0
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(213, 436)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_sdivc")
+texture = ExtResource("3_pycpc")
 
 [node name="statusLabel" type="Label" parent="."]
 layout_mode = 2
