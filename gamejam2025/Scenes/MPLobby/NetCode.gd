@@ -96,9 +96,11 @@ func _process(delta: float) -> void:
 func _exit_tree() -> void:
 	connected=false
 	client.disconnect_from_host()
-	game.queue_free()
+	if(game!=null):
+		game.queue_free()
 	pass
 
 func _on_button_3_pressed() -> void:
-	game.queue_free()
+	if(game!=null):
+		game.queue_free()
 	SceneNavigation.goToMultiplayerSelection()

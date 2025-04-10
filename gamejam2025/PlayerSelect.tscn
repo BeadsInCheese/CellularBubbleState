@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cj0un5t317b7y"]
+[gd_scene load_steps=19 format=3 uid="uid://cj0un5t317b7y"]
 
 [ext_resource type="Script" path="res://playerSelect.gd" id="1_ck5mi"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="2_64eh4"]
@@ -9,8 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://82ydshkri1ic" path="res://PlayermenuComponents/Playeroption_button.tscn" id="6_t4mh3"]
 [ext_resource type="PackedScene" uid="uid://buk1ghkxjvnfv" path="res://PlayermenuComponents/option_button.tscn" id="7_dknv5"]
 [ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="7_tav7e"]
-[ext_resource type="Texture2D" uid="uid://bjb4puyp6bwp1" path="res://resources/SeraBotIcon.png" id="8_vmg0i"]
-[ext_resource type="Texture2D" uid="uid://b1gvpqoynwdv1" path="res://resources/GolgathBotIcon.png" id="10_iyo5k"]
 
 [sub_resource type="Gradient" id="Gradient_156fm"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -126,9 +124,6 @@ offset_top = 231.0
 offset_right = 373.0
 offset_bottom = 367.0
 item_count = 5
-popup/item_2/icon = ExtResource("10_iyo5k")
-popup/item_3/icon = ExtResource("8_vmg0i")
-popup/item_3/id = 2
 popup/item_4/id = 4
 
 [node name="BackButton" parent="." instance=ExtResource("7_dknv5")]
@@ -147,9 +142,6 @@ offset_top = 231.0
 offset_right = 893.0
 offset_bottom = 367.0
 item_count = 5
-popup/item_2/icon = ExtResource("10_iyo5k")
-popup/item_3/icon = ExtResource("8_vmg0i")
-popup/item_3/id = 2
 popup/item_4/id = 4
 
 [node name="Transition" parent="." instance=ExtResource("7_tav7e")]
