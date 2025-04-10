@@ -61,7 +61,7 @@ func _ready() -> void:
 	
 	game=scene.instantiate()
 	get_tree().root.add_child(game)
-	_send_keep_alive()
+	#_send_keep_alive()
 	pass # Replace with function body.
 
 func _send_keep_alive():
