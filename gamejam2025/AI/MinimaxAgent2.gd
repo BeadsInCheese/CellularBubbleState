@@ -1,6 +1,6 @@
 extends AgentBase
 
-class_name MinimaxAgent
+class_name MinimaxAgent2
 
 # Called when the node enters the scene tree for the first time.
 func makeMove(observation:Board):
@@ -29,18 +29,18 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 func get_custom_class_name():
-	return "MinimaxAgent"
+	return "MinimaxAgent2"
 
 var thread: Thread
 var game_board: Board
-var minimax: Minimax = Minimax.new(Callable(result), Callable(terminal), Callable(utility), Callable(possible_actions))
+var minimax: Minimax2 = Minimax2.new(Callable(result), Callable(terminal), Callable(utility), Callable(possible_actions))
 
 var calculated_action: int
 
 func minimax_step() -> void:
 	var tempBoard = game_board.getBoardCopy()
 	
-	var action: Array = minimax.action(tempBoard, game_board.currentTurn, 3, 18, 2)
+	var action: Array = minimax.action(tempBoard, game_board.currentTurn, 7, 5, 0)
 	if len(action) == 0:
 		return
 

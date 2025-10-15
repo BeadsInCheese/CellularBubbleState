@@ -123,8 +123,10 @@ offset_left = 213.0
 offset_top = 231.0
 offset_right = 373.0
 offset_bottom = 367.0
-item_count = 5
+item_count = 6
 popup/item_4/id = 4
+popup/item_5/text = "Strategol"
+popup/item_5/id = 5
 
 [node name="BackButton" parent="." instance=ExtResource("7_dknv5")]
 
@@ -141,8 +143,10 @@ offset_left = 733.0
 offset_top = 231.0
 offset_right = 893.0
 offset_bottom = 367.0
-item_count = 5
+item_count = 6
 popup/item_4/id = 4
+popup/item_5/text = "Strategol"
+popup/item_5/id = 5
 
 [node name="Transition" parent="." instance=ExtResource("7_tav7e")]
 
