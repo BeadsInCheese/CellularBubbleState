@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="BTNode" load_steps=10 format=3 uid="uid://dh5c0cpappgu5"]
+
+[ext_resource type="Script" path="res://AI/BTTree/BTnode.gd" id="1_8siw3"]
+[ext_resource type="Script" path="res://AI/BTTree/ConditionNode.gd" id="2_f2q1a"]
+[ext_resource type="Script" path="res://AI/BTTree/BTAction.gd" id="2_lumjx"]
+
+[sub_resource type="Resource" id="Resource_8tx7v"]
+script = ExtResource("2_lumjx")
+act = 0
+children = Array[ExtResource("1_8siw3")]([])
+
+[sub_resource type="Resource" id="Resource_dr51m"]
+script = ExtResource("2_f2q1a")
+cond = 0
+children = Array[ExtResource("1_8siw3")]([SubResource("Resource_8tx7v")])
+
+[sub_resource type="Resource" id="Resource_um6qi"]
+script = ExtResource("2_lumjx")
+act = 1
+children = Array[ExtResource("1_8siw3")]([])
+
+[sub_resource type="Resource" id="Resource_o22lh"]
+script = ExtResource("2_f2q1a")
+cond = 1
+children = Array[ExtResource("1_8siw3")]([SubResource("Resource_um6qi")])
+
+[sub_resource type="Resource" id="Resource_cqskp"]
+script = ExtResource("2_lumjx")
+act = 2
+children = Array[ExtResource("1_8siw3")]([])
+
+[sub_resource type="Resource" id="Resource_tgr7w"]
+script = ExtResource("2_lumjx")
+act = 0
+children = Array[ExtResource("1_8siw3")]([])
+
+[resource]
+script = ExtResource("1_8siw3")
+children = Array[ExtResource("1_8siw3")]([SubResource("Resource_dr51m"), SubResource("Resource_o22lh"), SubResource("Resource_cqskp"), SubResource("Resource_tgr7w")])
