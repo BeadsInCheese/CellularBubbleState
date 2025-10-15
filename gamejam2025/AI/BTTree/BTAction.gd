@@ -11,6 +11,17 @@ func calcFromPos(index:int,boardX:int)->Vector2:
 func calcToPos(index:Vector2,boardX:int)->int:
 	return index.y*boardX+index.x
 @export var act:action
+
+func placeDiagonal(i:int,offset:Vector2,observation:Board,playerType):
+	var pos=calcFromPos(i,observation.xsize)
+	var topIndex=calcToPos(pos+offset,observation.xsize)
+	if(topIndex>=0&&topIndex<observation.gridList.size()):
+		if(observation.gridList[topIndex].tileType==0):
+			await observation.get_tree().create_timer(0.10).timeout
+			observation.gridList[topIndex].setTileType(playerType)
+			print(str(i)+":"+str(topIndex))
+			return true
+	return false
 func doActionOrFail(observation:Board,playerType)->bool:
 	if(act==action.RANDOM_MOVE):
 		var x=randi()%100
@@ -32,41 +43,19 @@ func doActionOrFail(observation:Board,playerType)->bool:
 		else:
 			print("Cached move failed")
 			return false
-	return false
+
 	if(act==action.PLAY_DIAGONAL):
+		var offsets:Array[Vector2]=[Vector2(1,1),Vector2(-1,-1),Vector2(-1,1),Vector2(1,-1)]
 		for i in range(observation.gridList.size()):
+			print("checking square...")
 			if(observation.gridList[i].tileType==playerType):
-				var pos=calcFromPos(i,observation.xsize)
-				var topIndex=calcToPos(pos+Vector2(1,1),observation.xsize)
-				if(topIndex>=0&&topIndex<observation.gridList.size()):
-					if(observation.gridList[topIndex].tileType==0):
-						await observation.get_tree().create_timer(0.10).timeout
-						observation.gridList[topIndex].setTileType(playerType)
-						print(str(i)+":"+str(topIndex))
-						return true
-				var botIndex=calcToPos(pos+Vector2(-1,-1),observation.xsize)
-				if(botIndex>=0&&botIndex<observation.gridList.size()):
-					if(observation.gridList[botIndex].tileType==0):
-						await observation.get_tree().create_timer(0.10).timeout
-						observation.gridList[botIndex].setTileType(playerType)
-						print(str(i)+":"+str(botIndex))
-						return true
-				topIndex=calcToPos(pos+Vector2(-1,1),observation.xsize)
-				if(topIndex>=0&&topIndex<observation.gridList.size()):
-					if(observation.gridList[topIndex].tileType==0):
-						await observation.get_tree().create_timer(0.10).timeout
-						observation.gridList[topIndex].setTileType(playerType)
-						print(str(i)+":"+str(topIndex))
-						return true
-				botIndex=calcToPos(pos+Vector2(1,-1),observation.xsize)
-				if(botIndex>=0&&botIndex<observation.gridList.size()):
-					if(observation.gridList[botIndex].tileType==0):
-						await observation.get_tree().create_timer(0.10).timeout
-						observation.gridList[botIndex].setTileType(playerType)
-						print(str(i)+":"+str(botIndex))
+				offsets.shuffle()
+				for j in range(offsets.size()):
+					if(await placeDiagonal(i,offsets[j],observation,playerType)):
 						return true
 		print("FAILED TO FIND DIAGONAL")
 		return false
+	return false
 func evaluate(observation:Board,playerType)->bool:
 	print("TRY ACTION "+str(action.keys()[act]))
 	return await doActionOrFail(observation,playerType)
