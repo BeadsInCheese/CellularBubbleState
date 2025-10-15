@@ -3,7 +3,8 @@ class_name BTAction
 enum action{
 	RANDOM_MOVE,
 	PLAY_CACHED_MOVE,
-	PLAY_DIAGONAL
+	PLAY_DIAGONAL,
+	PLACE_CENTER
 }
 
 func calcFromPos(index:int,boardX:int)->Vector2:
@@ -55,6 +56,21 @@ func doActionOrFail(observation:Board,playerType)->bool:
 						return true
 		print("FAILED TO FIND DIAGONAL")
 		return false
+	if(act==action.PLACE_CENTER):
+		var mindist=10000
+		var selected=null
+		var found=false
+		for i in range(observation.gridList.size()):
+			if(observation.gridList[i].tileType==0):
+				var l=(Vector2(observation.xsize/2,observation.ysize/2)-calcFromPos(i,observation.xsize)).length_squared()
+				if(l<mindist):
+					selected=i
+					mindist=l
+					found=true
+		if found:
+			await observation.get_tree().create_timer(0.10).timeout
+			observation.gridList[selected].setTileType(playerType)
+			return true
 	return false
 func evaluate(observation:Board,playerType)->bool:
 	print("TRY ACTION "+str(action.keys()[act]))

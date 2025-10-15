@@ -6,7 +6,7 @@
 
 [sub_resource type="Resource" id="Resource_8tx7v"]
 script = ExtResource("2_lumjx")
-act = 0
+act = 3
 children = Array[ExtResource("1_8siw3")]([])
 
 [sub_resource type="Resource" id="Resource_dr51m"]
@@ -31,7 +31,7 @@ children = Array[ExtResource("1_8siw3")]([])
 
 [sub_resource type="Resource" id="Resource_tgr7w"]
 script = ExtResource("2_lumjx")
-act = 0
+act = 3
 children = Array[ExtResource("1_8siw3")]([])
 
 [resource]
