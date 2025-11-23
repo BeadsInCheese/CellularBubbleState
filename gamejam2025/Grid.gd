@@ -34,7 +34,7 @@ var player1Agent=load("res://AI/LDAgent.gd")
 var player2Agent=load("res://AI/PlayerAgent.gd")
 var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxAgent.gd"),load("res://AI/LDAgent.gd"),load("res://AI/BasicHeuristicEval.gd"),load("res://AI/MinimaxAgent2.gd")]
 var automataAgent: AutomataAgent = load("res://AI/AutomataAgent.gd").new()
-
+signal turnChangedSignal
 var victor=-1
 func isEnd()->bool:
 	for i in gridList:
@@ -84,7 +84,7 @@ func changeTurn()->void:
 	#print(player1Score,"   ",player2Score)
 	if(not(isEnd())):
 		changeTurn()
-	
+		turnChangedSignal.emit()
 	if dataAquisition and isEnd():
 		#print(boardHistory)
 		#_trainSave_button_pressed()

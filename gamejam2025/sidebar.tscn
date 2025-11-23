@@ -6,6 +6,7 @@
 
 [node name="Sidebar" type="VBoxContainer"]
 custom_minimum_size = Vector2(100, 100)
+offset_left = 1.0
 offset_right = 656.0
 offset_bottom = 579.0
 size_flags_stretch_ratio = 1.86
