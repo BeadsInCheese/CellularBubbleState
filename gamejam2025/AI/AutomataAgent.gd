@@ -3,6 +3,7 @@ extends AgentBase
 class_name AutomataAgent
 
 func makeMove(observation:Board):
+	await observation.get_tree().create_timer(0.20).timeout
 	game_board = observation
 	automata_step()
 	moveMade.emit(game_board)
