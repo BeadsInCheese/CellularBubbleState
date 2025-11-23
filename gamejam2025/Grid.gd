@@ -249,13 +249,14 @@ func _input(event):
 			#print("pointer=",currentBoardStatePointer," turn=",currentTurn)
 			decode_board(currentBoardStatePointer)
 			update_meta()
+			turnChangedSignal.emit()
 		elif (event.as_text() == "Right" && (turnOrder[(len(boardHistory)-1)%6].get_is_player() || hasEnded)):
 			currentBoardStatePointer += 1
 			currentBoardStatePointer = clampi(currentBoardStatePointer,0,len(boardHistory)-1)
 			#print("pointer=",currentBoardStatePointer," turn=",currentTurn)
 			decode_board(currentBoardStatePointer)
 			update_meta()
-
+			turnChangedSignal.emit()
 func update_meta():
 	updateScore()
 	gui.updateSidebar(currentTurn,player1Score,player2Score,turnOrder[currentTurn].get_is_player())
