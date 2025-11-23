@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bmhbegdsa6jji"
-path="res://.godot/imported/bubble03b.png-2e2aaf9f65392eda36d01cb3e57fd536.ctex"
+uid="uid://b1gvpqoynwdv1"
+path="res://.godot/imported/GolgathBotIcon.png-0cfea5cd4111bc7ecee6ee39bccd97e4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/bubble03b.png"
-dest_files=["res://.godot/imported/bubble03b.png-2e2aaf9f65392eda36d01cb3e57fd536.ctex"]
+source_file="res://resources/GFX/AI icons/GolgathBotIcon.png"
+dest_files=["res://.godot/imported/GolgathBotIcon.png-0cfea5cd4111bc7ecee6ee39bccd97e4.ctex"]
 
 [params]
 

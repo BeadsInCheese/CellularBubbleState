@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxmmo6dsch0qk"
-path="res://.godot/imported/finitebubblestate_rules02d.png-b545199c36aac5c1a4dfa5289a8c6735.ctex"
+uid="uid://bjb4puyp6bwp1"
+path="res://.godot/imported/SeraBotIcon.png-a7a656cb2b41ea6a3c94bfe2bd6747e7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/finitebubblestate_rules02d.png"
-dest_files=["res://.godot/imported/finitebubblestate_rules02d.png-b545199c36aac5c1a4dfa5289a8c6735.ctex"]
+source_file="res://resources/GFX/AI icons/SeraBotIcon.png"
+dest_files=["res://.godot/imported/SeraBotIcon.png-a7a656cb2b41ea6a3c94bfe2bd6747e7.ctex"]
 
 [params]
 

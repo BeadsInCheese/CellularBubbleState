@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://82ydshkri1ic"]
 
-[ext_resource type="Texture2D" uid="uid://b0nblw8antqm7" path="res://resources/HumanIcon.png" id="1_dhfmh"]
-[ext_resource type="Texture2D" uid="uid://bdscg5n4f3hqd" path="res://resources/LarryTheSeaUrchin.png" id="1_khg82"]
-[ext_resource type="Texture2D" uid="uid://bjb4puyp6bwp1" path="res://resources/SeraBotIcon.png" id="2_kqpx4"]
-[ext_resource type="Texture2D" uid="uid://b1gvpqoynwdv1" path="res://resources/GolgathBotIcon.png" id="3_74qwj"]
+[ext_resource type="Texture2D" uid="uid://b0nblw8antqm7" path="res://resources/GFX/AI icons/HumanIcon.png" id="1_dhfmh"]
+[ext_resource type="Texture2D" uid="uid://bdscg5n4f3hqd" path="res://resources/GFX/AI icons/LarryTheSeaUrchin.png" id="1_khg82"]
+[ext_resource type="Texture2D" uid="uid://bjb4puyp6bwp1" path="res://resources/GFX/AI icons/SeraBotIcon.png" id="2_kqpx4"]
+[ext_resource type="Texture2D" uid="uid://b1gvpqoynwdv1" path="res://resources/GFX/AI icons/GolgathBotIcon.png" id="3_74qwj"]
 
 [node name="OptionButton" type="OptionButton"]
 offset_left = 223.0

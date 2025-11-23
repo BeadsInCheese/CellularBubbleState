@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c1xm7r8r0bcvf"
-path="res://.godot/imported/audio_icon.png-bc8fffe8609d41c4c0f3afe5cc90cf53.ctex"
+uid="uid://bmhbegdsa6jji"
+path="res://.godot/imported/bubble03b.png-a0990fb7cd58a1f131bf0c6707c3f0e1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/audio_icon.png"
-dest_files=["res://.godot/imported/audio_icon.png-bc8fffe8609d41c4c0f3afe5cc90cf53.ctex"]
+source_file="res://resources/GFX/Bubble icons/bubble03b.png"
+dest_files=["res://.godot/imported/bubble03b.png-a0990fb7cd58a1f131bf0c6707c3f0e1.ctex"]
 
 [params]
 

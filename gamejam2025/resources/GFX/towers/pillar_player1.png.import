@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b1gvpqoynwdv1"
-path="res://.godot/imported/GolgathBotIcon.png-be9fa58084baceb483662b6bcb98f8cd.ctex"
+uid="uid://bfkyh5nr4motd"
+path="res://.godot/imported/pillar_player1.png-20eff45087003ed9fe83a78558b84ecb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/GolgathBotIcon.png"
-dest_files=["res://.godot/imported/GolgathBotIcon.png-be9fa58084baceb483662b6bcb98f8cd.ctex"]
+source_file="res://resources/GFX/towers/pillar_player1.png"
+dest_files=["res://.godot/imported/pillar_player1.png-20eff45087003ed9fe83a78558b84ecb.ctex"]
 
 [params]
 

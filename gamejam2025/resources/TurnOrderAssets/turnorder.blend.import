@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dgmp54j5v5s6b"
-path="res://.godot/imported/turnorder.blend-5fc8b95e3202e4ad5aba7f096f811b30.scn"
+path="res://.godot/imported/turnorder.blend-bacf1a2eb56d63fc462a246b4701adfb.scn"
 
 [deps]
 
-source_file="res://prod assets/turnorder.blend"
-dest_files=["res://.godot/imported/turnorder.blend-5fc8b95e3202e4ad5aba7f096f811b30.scn"]
+source_file="res://resources/TurnOrderAssets/turnorder.blend"
+dest_files=["res://.godot/imported/turnorder.blend-bacf1a2eb56d63fc462a246b4701adfb.scn"]
 
 [params]
 

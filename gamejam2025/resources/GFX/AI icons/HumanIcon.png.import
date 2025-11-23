@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdscg5n4f3hqd"
-path="res://.godot/imported/LarryTheSeaUrchin.png-e02c0c11bef1fac75dac7edf903f227a.ctex"
+uid="uid://b0nblw8antqm7"
+path="res://.godot/imported/HumanIcon.png-de67502aca7fc1178978a555a0b58ddf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/LarryTheSeaUrchin.png"
-dest_files=["res://.godot/imported/LarryTheSeaUrchin.png-e02c0c11bef1fac75dac7edf903f227a.ctex"]
+source_file="res://resources/GFX/AI icons/HumanIcon.png"
+dest_files=["res://.godot/imported/HumanIcon.png-de67502aca7fc1178978a555a0b58ddf.ctex"]
 
 [params]
 

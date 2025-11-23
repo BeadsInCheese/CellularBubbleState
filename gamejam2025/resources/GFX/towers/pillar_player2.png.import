@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4q6k2lul8wet"
-path="res://.godot/imported/turnOrder.png-156a6b1bc747853ce24876e23406e2dc.ctex"
+uid="uid://dipb4t7dxgki5"
+path="res://.godot/imported/pillar_player2.png-770d03f0acdc855589b29a069300512b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prod assets/turnOrder.png"
-dest_files=["res://.godot/imported/turnOrder.png-156a6b1bc747853ce24876e23406e2dc.ctex"]
+source_file="res://resources/GFX/towers/pillar_player2.png"
+dest_files=["res://.godot/imported/pillar_player2.png-770d03f0acdc855589b29a069300512b.ctex"]
 
 [params]
 

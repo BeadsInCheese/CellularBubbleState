@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://btcx7r1t2odq"
-path="res://.godot/imported/turnOrderLit.png-4e0aef2993b8f5743364074cac4d4a02.ctex"
+uid="uid://bktbkc55glk1b"
+path="res://.godot/imported/Cube.png-50bc18406c3fb860cf5107ab5e0af335.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://prod assets/turnOrderLit.png"
-dest_files=["res://.godot/imported/turnOrderLit.png-4e0aef2993b8f5743364074cac4d4a02.ctex"]
+source_file="res://resources/GFX/towers/Cube.png"
+dest_files=["res://.godot/imported/Cube.png-50bc18406c3fb860cf5107ab5e0af335.ctex"]
 
 [params]
 
@@ -25,7 +25,7 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
-process/fix_alpha_border=false
+process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
