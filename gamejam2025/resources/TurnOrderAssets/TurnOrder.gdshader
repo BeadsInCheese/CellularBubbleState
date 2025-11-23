@@ -9,17 +9,19 @@ uniform sampler2D unLit;
 void fragment() {
 	// Called for every pixel the material is visible on.
 	vec2 uvCenter=UV-0.5;
-	float angle=PI-atan(uvCenter.x,uvCenter.y);
+	float angle=PI-atan(uvCenter.x,uvCenter.y) - 0.25;
 	float segmentSize=TAU/6.0;
 	int offset=3;
-	bool litSeg=segmentSize*float((index+offset)%6)<angle&&segmentSize*float((index+offset)%6+1)>angle;
+	float start = segmentSize*float((index+offset)%6);
+	float end = segmentSize*float((index+offset)%6+1);
+	bool litSeg=start<angle && end>angle || start<angle+TAU && end>angle+TAU;
 	if(litSeg){
 		COLOR=texture(lit,UV);
 	}else{
 		COLOR=texture(unLit,UV);
 	}
-	
-	
+
+
 }
 
 //void light() {
