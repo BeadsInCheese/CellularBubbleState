@@ -16,6 +16,7 @@ var latestTileIndexes: Array[int] = []
 static var boardHistory : Array[String] = []
 var currentBoardStatePointer = 0
 var loading = false
+var hasEnded=false
 
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
 var turnOrder=[]
@@ -55,7 +56,7 @@ func asArray():
 	for i in gridList:
 		arr.append(i.tileType)
 	return arr
-var announced=false
+
 func getVictor():
 	var v
 	if player1Score==player2Score:
@@ -102,8 +103,8 @@ func changeTurn()->void:
 		pass
 	gui.updateSidebar(currentTurn,player1Score,player2Score,turnOrder[currentTurn].get_is_player())
 	updateCursor()
-	if(!announced and isEnd()):
-		announced=true
+	if(!hasEnded and isEnd()):
+		hasEnded=true
 		var x = load("res://VictorAnnouncement.tscn").instantiate()
 		if player1Score==player2Score:
 			victor=0.5
@@ -242,13 +243,13 @@ func _exit_tree() -> void:
 	boardHistory.clear()
 func _input(event):
 	if event is InputEventKey and event.pressed:
-		if (event.as_text() == "Left" && (turnOrder[(len(boardHistory)-1)%6].get_is_player() || isEnd())):
+		if (event.as_text() == "Left" && (turnOrder[(len(boardHistory)-1)%6].get_is_player() || hasEnded)):
 			currentBoardStatePointer -= 1
 			currentBoardStatePointer = clampi(currentBoardStatePointer,0,len(boardHistory)-1)
 			#print("pointer=",currentBoardStatePointer," turn=",currentTurn)
 			decode_board(currentBoardStatePointer)
 			update_meta()
-		elif(event.as_text() == "Right" && (turnOrder[(len(boardHistory)-1)%6].get_is_player() || isEnd())):
+		elif (event.as_text() == "Right" && (turnOrder[(len(boardHistory)-1)%6].get_is_player() || hasEnded)):
 			currentBoardStatePointer += 1
 			currentBoardStatePointer = clampi(currentBoardStatePointer,0,len(boardHistory)-1)
 			#print("pointer=",currentBoardStatePointer," turn=",currentTurn)
