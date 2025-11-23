@@ -5,6 +5,7 @@ extends TextureRect
 func update_turn():
 	material.set_shader_parameter("index",get_parent().currentTurn)
 func _ready() -> void:
+	material.set_shader_parameter("index",0)
 	get_parent().turnChangedSignal.connect(update_turn)
 
 
