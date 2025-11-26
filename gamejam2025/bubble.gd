@@ -78,7 +78,7 @@ func _process(delta: float) -> void:
 
 
 func _on_button_button_down() -> void:
-	print("clicked bubble, player=",board.turnOrder[board.currentTurn].playerType)
+	#print("clicked bubble, player=",board.turnOrder[board.currentTurn].playerType)
 	if(board.currentBoardStatePointer < len(board.boardHistory)-1):
 		return
 	if(board.turnOrder[board.currentTurn].get_is_player()==true and not(board.turnOrder[board.currentTurn].skip)):
