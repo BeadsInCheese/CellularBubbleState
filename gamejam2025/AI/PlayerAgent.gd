@@ -9,6 +9,9 @@ func makeMove(observation:Board):
 	
 	#print("latest tile index: " + str(observation.latestTileIndex))
 
+	if observation.tutorial:
+		observation.get_node("Node2D").sequence
+
 	while makingMove:
 		if(observation!=null):
 			if(skip):

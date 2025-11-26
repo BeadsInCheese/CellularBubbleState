@@ -79,6 +79,8 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+
 "
 
 [sub_resource type="Environment" id="Environment_in81w"]
@@ -133,6 +135,7 @@ volume_db = -9.502
 autoplay = true
 
 [node name="Board" type="Sprite2D" parent="." node_paths=PackedStringArray("gui")]
+unique_name_in_owner = true
 script = ExtResource("1_aixle")
 gui = NodePath("../Sidebar")
 
@@ -147,6 +150,53 @@ offset_bottom = 728.0
 scale = Vector2(0.215, 0.215)
 texture = ExtResource("8_l4w7h")
 script = ExtResource("8_ncibk")
+
+[node name="Label2" type="Label" parent="Board"]
+offset_left = 22.0
+offset_top = 37.0
+offset_right = 35.0
+offset_bottom = 652.0
+theme_override_font_sizes/font_size = 16
+text = "1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+10
+
+11
+
+12"
+autowrap_mode = 2
+
+[node name="Label" type="Label" parent="Board"]
+offset_left = 45.0
+offset_top = 15.0
+offset_right = 669.0
+offset_bottom = 91.0
+theme_override_font_sizes/font_size = 16
+text = "A          B          C          D          E          F          G          H          I           J           K          L"
+
+[node name="Label3" type="Label" parent="Board"]
+visible = false
+offset_left = 240.0
+offset_top = 287.0
+offset_right = 273.0
+offset_bottom = 310.0
+text = "X"
 
 [node name="PlayerController" type="Node2D" parent="."]
 script = SubResource("GDScript_vi183")

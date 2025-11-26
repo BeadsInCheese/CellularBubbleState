@@ -25,7 +25,7 @@ func automata_step() -> void:
 	var baseGrid = game_board.getBoardCopy()
 	var tempGrid = baseGrid.duplicate(true)
 	var result=automata.AutomataStep(tempGrid)
-	print(tempGrid)
+	#print(tempGrid)
 	
 	for i in range(len(tempGrid)):
 		var currentTile = game_board.gridList[i].tileType

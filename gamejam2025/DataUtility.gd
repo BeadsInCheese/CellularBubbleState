@@ -20,7 +20,6 @@ static func get_board_string(b : Array[Bubble], currentTurn):
 
 static func save_to_file(b : Array[String], title : String,path : String):
 	DirAccess.make_dir_absolute("Saves")
-	print(title.replace(":","-"))
 	var file = FileAccess.open(path+"/"+title.replace(":","-"), FileAccess.WRITE)
 	if(file==null):
 		print(error_string(FileAccess.get_open_error()))
@@ -35,7 +34,6 @@ static func load_from_file(index) -> Array[String]:
 	if(len(saves) < index):
 		return lines
 	else:
-		print(saves[index])
 		var file = FileAccess.open("Saves/"+saves[index],FileAccess.READ)
 		lines = []
 		print(FileAccess.get_open_error())

@@ -3,7 +3,6 @@ class_name LDAgent
 
 var agentColor
 var playerColor
-var time_step_player
 var G_default_own_coeff1 : float
 var G_default_own_coeff2 : float
 var G_default_opponent_coeff1 : float
@@ -12,24 +11,23 @@ var W_target = [true,false]
 var DPU_list : Array[DynamicalProcessingUnit] = []
 var history = []
 
-static var N_ROUNDS = 1200
-static var DL_UNITS = 8
+static var N_ROUNDS = -1#1200
+static var DL_UNITS = 1
 
 
 
 func init_dpu():
 	var j = 1
 	for k in range(0,DL_UNITS):
-		for m in range(0,16):
-			for i in range(0,100):
-				var u : DynamicalProcessingUnit = DynamicalProcessingUnit.new()
-				u.id = i + 100*m + 16*100*k
-				u.offsetX = floor(i/10) + 1
-				u.offsetY = j
-				u.init()
-				u.currentTurn = time_step_player
-				DPU_list.append(u)
-				j = (j+1) % 10
+		for i in range(0,100):
+			var u : DynamicalProcessingUnit = DynamicalProcessingUnit.new()
+			u.id = i + 100*k
+			u.offsetX = floor(i/10) + 1
+			u.offsetY = j
+			u.currentTurn = 0
+			u.init()
+			DPU_list.append(u)
+			j = (j+1) % 10
 
 func compute_heuristic(n,color,board):
 	var result = 0
@@ -88,27 +86,22 @@ func generate_move(board : Array[Bubble]) -> int:
 	var n = 0
 	while(n < N_ROUNDS):
 		for dpu: DynamicalProcessingUnit in DPU_list:
-			for p : Point in dpu.get_points():
-				for value : float in p.score:
-					#history.append(p)
-					#get_tree().root.get_node("root/Board").get_history()
-					var old_data : Array = []
-					old_data.append(value)
-					#for j in range(len(history),-1,-7):
-					#	old_data.append(history[j])
-					for i in len(W):
-						dpu.inference_generic(p.x,p.y,value,W[i],i,old_data)
-						
-						
+			var d = FSystem.getRelation(dpu)
+			
+			for i in len(W):
+				#TODO: 
+				var dx = 0.3
+				var R = FSystem.getWaypointTarget(d,W[i])
+				#TODO endvector points in direction give by W[i] #
+				var V_INT = Vector2(0,-3)
+				var V_VEC = Vector2(0,5)
+				var p = Vector2(1,2) #lattice of single point
+				var z = dpu.inference_generic(p.x,p.y,d.x,d.y,V_VEC,V_INT,W[i],FSystem.getTime(W[i]))
 				
-				#for p1 : Point in dpu.get_points():
-					#for p2 : Point in dpu.get_points():
-						#
-						#for layer1 : float in p1.score:
-							#for layer2 : float in p2.score:
-								#dpu.inference_internal(p1,p2,layer1,layer2)
-								
-								#d.x, d.y, layer z <-> G_xy(z)
+				var TR_LIST : Array = FSystem.generatePath(d,p,R)
+			#TODO evaluate R in terms of W
+			#return ranked TR_LIST:s closest matching Move
+			
 		n += 1
 		
 	var j = randi() % 144
@@ -159,13 +152,10 @@ func proceduralMove(board : Board):
 
 func init(board):
 	init_dpu()
-	Parameters.SEED = randi()
-	FSystem.randomize_tables(Parameters.SEED)
+	#Parameters.SEED = randi()
+	#FSystem.randomize_tables(Parameters.SEED)
 
 func makeMove(observation:Board):
-	await makeRandomMove(observation)
-	await observation.get_tree().process_frame
-	return
 	await observation.get_tree().create_timer(0.5).timeout
 	var game_board = proceduralMove(observation)
 	moveMade.emit(game_board)

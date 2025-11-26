@@ -1,0 +1,35 @@
+extends "res://AI/AgentBase.gd"
+
+class_name TutorialAgent
+
+var gameBoard
+var agentStage = 0
+
+#[66,43,67,64,64,43,90,78,89,90,51]
+var t = [43,67,43,90,90,51]
+
+# Called when the node enters the scene tree for the first time.
+#var makingMove=false
+
+func makeMove(observation:Board):
+	makingMove=true
+	
+	print("agentStage=",agentStage)
+	gameBoard = observation
+	await observation.get_tree().create_timer(2.0).timeout
+	gameBoard.gridList[t[agentStage]].setTileType(3, false)
+	agentStage += 1
+
+	moveMade.emit(observation)
+	
+	
+func _ready() -> void:
+	pass
+	
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+func get_custom_class_name():
+	return "TutorialAgent"
+func get_is_player() -> bool:
+	return false

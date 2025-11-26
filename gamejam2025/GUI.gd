@@ -26,7 +26,6 @@ func updateSidebar(turn,score1,score2,isPlayer):
 	elif(turn == 5):
 		$TurnValue.text="Automata turn"
 		$contLower/NextTurnValue.text="Player 1"
-	print(isPlayer)
 	$statusLabel.text="thinking..." if not(isPlayer) else "" 
 
 	

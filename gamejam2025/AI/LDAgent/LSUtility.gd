@@ -3,6 +3,9 @@ class_name MathLib
 
 static var J = []
 
+static func computeMetricM1(Z1,Z2):
+	return det(mult(Z1,inv(Z2)))-det(mult(Z2,inv(Z1)))
+
 static func mult(M,N):
 	var O = []
 	var sum = 0
@@ -74,6 +77,29 @@ static func det(N):
 	#print(J)
 			
 	return result
+#(vector0.x,vector0.y) 
+#(vec
+static func getAngularError(v1:Vector2,v2:Vector2):
+	v2.x += v1.x - v2.x
+	v2.y += v1.y - v2.y
+	
+	v1 = v1.normalized()
+	v2 = v2.normalized()
+	
+	
+
+#ofunc format: [id,a0,a1,a2,a3,a4,a5]
+static func getDVector(ofunc:Array,x) -> Vector2:
+	var dy = 0
+	if(ofunc[0] < 16):
+		for i in range(1,7):
+			dy += i*ofunc[i+1]*(x**(i-1))
+	else:
+		if(ofunc[0] == 16): #sin(x)
+			dy = ofunc[2]*ofunc[1]*cos(ofunc[2]*x)
+		elif(ofunc[0] == 17): #exp(x)
+			dy = ofunc[1]*exp(ofunc[2]*x)
+	return Vector2(1,dy)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
