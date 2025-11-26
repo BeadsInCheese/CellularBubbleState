@@ -2,7 +2,7 @@ extends TextureRect
 
 
 # Called when the node enters the scene tree for the first time.
-func update_turn():
+func update_turn(absoluteTurn: int):
 	material.set_shader_parameter("index",get_parent().currentTurn)
 func _ready() -> void:
 	material.set_shader_parameter("index",0)
