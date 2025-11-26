@@ -6,8 +6,8 @@ var data = []
 var G = [[0,0,0],[0,0,0],[0,0,0]]
 var n = 0
 static var MATCH : Point
-var ACC : Region = Region.new()
-var LAST : Region = Region.new()
+var ACC : Region
+var LAST : Region
 enum Regions{COMPLEMENT}
 
 func initialize(r : Regions, L : Region) -> Region:

@@ -15,7 +15,6 @@ func _button_pressed():
 	board.decode_board(board.currentBoardStatePointer)
 
 	board.loading = true
-	print("true")
 	board.currentAgent.makingMove = false
 	
 	get_tree().root.get_node("root/Sidebar/statusLabel").set_text("save loaded!")

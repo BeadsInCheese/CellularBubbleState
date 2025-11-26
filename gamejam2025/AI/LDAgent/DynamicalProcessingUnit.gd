@@ -4,7 +4,7 @@ class_name DynamicalProcessingUnit
 var INS:Instruction
 var param:Parameters
 var color : int
-var currentTurn = 0
+var currentTurn
 
 var offsetX
 var offsetY
@@ -12,7 +12,7 @@ var id
 
 var R : Array[Point] = []
 var Q : Array[float]#coefficients for Rel(h_u,R_ij(y)) Q[k+9*j+9*7*w]
-
+var LATTICE_SIZE = 4
 
 func init():
 	for w in range(0,Parameters.HEUR_NO):
@@ -29,6 +29,7 @@ func init():
 		R.append(p)
 	for p in R:
 		p.add_adjacents(p.x,p.y)
+	print("initialized DPU ",id," at ",offsetX,",",offsetY)
 
 func get_points():
 	return R
@@ -46,47 +47,7 @@ func update(x,y,piece):
 
 #color player1 = 1, color player2 = 3
 func update_layers():
-	
-	
-	var G : Region = Region.new()
-	G.add_data(R)
-	#diag-capture
-	#G.process_str("chk2_diag2_set&dinv-2,2_rR")
-	#G.process(["check",2],["has_diag",2],["set","diag_invert",-2,2],["refresh",R])
-	G.check(G,Point.BUBBLE_OWN)
-	G.has_diag(Point.BUBBLE_OWN)
-	G.set_data_cond(G.diag_invert(),Point.BUBBLE_OPPONENT,Point.BUBBLE_OWN)
-	G.refresh_from(R)
-	#bubble shifting rule
-	#G.process_str("chk2_adj2_adj1_set&ACC@cdiag0,2_set&int&ACC@cdiag&adj2&2,0_rR")
-	G = G.check(G,Point.BUBBLE_OWN)
-	G = G.has_adj(Point.BUBBLE_OWN)
-	G = G.has_adj(Point.TOWER_OWN)
-	G.set_data_cond(G.ACC.corner_diag(),Point.EMPTY,Point.BUBBLE_OWN)
-	G.set_data_cond(G.intersect(G.ACC.corner_diag().has_adj(Point.BUBBLE_OWN)),Point.BUBBLE_OWN,Point.EMPTY)
-	G.refresh_from(R)
-	#3-in-a-row addition rule
-	G = G.check(G,Point.BUBBLE_OWN)
-	G = G.has_adj(Point.BUBBLE_OWN)
-	G.check(G.next(G.LAST),Point.BUBBLE_OWN)
-	G.set_data_cond(G.LAST.has_adj(Point.EMPTY),Point.EMPTY,Point.BUBBLE_OWN)
-	G.refresh_from(R)
-	#tower-growing rule
-	G.check(G,Point.TOWER_OWN)
-	G = G.has_adj(Point.BUBBLE_OWN)
-	G.set_data_cond(G.next(G.LAST),Point.EMPTY,Point.BUBBLE_OWN)
-	G.refresh_from(R)
-	#bubble creation rule
-	G = G.check(G,Point.TOWER_OWN)
-	G.check(G.next(G),Point.TOWER_OWN)
-	G.set_data_cond(G.LAST,Point.EMPTY,Point.BUBBLE_OWN)
-	G.refresh_from(R)
-	#diagonal rule
-	G = G.check(G,Point.TOWER_OWN)
-	G.has_diag(Point.TOWER_OWN)
-	G = G.add(G.check(G.ACC.diag_invert(),Point.BUBBLE_OWN))
-	G.set_data_cond(G.corner_diag(),Point.EMPTY,Point.BUBBLE_OWN)
-	
+
 	for point : Point in R:
 		#Layer 0 - standard scores(1 if own piece, -1 if enemy piece, 0 for empty)
 		#Rule0(Diag-capture)
@@ -114,7 +75,8 @@ func update_layers():
 			for p in point.adj:
 				if(p.piece == Point.BUBBLE_OWN):
 					pass
-
+		
+		FSystem.Gates.append(Vector4(1,7,1.4,4))
 
 func update_point(posX, posY, piece):
 	var B = [[0,1,2],[3,4,5],[6,7,8]]
@@ -130,22 +92,29 @@ func update_point(posX, posY, piece):
 		R[B[posX+1][posY+1]].piece = Point.EMPTY
 
 
-func inference_generic(p_coord_x, p_coord_y, layer_index, diff, w_index, old_data : Array[Point]) -> int:
+func inference_generic(x,y,m1, m2, targetVector, targetInterval, W, t0) -> int:
 	#TODO compute z_0 by Q values
-	var z = old_data[0].score[layer_index]*randf()
+	
 	var t = 3
-	print("z = ",z)
-	print("starting inference:", "w_index=",w_index,"G_",p_coord_x,p_coord_y,"(",layer_index,")","for t = ",t)
+	#print("starting inference: G_",p_coord_x,p_coord_y,"(",layer_index,")","for t = ",t)
 	
-	
-	var j = randi() % len(old_data)
-	var p : Point = old_data[j]
 	var turn = (currentTurn + t) % 6
-	var tr_chain = process(p.score[layer_index],layer_index,len(old_data) - j + t,turn,old_data)
+	#var tr_chain = process(p.score[layer_index],layer_index,len(old_data) - j + t,turn,old_data)
+	var e0 = process(FSystem.AVGLocalVector(m1,m2),targetVector,t0)
 	
 	return 0
 
-func process(metricTarget,layer,span,turn,data):
+func process(vector0,vector,t) -> float:
+	t /= 2
+	var newVector = FSystem.getVector(FSystem.getSPElement(vector0,vector),t)
+	if(t < 1):
+		return MathLib.getAngularError(vector0,vector)
+	else:
+		return process(vector0,newVector,t)
+
+
+
+func process2(metricTarget,layer,span,turn,data):
 	var tries = 0
 	var gamma = []
 	var g

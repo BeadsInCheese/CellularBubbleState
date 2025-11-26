@@ -1,7 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cdp1ptkk1qkda"]
+[gd_scene load_steps=4 format=3 uid="uid://b4rgdo55qhhue"]
 
 [ext_resource type="Script" path="res://GUI.gd" id="1_50b85"]
-[ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="2_7aq0k"]
+[ext_resource type="Theme" path="res://FontArtistic.tres" id="2_7aq0k"]
 [ext_resource type="Texture2D" uid="uid://cu4fk7dnuh5ci" path="res://resources/finitebubblestate_rules02e.png" id="3_pycpc"]
 
 [node name="Sidebar" type="VBoxContainer"]
@@ -91,10 +91,46 @@ theme = ExtResource("2_7aq0k")
 fit_content = true
 autowrap_mode = 0
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(213, 436)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_pycpc")
-
 [node name="statusLabel" type="Label" parent="."]
 layout_mode = 2
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 2
+size_flags_stretch_ratio = 2.88
+current_tab = 1
+
+[node name="Console" type="Panel" parent="TabContainer"]
+visible = false
+layout_mode = 2
+size_flags_stretch_ratio = 3.56
+metadata/_tab_index = 0
+
+[node name="TextEdit2" type="TextEdit" parent="TabContainer/Console"]
+layout_mode = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 2.0
+offset_bottom = 276.0
+placeholder_text = "ove CanvasItem \"Sprite2D\" to (183, 381)
+Scene Undo: Move CanvasItem \"Sprite2D\" to (183, 381)
+Scene Undo: Set scale
+Create Node
+Reparent Node
+Create Nodefg
+fgdfgdfgfgg
+fgjggfggfgfg
+ghfghghf
+ghfghfgh
+"
+editable = false
+scroll_smooth = true
+
+[node name="Rules" type="Panel" parent="TabContainer"]
+layout_mode = 2
+size_flags_stretch_ratio = 12.84
+metadata/_tab_index = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="TabContainer/Rules"]
+position = Vector2(187, 118)
+scale = Vector2(0.425, 0.425)
+texture = ExtResource("3_pycpc")

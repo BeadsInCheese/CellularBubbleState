@@ -4,9 +4,9 @@
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="1_qw4ww"]
 [ext_resource type="AudioStream" uid="uid://bopl44gp5ld8e" path="res://resources/loop_bubbles_1.ogg" id="2_s7r41"]
 [ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_w1ryg"]
-[ext_resource type="PackedScene" uid="uid://cdp1ptkk1qkda" path="res://sidebar.tscn" id="3_xlshu"]
+[ext_resource type="PackedScene" uid="uid://b4rgdo55qhhue" path="res://sidebar.tscn" id="3_xlshu"]
 [ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="7_nmuy5"]
-[ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="8_3ddsp"]
+[ext_resource type="PackedScene" path="res://transition.tscn" id="8_3ddsp"]
 
 [sub_resource type="Gradient" id="Gradient_ubn5m"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -69,6 +69,8 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+
 "
 
 [sub_resource type="Environment" id="Environment_in81w"]
@@ -123,10 +125,58 @@ volume_db = -9.502
 autoplay = true
 
 [node name="Board" type="Sprite2D" parent="." node_paths=PackedStringArray("gui")]
+unique_name_in_owner = true
 script = ExtResource("1_aixle")
 gui = NodePath("../Sidebar")
 
 [node name="Automata" type="Automata" parent="Board"]
+
+[node name="Label2" type="Label" parent="Board"]
+offset_left = 22.0
+offset_top = 37.0
+offset_right = 35.0
+offset_bottom = 652.0
+theme_override_font_sizes/font_size = 16
+text = "1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+10
+
+11
+
+12"
+autowrap_mode = 2
+
+[node name="Label" type="Label" parent="Board"]
+offset_left = 45.0
+offset_top = 15.0
+offset_right = 669.0
+offset_bottom = 91.0
+theme_override_font_sizes/font_size = 16
+text = "A          B          C          D          E          F          G          H          I           J           K          L"
+
+[node name="Label3" type="Label" parent="Board"]
+visible = false
+offset_left = 240.0
+offset_top = 287.0
+offset_right = 273.0
+offset_bottom = 310.0
+text = "X"
 
 [node name="PlayerController" type="Node2D" parent="."]
 script = SubResource("GDScript_vi183")
@@ -147,6 +197,7 @@ autoplay = true
 bus = &"Music"
 
 [node name="Transition" parent="." instance=ExtResource("8_3ddsp")]
+visible = false
 
 [node name="SaveTrain" type="Button" parent="."]
 visible = false

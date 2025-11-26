@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://cxrytcxo1bp0p"]
+
+[ext_resource type="Script" path="res://tutorial.gd" id="1_iagd1"]
+
+[node name="Node2D" type="Node2D"]
+z_index = 10
+position = Vector2(68, 348)
+script = ExtResource("1_iagd1")
+
+[node name="text" type="Label" parent="."]
+offset_left = 103.0
+offset_top = 159.0
+offset_right = 427.0
+offset_bottom = 182.0
+text = "Welcome to Cellular Bubble State tutorial!
+"
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 78.0
+offset_top = 119.0
+offset_right = 461.0
+offset_bottom = 261.0
+
+[node name="Exit" type="Button" parent="."]
+visible = false
+offset_left = 410.0
+offset_top = 223.0
+offset_right = 457.0
+offset_bottom = 254.0
+text = "Exit"
+
+[connection signal="button_down" from="Exit" to="." method="_on_exit_button_down"]

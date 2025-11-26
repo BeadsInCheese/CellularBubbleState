@@ -78,12 +78,22 @@ func _process(delta: float) -> void:
 
 
 func _on_button_button_down() -> void:
-	print("clicked bubble, player=",board.turnOrder[board.currentTurn].playerType)
 	if(board.currentBoardStatePointer < len(board.boardHistory)-1):
 		return
+	
+	var seq 
+	var turn
+	
+	if board.get_node("Node2D") != null:
+		seq = board.get_node("Node2D").totalSequence
+		turn = board.get_node("Node2D").turn
+	
+	if(board.tutorial and seq[turn-1] != tileIndex):
+		return
+	
 	if(board.turnOrder[board.currentTurn].get_is_player()==true and not(board.turnOrder[board.currentTurn].skip)):
 		setTileType(board.turnOrder[board.currentTurn].playerType)
 		board.lastMove=[tileIndex,board.turnOrder[board.currentTurn].playerType]
 		board.turnOrder[board.currentTurn].makingMove=false
-		
+	
 	pass # Replace with function body.

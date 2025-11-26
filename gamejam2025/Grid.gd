@@ -3,6 +3,7 @@ extends Sprite2D
 class_name Board
 @export
 var bubble = preload("Bubble.tscn")
+var tutorialPanel = preload("res://Tutorial.tscn")
 @export
 var gui: GUI
 @export
@@ -16,10 +17,12 @@ var latestTileIndexes: Array[int] = []
 static var boardHistory : Array[String] = []
 var currentBoardStatePointer = 0
 var loading = false
+var tutorial = false
 
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
 var turnOrder=[]
 var currentTurn=0
+var turn = 0
 var player1Score = 0
 var player2Score = 0
 
@@ -32,9 +35,9 @@ var p1AgentInstance
 var p2AgentInstance
 var player1Agent=load("res://AI/LDAgent.gd")
 var player2Agent=load("res://AI/PlayerAgent.gd")
-var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxAgent.gd"),load("res://AI/LDAgent.gd"),load("res://AI/BasicHeuristicEval.gd"),load("res://AI/MinimaxAgent2.gd")]
+var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxAgent.gd"),load("res://AI/LDAgent.gd"),load("res://AI/BasicHeuristicEval.gd"),load("res://AI/MinimaxAgent2.gd"),load("res://TutorialAgent.gd")]
 var automataAgent: AutomataAgent = load("res://AI/AutomataAgent.gd").new()
-
+signal turnChangedSignal
 var victor=-1
 func isEnd()->bool:
 	for i in gridList:
@@ -74,6 +77,7 @@ func changeTurn()->void:
 	#print("type",currentAgent.playerType)
 	if(!loading):
 		currentTurn = (currentTurn+1) % 6
+		turn += 1
 		boardHistory.resize(currentBoardStatePointer+1)
 		boardHistory.append(DataUtility.get_board_string(gridList,currentTurn))
 		currentBoardStatePointer += 1
@@ -84,7 +88,7 @@ func changeTurn()->void:
 	#print(player1Score,"   ",player2Score)
 	if(not(isEnd())):
 		changeTurn()
-	
+		turnChangedSignal.emit()
 	if dataAquisition and isEnd():
 		#print(boardHistory)
 		#_trainSave_button_pressed()
@@ -163,10 +167,16 @@ func _ready() -> void:
 	
 	for i in turnOrder:
 		print(i.get_custom_class_name())
-		
+	
+	if(Settings.P2Index == 6):
+		tutorial = true
+		var x = tutorialPanel.instantiate()
+		add_child(x)
+	
 	moveToplace()
 	updateCursor()
 	changeTurn()
+	
 
 
 func moveToplace()->void:
@@ -202,7 +212,7 @@ static func getGridTileTypeStatic(xsize:int,ysize:int,xpos: int, ypos: int, boar
 	return board[xpos + ypos * ysize]
 
 
-func decode_board(pointer):
+func decodeBoard(pointer):
 	var s = boardHistory[pointer]
 	currentTurn = int(s[len(s) - 1])
 	s = DataUtility.decode(s.substr(0,len(s)-1))
@@ -246,16 +256,18 @@ func _input(event):
 			currentBoardStatePointer -= 1
 			currentBoardStatePointer = clampi(currentBoardStatePointer,0,len(boardHistory)-1)
 			#print("pointer=",currentBoardStatePointer," turn=",currentTurn)
-			decode_board(currentBoardStatePointer)
-			update_meta()
+			decodeBoard(currentBoardStatePointer)
+			updateMeta()
+			turnChangedSignal.emit(turn)
 		elif(event.as_text() == "Right" && (turnOrder[(len(boardHistory)-1)%6].get_is_player() || isEnd())):
 			currentBoardStatePointer += 1
 			currentBoardStatePointer = clampi(currentBoardStatePointer,0,len(boardHistory)-1)
 			#print("pointer=",currentBoardStatePointer," turn=",currentTurn)
-			decode_board(currentBoardStatePointer)
-			update_meta()
+			decodeBoard(currentBoardStatePointer)
+			updateMeta()
+			turnChangedSignal.emit(turn)
 
-func update_meta():
+func updateMeta():
 	updateScore()
 	gui.updateSidebar(currentTurn,player1Score,player2Score,turnOrder[currentTurn].get_is_player())
 	updateCursor()
