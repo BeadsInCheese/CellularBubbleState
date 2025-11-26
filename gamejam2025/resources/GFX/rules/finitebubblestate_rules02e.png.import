@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdscg5n4f3hqd"
-path="res://.godot/imported/LarryTheSeaUrchin.png-e02c0c11bef1fac75dac7edf903f227a.ctex"
+uid="uid://cu4fk7dnuh5ci"
+path="res://.godot/imported/finitebubblestate_rules02e.png-73d99d84bcb8869a0fc9731e4b58369c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/LarryTheSeaUrchin.png"
-dest_files=["res://.godot/imported/LarryTheSeaUrchin.png-e02c0c11bef1fac75dac7edf903f227a.ctex"]
+source_file="res://resources/GFX/rules/finitebubblestate_rules02e.png"
+dest_files=["res://.godot/imported/finitebubblestate_rules02e.png-73d99d84bcb8869a0fc9731e4b58369c.ctex"]
 
 [params]
 

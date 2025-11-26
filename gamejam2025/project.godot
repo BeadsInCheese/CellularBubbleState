@@ -15,7 +15,7 @@ config/description="Game"
 config/version="1.0"
 run/main_scene="res://Scenes/MainMenu.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
-config/icon="res://resources/bubble03b_2.png"
+config/icon="res://resources/GFX/Bubble icons/bubble03b_2.png"
 
 [autoload]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bw1a0v1l48ckg"
-path="res://.godot/imported/bubble03a.png-c7cc50b3743934e9437874fcbf045306.ctex"
+uid="uid://btcx7r1t2odq"
+path="res://.godot/imported/turnOrderLit.png-0aed7a68a4db360b084e3378233f4546.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/bubble03a.png"
-dest_files=["res://.godot/imported/bubble03a.png-c7cc50b3743934e9437874fcbf045306.ctex"]
+source_file="res://resources/TurnOrderAssets/turnOrderLit.png"
+dest_files=["res://.godot/imported/turnOrderLit.png-0aed7a68a4db360b084e3378233f4546.ctex"]
 
 [params]
 
@@ -25,7 +25,7 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
-process/fix_alpha_border=true
+process/fix_alpha_border=false
 process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false

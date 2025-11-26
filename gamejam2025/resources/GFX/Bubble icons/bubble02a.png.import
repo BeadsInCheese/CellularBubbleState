@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dipb4t7dxgki5"
-path="res://.godot/imported/pillar_player2.png-48e983f6142f7c22b83cb36c1b8cd935.ctex"
+uid="uid://d4l16ave2j4vf"
+path="res://.godot/imported/bubble02a.png-6748da249a2e6c427da55f1ede8af7b4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/pillar_player2.png"
-dest_files=["res://.godot/imported/pillar_player2.png-48e983f6142f7c22b83cb36c1b8cd935.ctex"]
+source_file="res://resources/GFX/Bubble icons/bubble02a.png"
+dest_files=["res://.godot/imported/bubble02a.png-6748da249a2e6c427da55f1ede8af7b4.ctex"]
 
 [params]
 

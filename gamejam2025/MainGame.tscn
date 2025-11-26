@@ -1,12 +1,16 @@
-[gd_scene load_steps=18 format=3 uid="uid://1bsyxxel7wtb"]
+[gd_scene load_steps=23 format=3 uid="uid://1bsyxxel7wtb"]
 
 [ext_resource type="Script" path="res://Grid.gd" id="1_aixle"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="1_qw4ww"]
-[ext_resource type="AudioStream" uid="uid://bopl44gp5ld8e" path="res://resources/loop_bubbles_1.ogg" id="2_s7r41"]
-[ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_w1ryg"]
-[ext_resource type="PackedScene" uid="uid://b4rgdo55qhhue" path="res://sidebar.tscn" id="3_xlshu"]
+[ext_resource type="Shader" path="res://resources/TurnOrderAssets/TurnOrder.gdshader" id="2_7s6tj"]
+[ext_resource type="AudioStream" uid="uid://bopl44gp5ld8e" path="res://resources/Sound/SFX/loop_bubbles_1.ogg" id="2_s7r41"]
+[ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/GFX/Bubble icons/bubble_player1.png" id="3_w1ryg"]
+[ext_resource type="Texture2D" uid="uid://btcx7r1t2odq" path="res://resources/TurnOrderAssets/turnOrderLit.png" id="3_xj4hr"]
+[ext_resource type="PackedScene" uid="uid://cdp1ptkk1qkda" path="res://sidebar.tscn" id="3_xlshu"]
 [ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="7_nmuy5"]
-[ext_resource type="PackedScene" path="res://transition.tscn" id="8_3ddsp"]
+[ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="8_3ddsp"]
+[ext_resource type="Texture2D" uid="uid://4q6k2lul8wet" path="res://resources/TurnOrderAssets/turnOrder.png" id="8_l4w7h"]
+[ext_resource type="Script" path="res://turnOrder.gd" id="8_ncibk"]
 
 [sub_resource type="Gradient" id="Gradient_ubn5m"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -54,6 +58,12 @@ scale_min = 0.1
 scale_max = 0.2
 scale_curve = SubResource("CurveTexture_l1u0o")
 color = Color(1, 1, 1, 0.0941176)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iw7ca"]
+shader = ExtResource("2_7s6tj")
+shader_parameter/index = 0
+shader_parameter/lit = ExtResource("3_xj4hr")
+shader_parameter/unLit = ExtResource("8_l4w7h")
 
 [sub_resource type="GDScript" id="GDScript_vi183"]
 script/source = "extends Node2D
@@ -197,7 +207,7 @@ autoplay = true
 bus = &"Music"
 
 [node name="Transition" parent="." instance=ExtResource("8_3ddsp")]
-visible = false
+
 
 [node name="SaveTrain" type="Button" parent="."]
 visible = false

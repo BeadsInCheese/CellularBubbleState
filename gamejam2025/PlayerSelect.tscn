@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://playerSelect.gd" id="1_ck5mi"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="2_64eh4"]
-[ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="3_4bkf4"]
+[ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/GFX/Bubble icons/bubble_player1.png" id="3_4bkf4"]
 [ext_resource type="AudioStream" uid="uid://cctgma7w3r7xe" path="res://sunrise_over_water.mp3" id="4_q2vhn"]
 [ext_resource type="Theme" path="res://FontArtistic.tres" id="5_uchd8"]
 [ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="6_rls2n"]

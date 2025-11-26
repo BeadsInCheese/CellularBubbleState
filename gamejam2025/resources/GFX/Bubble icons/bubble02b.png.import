@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxmmo6dsch0qk"
-path="res://.godot/imported/finitebubblestate_rules02d.png-b545199c36aac5c1a4dfa5289a8c6735.ctex"
+uid="uid://sahu5nkmpm6v"
+path="res://.godot/imported/bubble02b.png-bd85172db10ebbe8032a9c17b3c9e15a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/finitebubblestate_rules02d.png"
-dest_files=["res://.godot/imported/finitebubblestate_rules02d.png-b545199c36aac5c1a4dfa5289a8c6735.ctex"]
+source_file="res://resources/GFX/Bubble icons/bubble02b.png"
+dest_files=["res://.godot/imported/bubble02b.png-bd85172db10ebbe8032a9c17b3c9e15a.ctex"]
 
 [params]
 

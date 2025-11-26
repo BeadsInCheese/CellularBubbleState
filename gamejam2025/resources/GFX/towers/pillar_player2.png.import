@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bjb4puyp6bwp1"
-path="res://.godot/imported/SeraBotIcon.png-f7ec9c88b0eeb5360f5906543bce844a.ctex"
+uid="uid://dipb4t7dxgki5"
+path="res://.godot/imported/pillar_player2.png-770d03f0acdc855589b29a069300512b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/SeraBotIcon.png"
-dest_files=["res://.godot/imported/SeraBotIcon.png-f7ec9c88b0eeb5360f5906543bce844a.ctex"]
+source_file="res://resources/GFX/towers/pillar_player2.png"
+dest_files=["res://.godot/imported/pillar_player2.png-770d03f0acdc855589b29a069300512b.ctex"]
 
 [params]
 

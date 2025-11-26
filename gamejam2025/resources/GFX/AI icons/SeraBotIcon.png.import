@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b1gvpqoynwdv1"
-path="res://.godot/imported/GolgathBotIcon.png-be9fa58084baceb483662b6bcb98f8cd.ctex"
+uid="uid://bjb4puyp6bwp1"
+path="res://.godot/imported/SeraBotIcon.png-a7a656cb2b41ea6a3c94bfe2bd6747e7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/GolgathBotIcon.png"
-dest_files=["res://.godot/imported/GolgathBotIcon.png-be9fa58084baceb483662b6bcb98f8cd.ctex"]
+source_file="res://resources/GFX/AI icons/SeraBotIcon.png"
+dest_files=["res://.godot/imported/SeraBotIcon.png-a7a656cb2b41ea6a3c94bfe2bd6747e7.ctex"]
 
 [params]
 

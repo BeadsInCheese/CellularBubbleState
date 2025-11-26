@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bfkyh5nr4motd"
-path="res://.godot/imported/pillar_player1.png-680b9b65fc3036547c2b2b95a49c7aa4.ctex"
+uid="uid://bdscg5n4f3hqd"
+path="res://.godot/imported/LarryTheSeaUrchin.png-27b468319d66da79cea99c0a3cfb4635.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/pillar_player1.png"
-dest_files=["res://.godot/imported/pillar_player1.png-680b9b65fc3036547c2b2b95a49c7aa4.ctex"]
+source_file="res://resources/GFX/AI icons/LarryTheSeaUrchin.png"
+dest_files=["res://.godot/imported/LarryTheSeaUrchin.png-27b468319d66da79cea99c0a3cfb4635.ctex"]
 
 [params]
 

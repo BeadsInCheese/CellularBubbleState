@@ -42,22 +42,22 @@ func update_gfx(type):
 	
 	if type == 1:
 		$BubbleGfx.material.set_shader_parameter("color",Vector3(0,0,1))
-		$BubbleGfx.set_texture(load("res://resources/pillar_player1.png"))
+		$BubbleGfx.set_texture(load("res://resources/GFX/towers/pillar_player1.png"))
 		$BubbleGfx.scale=Vector2(0.08,0.08)
 		appear()
 	elif type == 3:
 		$BubbleGfx.material.set_shader_parameter("color",Vector3(1,0,0))
-		$BubbleGfx.set_texture(load("res://resources/pillar_player2.png"))
+		$BubbleGfx.set_texture(load("res://resources/GFX/towers/pillar_player2.png"))
 		$BubbleGfx.scale=Vector2(0.08,0.08)
 		appear()
 	elif type == 2:
 		$BubbleGfx.material.set_shader_parameter("color",Vector3(0,0,1))
-		$BubbleGfx.set_texture(load("res://resources/bubble03b.png"))
+		$BubbleGfx.set_texture(load("res://resources/GFX/Bubble icons/bubble03b.png"))
 		$BubbleGfx.scale=Vector2(0.2,0.2)
 		appear()
 	elif type == 4:
 		$BubbleGfx.material.set_shader_parameter("color",Vector3(1,0,0))
-		$BubbleGfx.set_texture(load("res://resources/bubble03b_2.png"))
+		$BubbleGfx.set_texture(load("res://resources/GFX/Bubble icons/bubble03b_2.png"))
 		$BubbleGfx.scale=Vector2(0.2,0.2)
 		appear()
 	elif type == 0:

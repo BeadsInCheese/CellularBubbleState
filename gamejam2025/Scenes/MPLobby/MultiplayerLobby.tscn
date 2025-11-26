@@ -1,7 +1,7 @@
 [gd_scene load_steps=21 format=3 uid="uid://d3ksc6wuynx5a"]
 
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="1_yplj2"]
-[ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/bubble_player1.png" id="2_2dbcb"]
+[ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/GFX/Bubble icons/bubble_player1.png" id="2_2dbcb"]
 [ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="3_evng2"]
 [ext_resource type="Script" path="res://MultiplayerLobby/LobbyText.gd" id="4_caqv2"]
 [ext_resource type="Shader" path="res://Scenes/MainMenu.gdshader" id="5_2qdjg"]
