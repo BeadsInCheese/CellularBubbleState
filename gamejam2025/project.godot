@@ -26,6 +26,10 @@ SceneNavigation="*res://Scenes/SceneNavigation.gd"
 
 window/stretch/mode="canvas_items"
 
+[filesystem]
+
+import/blender/enabled=false
+
 [input]
 
 Quit={

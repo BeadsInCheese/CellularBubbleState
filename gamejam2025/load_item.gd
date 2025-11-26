@@ -8,7 +8,7 @@ func _button_pressed():
 	
 	var board : Board = find_parent("Board")
 	
-	print("currentAgent",board.currentAgent.playerType)
+	#print("currentAgent",board.currentAgent.playerType)
 	
 	board.boardHistory = DataUtility.load_from_file(n)
 	board.currentBoardStatePointer = len(board.boardHistory)-1

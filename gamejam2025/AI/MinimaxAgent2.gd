@@ -2,8 +2,9 @@ extends AgentBase
 
 class_name MinimaxAgent2
 
+
 # Called when the node enters the scene tree for the first time.
-func makeMove(observation:Board):
+func makeMove(observation: Board):
 	if observation == null:
 		return
 		
@@ -33,14 +34,17 @@ func get_custom_class_name():
 
 var thread: Thread
 var game_board: Board
-var minimax: Minimax2 = Minimax2.new(Callable(result), Callable(terminal), Callable(utility), Callable(possible_actions))
+var minimax: Minimax2 = Minimax2.new(result, terminal, utility, possible_actions)
 
 var calculated_action: int
+
+func init(board: Board):
+	minimax.init_zobrist()
 
 func minimax_step() -> void:
 	var tempBoard = game_board.getBoardCopy()
 	
-	var action: Array = minimax.action(tempBoard, game_board.currentTurn, 7, 5, 0)
+	var action: Array = minimax.action(tempBoard, game_board.currentTurn, 3, 5, 0)
 	if len(action) == 0:
 		return
 
@@ -51,12 +55,15 @@ func minimax_step() -> void:
 # Returns a new board state after applying the move
 func result(minimax_board: Array, action: Array, player_state: String) -> Array:
 	var tempBoard = minimax_board.duplicate(true)
-	tempBoard[action[0]] = 3 if player_state.begins_with("P2") else 1
+	var tileType = 3 if player_state.begins_with("P2") else 1
+	tempBoard[action[0]] = tileType
+	
+	var resultActions = [[action[0], tileType]] # this action and the resulting automata actions
 	
 	if player_state.ends_with("A"):
-		game_board.automataAgent.simulateAutomataStep(tempBoard)
+		resultActions.append_array(game_board.automataAgent.simulateAutomataStepAndReturnActions(tempBoard))
 	
-	return tempBoard
+	return [tempBoard, resultActions]
 
 
 # Check if the game has reached a terminal state (win/draw)
