@@ -17,8 +17,6 @@ func _button_pressed():
 	board.loading = true
 	board.currentAgent.makingMove = false
 	
-	get_tree().root.get_node("root/Sidebar/statusLabel").set_text("save loaded!")
-	
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

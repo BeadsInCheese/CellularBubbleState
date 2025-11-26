@@ -1,14 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://cdp1ptkk1qkda"]
+[gd_scene load_steps=5 format=3 uid="uid://cdp1ptkk1qkda"]
 
 [ext_resource type="Script" path="res://GUI.gd" id="1_50b85"]
 [ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="2_7aq0k"]
+[ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="3_55rcj"]
 [ext_resource type="Texture2D" uid="uid://cu4fk7dnuh5ci" path="res://resources/GFX/rules/finitebubblestate_rules02e.png" id="3_pycpc"]
 
 [node name="Sidebar" type="VBoxContainer"]
 custom_minimum_size = Vector2(100, 100)
 offset_left = 1.0
-offset_right = 656.0
-offset_bottom = 579.0
+offset_right = 588.0
+offset_bottom = 645.0
 size_flags_stretch_ratio = 1.86
 tooltip_text = "Rules: 
 Players take turns placing pieces on the board. 
@@ -23,12 +24,17 @@ script = ExtResource("1_50b85")
 clip_contents = true
 layout_mode = 2
 
+[node name="separator3" type="Label" parent="contUpper1"]
+custom_minimum_size = Vector2(140, 50)
+layout_mode = 2
+
 [node name="RichTextLabel" type="RichTextLabel" parent="contUpper1"]
 clip_contents = false
-custom_minimum_size = Vector2(320, 0)
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 mouse_filter = 2
 theme = ExtResource("2_7aq0k")
+theme_override_font_sizes/normal_font_size = 35
 text = "Player 1 score: "
 
 [node name="Score_player1" type="RichTextLabel" parent="contUpper1"]
@@ -38,6 +44,7 @@ layout_mode = 2
 size_flags_horizontal = 8
 mouse_filter = 2
 theme = ExtResource("2_7aq0k")
+theme_override_font_sizes/normal_font_size = 35
 text = "0"
 fit_content = true
 
@@ -45,12 +52,17 @@ fit_content = true
 clip_contents = true
 layout_mode = 2
 
+[node name="separator4" type="Label" parent="contUpper2"]
+custom_minimum_size = Vector2(140, 50)
+layout_mode = 2
+
 [node name="RichTextLabel" type="RichTextLabel" parent="contUpper2"]
 clip_contents = false
-custom_minimum_size = Vector2(320, 0)
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 mouse_filter = 2
 theme = ExtResource("2_7aq0k")
+theme_override_font_sizes/normal_font_size = 35
 text = "Player 2 score: "
 
 [node name="Score_player2" type="RichTextLabel" parent="contUpper2"]
@@ -59,16 +71,20 @@ custom_minimum_size = Vector2(65, 0)
 layout_mode = 2
 mouse_filter = 2
 theme = ExtResource("2_7aq0k")
+theme_override_font_sizes/normal_font_size = 35
 text = "0"
 fit_content = true
 
 [node name="separator1" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
 [node name="TurnValue" type="RichTextLabel" parent="."]
+visible = false
 layout_mode = 2
 mouse_filter = 2
 theme = ExtResource("2_7aq0k")
+theme_override_font_sizes/normal_font_size = 35
 text = "Player 1 turn"
 fit_content = true
 autowrap_mode = 0
@@ -81,6 +97,7 @@ layout_mode = 2
 layout_mode = 2
 mouse_filter = 2
 theme = ExtResource("2_7aq0k")
+theme_override_font_sizes/normal_font_size = 28
 text = "Next turn: "
 fit_content = true
 autowrap_mode = 0
@@ -89,19 +106,23 @@ autowrap_mode = 0
 layout_mode = 2
 mouse_filter = 2
 theme = ExtResource("2_7aq0k")
+theme_override_font_sizes/normal_font_size = 28
 fit_content = true
 autowrap_mode = 0
 
-[node name="statusLabel" type="Label" parent="."]
+[node name="separator2" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
 [node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 2
 size_flags_stretch_ratio = 2.88
-current_tab = 1
+theme_override_constants/side_margin = 0
+theme_override_fonts/font = ExtResource("3_55rcj")
+theme_override_font_sizes/font_size = 35
+current_tab = 0
 
 [node name="Console" type="Panel" parent="TabContainer"]
-visible = false
 layout_mode = 2
 size_flags_stretch_ratio = 3.56
 metadata/_tab_index = 0
@@ -111,7 +132,9 @@ layout_mode = 2
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 2.0
-offset_bottom = 276.0
+offset_right = -69.0
+offset_bottom = 358.0
+theme_override_fonts/font = ExtResource("3_55rcj")
 placeholder_text = "ove CanvasItem \"Sprite2D\" to (183, 381)
 Scene Undo: Move CanvasItem \"Sprite2D\" to (183, 381)
 Scene Undo: Set scale
@@ -127,11 +150,12 @@ editable = false
 scroll_smooth = true
 
 [node name="Rules" type="Panel" parent="TabContainer"]
+visible = false
 layout_mode = 2
 size_flags_stretch_ratio = 12.84
 metadata/_tab_index = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="TabContainer/Rules"]
-position = Vector2(187, 118)
-scale = Vector2(0.425, 0.425)
+position = Vector2(231, 145)
+scale = Vector2(0.434248, 0.445227)
 texture = ExtResource("3_pycpc")
