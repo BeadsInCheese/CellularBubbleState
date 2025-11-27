@@ -48,5 +48,4 @@ static func simulateAutomataStepAndReturnActions(board: Array) -> Array:
 		if tile != newTile:
 			automataActions.append([i, newTile])
 	
-	board = newBoard
-	return automataActions
+	return [newBoard, automataActions]

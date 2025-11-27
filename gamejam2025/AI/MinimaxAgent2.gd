@@ -49,35 +49,37 @@ func minimax_step() -> void:
 		return
 
 	calculated_action = action[0]
-	
 
-# Simulate the result of an action on the board
-# Returns a new board state after applying the move
-func result(minimax_board: Array, action: Array, player_state: String) -> Array:
-	var tempBoard = minimax_board.duplicate(true)
+
+# Simulate the result of an action on the board state
+# Returns the resulting board state and the separate actions made on the board by this action
+func result(state: Array, action: Array, player_state: String) -> Array:
+	var tempBoard = state.duplicate(true)
 	var tileType = 3 if player_state.begins_with("P2") else 1
 	tempBoard[action[0]] = tileType
 	
 	var resultActions = [[action[0], tileType]] # this action and the resulting automata actions
 	
 	if player_state.ends_with("A"):
-		resultActions.append_array(game_board.automataAgent.simulateAutomataStepAndReturnActions(tempBoard))
+		var results = game_board.automataAgent.simulateAutomataStepAndReturnActions(tempBoard)
+		tempBoard = results[0]
+		resultActions.append_array(results[1]) # add automata actions to resultActions
 	
 	return [tempBoard, resultActions]
 
 
-# Check if the game has reached a terminal state (win/draw)
-func terminal(board: Array) -> bool:
-	for tile in board:
-		if(tile == 0):
+# Check if the game has reached a terminal state
+func terminal(state: Array) -> bool:
+	for tile in state:
+		if (tile == 0):
 			return false
 	return true
 
 # Evaluate the board state
-func utility(board: Array) -> float:
+func utility(state: Array) -> float:
 	var p1Score=0
 	var p2Score=0
-	for tile in board:
+	for tile in state:
 		if(tile == 1 or tile == 2):
 			p1Score += 1
 		if(tile == 3 or tile == 4):
@@ -86,10 +88,10 @@ func utility(board: Array) -> float:
 	return p1Score - p2Score
 
 # Get all possible valid moves on the current board
-func possible_actions(board: Array, max_actions: int) -> Array[Array]:
+func possible_actions(state: Array, max_actions: int) -> Array[Array]:
 	var actions: Array[Array] = []
-	for i in range(len(board)):
-		if board[i] == 0:
+	for i in range(len(state)):
+		if state[i] == 0:
 			actions.append([i])
 	
 	if max_actions < 2 or len(game_board.latestTileIndexes) < 2:
