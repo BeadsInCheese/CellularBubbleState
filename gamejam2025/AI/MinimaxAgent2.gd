@@ -44,7 +44,7 @@ func init(board: Board):
 func minimax_step() -> void:
 	var tempBoard = game_board.getBoardCopy()
 	
-	var action: Array = minimax.action(tempBoard, game_board.currentTurn, 3, 5, 0)
+	var action: Array = minimax.action(tempBoard, game_board.currentTurn, 2, 5, 0)
 	if len(action) == 0:
 		return
 
