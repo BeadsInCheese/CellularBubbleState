@@ -64,8 +64,12 @@ func action(state: Array, current_turn: int, max_depth: int, max_actions: int, m
 		var results = result_func.call(state, _action, turn_order[current_turn])
 		var result_state = results[0]
 		var zobrist_key = update_zobrist_key(results[1], initial_zobrist_key)
-		print("i zobr: ", zobrist_key)
-		print("i recalc zobr: ", generate_zobrist_key(result_state, current_turn))
+		print(_action, " i zobr: ", zobrist_key)
+		#print("i recalc zobr: ", generate_zobrist_key(result_state, current_turn))
+		#print_state(state)
+		#print("->")
+		#print_state(result_state)
+		#print()
 		
 		var value_of_result_state: float = self.minimax(result_state, get_next_turn_index(current_turn), alpha, beta, current_depth + 1, max_actions - max_actions_decay, zobrist_key)
 	
@@ -95,9 +99,9 @@ func minimax(state: Array, turn: int, alpha: float, beta: float, current_depth: 
 		# If terminal state or max depth reached, return the utility value of the state.
 		return utility_func.call(state)
 
-	var new_zobrist_key = zobrist_key
-	new_zobrist_key ^= zobrist_turns[get_previous_turn_index(turn)]
-	new_zobrist_key ^= zobrist_turns[turn]
+	var curr_zobrist_key = zobrist_key
+	curr_zobrist_key ^= zobrist_turns[get_previous_turn_index(turn)]
+	curr_zobrist_key ^= zobrist_turns[turn]
 
 	var possible_actions: Array = possible_actions_func.call(state, max_actions)
 	var optimal_value: float = -INF if not is_adversary else INF
@@ -106,10 +110,14 @@ func minimax(state: Array, turn: int, alpha: float, beta: float, current_depth: 
 	for _action in possible_actions:
 		var results = result_func.call(state, _action, turn_order[turn])
 		var result_state = results[0]
-		new_zobrist_key = update_zobrist_key(results[1], new_zobrist_key)
-		print("zobr: ", new_zobrist_key)
+		var new_zobrist_key = update_zobrist_key(results[1], curr_zobrist_key)
+		print(_action, " zobr: ", new_zobrist_key, " oldzobr:", curr_zobrist_key)
 		var new_gen_zob_key = generate_zobrist_key(result_state, turn)
-		print("recalc zobr: ", new_gen_zob_key)
+		print(current_depth, "recalc zobr: ", new_gen_zob_key)
+		print_state(state)
+		print("->")
+		print_state(result_state)
+		print()
 		states_explored += 1
 
 		var value_of_result_state = self.minimax(result_state, get_next_turn_index(turn), alpha, beta, current_depth + 1, max_actions - max_actions_decay, new_zobrist_key)
@@ -131,12 +139,21 @@ func minimax(state: Array, turn: int, alpha: float, beta: float, current_depth: 
 
 	return optimal_value
 
-
-var zobrist_board: Array = []
-var zobrist_turns: Array[int] = []
+static func print_state(state: Array):
+	for j in 12:
+		var line = ""
+		for i in 12:
+			var char = str(state[i + j * 12])
+			if char == "0":
+				char = "."
+			line += char
+		print(line)
 
 static func random_64bit_int():
 	return (randi() << 32) | randi()
+
+var zobrist_board: Array = []
+var zobrist_turns: Array[int] = []
 
 func init_zobrist():
 	for i in 4:
