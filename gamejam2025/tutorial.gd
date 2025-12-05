@@ -16,9 +16,10 @@ var tPrompts = ["Play at X to start",
 "You have finished the Tutorial!"]
 
 #var puzzle = "C4,F11,H3,D2,A3"
+#[66,43,-1,67,64,-1,64,43,-1,90,53,-1,89,90,-1,51]
 
-static var sequence = [66,43,67,64,64,43,90,78,89,90,51]
-static var totalSequence = [66,43,-1,67,64,-1,64,43,-1,90,78,-1,89,90,-1,51]
+static var sequence = [66,43,67,64,64,43,56,77,90,89,51]
+static var totalSequence = [66,43,-1,67,64,-1,64,43,-1,56,77,-1,90,89,-1,51]
 var markerPlacementTurn = [0,4,6,10,12]
 var cleanUpTurn = [1,7,13]
 var automataTurn = [2,5,8,11,14]
@@ -66,6 +67,7 @@ func turnChanged() -> void:
 	turn += 1
 	
 	if(turn == 16):
+		gameBoard.tutorial = false
 		$Exit.visible = true
 
 # Called when the node enters the scene tree for the first time.

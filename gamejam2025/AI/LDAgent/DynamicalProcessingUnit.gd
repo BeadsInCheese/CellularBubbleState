@@ -12,6 +12,9 @@ var id
 
 var R : Array[Point] = []
 var Q : Array[float]#coefficients for Rel(h_u,R_ij(y)) Q[k+9*j+9*7*w]
+var relevance
+var W
+var targetTime
 var LATTICE_SIZE = 4
 
 func init():
@@ -31,6 +34,29 @@ func init():
 		p.add_adjacents(p.x,p.y)
 	print("initialized DPU ",id," at ",offsetX,",",offsetY)
 
+#get neighboring DPU:s which also has the square (i,j), i,j in {0,1,2}
+func get_neighboring(i,j) -> Array:
+	var ids = []
+	#TODO finish
+	for m in range(i,3):
+		for n in range(j,3):
+			ids.append(id+12*m)
+			ids.append(id+12*m+n)
+			ids.append(id+12*n)
+			ids.append(id+12*n+m)
+			
+	#edge cases remove
+	if (id % 12 == 0 && j == 0):
+		ids.append(id+1)
+	if (id % 12 == 11 && j == 2):
+		ids.append(id-1)
+	if (id/12 == 0 && i == 0):
+		ids.append(id+12)
+	if (id/12 == 11 && i == 2):
+		ids.append(id-12)
+		
+	return ids
+
 func get_points():
 	return R
 
@@ -44,7 +70,12 @@ func update(x,y,piece):
 	update_point(x,y,piece)
 	currentTurn += 1
 	
-
+func computeRelevance():
+	return W*relevance
+	
+func setLocalW(x):
+	W = x
+	
 #color player1 = 1, color player2 = 3
 func update_layers():
 
@@ -91,27 +122,41 @@ func update_point(posX, posY, piece):
 	elif(piece == 0):
 		R[B[posX+1][posY+1]].piece = Point.EMPTY
 
+func inference_generic_backward(x,y,R,startVector,targetVector,tTime,endPointY):
+	targetTime = tTime
+	var dy = process_backward(startVector,targetVector,tTime,R)
+	return dy
 
-func inference_generic(x,y,m1, m2, targetVector, targetInterval, W, t0) -> int:
+
+func inference_generic(x,y,R, startVector, targetVector, targetInterval, t0) -> int:
 	#TODO compute z_0 by Q values
-	
-	var t = 3
+
 	#print("starting inference: G_",p_coord_x,p_coord_y,"(",layer_index,")","for t = ",t)
-	
-	var turn = (currentTurn + t) % 6
-	#var tr_chain = process(p.score[layer_index],layer_index,len(old_data) - j + t,turn,old_data)
-	var e0 = process(FSystem.AVGLocalVector(m1,m2),targetVector,t0)
-	
-	return 0
 
-func process(vector0,vector,t) -> float:
+	var dy = process_forward(startVector,targetVector,t0,R)
+	
+	return dy
+
+# R = [y1*i*j,y2*m*n,ulpx,p2,dpu_id,w_k,lattice_j]
+# TR = [(y1*i*j,y2*m*n),(x1,y1),(x2,y2),...,(xn,yn)]
+
+func process_forward(vector0,vector,t,R) -> float:
 	t /= 2
-	var newVector = FSystem.getVector(FSystem.getSPElement(vector0,vector),t)
+	var derivativeVector = MathLib.getDVector(FSystem.getSPElement(vector0,vector),t)
+	var newVector = GSystem.getRelation(FSystem.eval(FSystem.getSPElement(vector0,vector),t),R)
 	if(t < 1):
-		return MathLib.getAngularError(vector0,vector)
+		return newVector.y
 	else:
-		return process(vector0,newVector,t)
+		return process_forward(vector0,newVector,t,R)
 
+func process_backward(vector0,vector,t,R) -> float:
+	t = targetTime - t/2
+	var derivativeVector = MathLib.getDVector(FSystem.getSPElement(vector0,vector),t)
+	var newVector = GSystem.getRelation(FSystem.eval(FSystem.getSPElement(vector0,vector),t),R)
+	if(is_equal_approx(t,targetTime)):
+		return newVector.y
+	else:
+		return process_forward(vector0,newVector,t,R)
 
 
 func process2(metricTarget,layer,span,turn,data):
@@ -168,6 +213,9 @@ func process2(metricTarget,layer,span,turn,data):
 			#
 	#print(min)
 	
+#convert R.x,R.y onto Point/Layer format and evaluate
+func get_F0(R):
+	pass
 
 func preprocess(data : Array[Point],layer,index,i,j):
 	pass

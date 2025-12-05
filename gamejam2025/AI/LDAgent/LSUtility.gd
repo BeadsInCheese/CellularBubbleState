@@ -78,7 +78,7 @@ static func det(N):
 			
 	return result
 #(vector0.x,vector0.y) 
-#(vec
+
 static func getAngularError(v1:Vector2,v2:Vector2):
 	v2.x += v1.x - v2.x
 	v2.y += v1.y - v2.y
@@ -99,7 +99,7 @@ static func getDVector(ofunc:Array,x) -> Vector2:
 			dy = ofunc[2]*ofunc[1]*cos(ofunc[2]*x)
 		elif(ofunc[0] == 17): #exp(x)
 			dy = ofunc[1]*exp(ofunc[2]*x)
-	return Vector2(1,dy)
+	return Vector2(1,dy).normalized()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
