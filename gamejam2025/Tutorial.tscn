@@ -10,6 +10,7 @@ offset_left = 68.0
 offset_top = 348.0
 offset_right = 68.0
 offset_bottom = 348.0
+mouse_filter = 2
 script = ExtResource("1_iagd1")
 
 [node name="Panel" type="Panel" parent="."]
@@ -17,6 +18,7 @@ offset_left = 78.0
 offset_top = 119.0
 offset_right = 461.0
 offset_bottom = 261.0
+mouse_filter = 2
 
 [node name="text" type="Label" parent="Panel"]
 layout_mode = 1
