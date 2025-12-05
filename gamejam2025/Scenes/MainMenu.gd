@@ -33,3 +33,10 @@ func _on_PlayerMenuPressed() -> void:
 
 func _on_MPbutton_3_button_down() -> void:
 	SceneNavigation.goToMultiplayerSelection()
+
+
+func Tutorial_pressed() -> void:
+	Board.mp=false
+	Settings.P1Index = 0
+	Settings.P2Index = 6
+	SceneNavigation._onLocalMPSelected()
