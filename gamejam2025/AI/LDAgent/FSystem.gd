@@ -25,12 +25,17 @@ static var REL_Y1_Q_3 : Array[Array]
 
 static var Gates : Array[Vector4]
 
+'''Q_TABLE:
+	element i,j = float value designating success of R_waypoint(m_i,m_j)'''
 static var Q_TABLE : Array[Array]
 
 static var SP : Array[Array]
 
 #static func createGate()
 #ofunc format: [id,a0,a1,a2,a3,a4,a5]
+
+static func eval(spFunction : Array, t):
+	pass
 
 static func fit(data : Array[Point]):
 	pass
@@ -47,11 +52,58 @@ static func prune():
 static func getRelation(dpu):
 	pass
 	
-static func getWaypointTarget(d : Vector2,W) -> Vector4:
+#return [metric1,metric2,upperLeftCornerPoint,lowerRightCornerPoint] m1 = layer*i*j, 9*7 = 63
+static func getWaypointTarget(currentDpu,W) -> Vector4:
 	return Vector4(1,2,1,2)
 
-static func generatePath(metricPlane,start : Vector2, targetArea : Vector4):
+static func getVTarget(R:Vector4, W : float):
 	pass
+	
+static func getVVector(W:float):
+	pass
+
+static func generatePath(dpu, metricPlane, dxMin, dyMin, WTime,p):
+	var path : Array = [Vector2(metricPlane.x,metricPlane.y)]
+	var dR : Vector2 #TODO
+	var x = p.x
+	var y = p.y
+	var startVector = FSystem.AVGLocalVector(dpu,metricPlane.x,metricPlane.y)
+	var counter = 0
+	while(!isWithinTarget(x,y,metricPlane) && counter < 125):
+		x = dpu.inference_generic(x,y,metricPlane,startVector,dR,dxMin,WTime)
+		y = dpu.inference_generic(x,y,metricPlane,startVector,dR,dyMin,WTime)
+		path.append(Vector2(x,y))
+		counter += 1
+	return path
+
+static func isWithinTarget(x,y,R):
+	pass
+
+static func computeError(dpu,metricPlane,tTime):
+	var angle = 0
+	var angleAdd = 2/7*PI
+	var dx
+	var dy
+	var p = Vector2(dpu.get_points()[metricPlane.x % 9+(metricPlane.x / 9)*3].score[metricPlane.x % 7], dpu.get_points()[metricPlane.y % 9+(metricPlane.y / 9)*3].score[metricPlane.y % 7])
+	var targetVector = FSystem.AVGLocalVector(dpu,metricPlane.x,metricPlane.y)
+	var z_min : Array
+	var temp = 100000
+	var radius = Parameters.BW_PHASE_R
+	var startVector = FSystem.AVGLocalVector(dpu,metricPlane.x,metricPlane.y)
+	
+	for i in range(0,7):
+		dx = radius*cos(angle)
+		dy = radius*sin(angle)
+		angle += angleAdd
+		var errorx= dpu.inference_generic_backward(p.x,p.y,metricPlane,startVector,targetVector,tTime,dx)
+		var errory =dpu.inference_generic_backward(p.x,p.y,metricPlane,startVector,targetVector,tTime,dy)
+		if(errorx + errory < temp):
+			z_min.clear()
+			z_min.append(dx)
+			z_min.append(dy)
+			z_min.append(errorx+errory)
+	
+	return z_min
 
 static func getTime(W):
 	pass
@@ -74,25 +126,23 @@ static func get_ap_at_x(n,value,coeff):
 	elif n == 7:
 		return coeff*pow(-1*(-value-5)**2 + 100/(value+1),1/7)#Y2 "STEP"
 
-static func getVector(ofunc,x):
-	return MathLib.getDVector(ofunc,x)
 
-static func AVGLocalVector(metric1,metric2):
-	pass
+static func AVGLocalVector(dpu,metric1,metric2):
+	dpu.get_points()
+	
 
 static func interpolate(v1 : Vector2,v2 : Vector2,t) -> float:
 	var y
 	for i in range(0,10,0.1):
-		if is_equal_approx(getVector(SP[0],i).x, v1.x) && is_equal_approx(getVector(SP[0],i).y, v1.y):
+		if is_equal_approx(MathLib.getDVector(SP[0],i).x, v1.x) && is_equal_approx(MathLib.getDVector(SP[0],i).y, v1.y):
 			pass
 	for i in range(1,7):
 		y += SP[0][i]*t
 	return y
 	
 static func getSPElement(v1 : Vector2, v2 : Vector2):
-	var y
 	for i in range(0,10,0.1):
-		if is_equal_approx(getVector(SP[0],i).x, v1.x) && is_equal_approx(getVector(SP[0],i).y, v1.y):
+		if is_equal_approx(MathLib.getDVector(SP[0],i).x, v1.x) && is_equal_approx(MathLib.getDVector(SP[0],i).y, v1.y):
 			pass
 	return SP[0]
 
@@ -122,6 +172,15 @@ static func convert(n):
 	var a0 = floori(1000*((n / 1000) % 1))
 	return [a0,a1]
 		
+		
+static func initSP():
+	for i in range(0,4):
+		var A = [i]
+		for j in range(1,i+2):
+			A.append(randf_range(-2.0,2.0))
+		SP.append_array(A)
+
+	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
