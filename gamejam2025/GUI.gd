@@ -26,8 +26,6 @@ func updateSidebar(turn,score1,score2,isPlayer):
 	elif(turn == 5):
 		$TurnValue.text="Automata turn"
 		$contLower/NextTurnValue.text="Player 1"
-	$statusLabel.text="thinking..." if not(isPlayer) else "" 
-
 	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

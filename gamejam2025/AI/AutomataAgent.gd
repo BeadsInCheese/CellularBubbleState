@@ -25,14 +25,28 @@ func automata_step() -> void:
 	var baseGrid = game_board.getBoardCopy()
 	var tempGrid = baseGrid.duplicate(true)
 	var result=automata.AutomataStep(tempGrid)
-	#print(tempGrid)
 	
-	for i in range(len(tempGrid)):
+	for i in len(tempGrid):
 		var currentTile = game_board.gridList[i].tileType
 		var newTile = tempGrid[i]
 		
 		if currentTile != newTile:
 			game_board.gridList[i].setTileType(newTile, true)
 
-static func simulateAutomataStep(board:Array):
+static func simulateAutomataStep(board: Array):
 	board = automata.AutomataStep(board)
+
+static func simulateAutomataStepAndReturnActions(board: Array) -> Array:
+	var newBoard = automata.AutomataStep(board)
+	
+	var automataActions = []
+	
+	for i in len(board):
+		var tile = board[i]
+		var newTile = newBoard[i]
+		
+		if tile != newTile:
+			automataActions.append([i, newTile])
+	
+	board = newBoard
+	return automataActions

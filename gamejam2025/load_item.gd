@@ -8,7 +8,7 @@ func _button_pressed():
 	
 	var board : Board = find_parent("Board")
 	
-	print("currentAgent",board.currentAgent.playerType)
+	#print("currentAgent",board.currentAgent.playerType)
 	
 	board.boardHistory = DataUtility.load_from_file(n)
 	board.currentBoardStatePointer = len(board.boardHistory)-1
@@ -16,8 +16,6 @@ func _button_pressed():
 
 	board.loading = true
 	board.currentAgent.makingMove = false
-	
-	get_tree().root.get_node("root/Sidebar/statusLabel").set_text("save loaded!")
 	
 
 # Called when the node enters the scene tree for the first time.
