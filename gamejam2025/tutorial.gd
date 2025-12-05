@@ -52,7 +52,7 @@ func createPuzzle(s:String):
 		sequence[i] = convertSquare(c)
 		i += 1
 
-func turnChanged() -> void:
+func turnChanged(param) -> void:
 	print("turn=",turn," tStage=",tStage)
 	if(automataTurn.find(turn) == -1): #not automata turn
 		if(cleanUpTurn.find(turn) != -1): #is it time to remove 'X' markers on Board?
