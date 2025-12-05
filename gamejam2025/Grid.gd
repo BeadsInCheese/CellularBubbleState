@@ -15,6 +15,7 @@ var currentAgent
 var gridList: Array[Bubble] = []
 var latestTileIndexes: Array[int] = []
 static var boardHistory : Array[String] = []
+static var boardExists=false
 var currentBoardStatePointer = 0
 var loading = false
 var hasEnded=false
@@ -134,7 +135,7 @@ static var mp=true
 var temp=load("res://AI/PlayerAgent.gd")
 var temp2=load("res://AI/MultiplayerAgent.gd")
 func _ready() -> void:
-	
+	boardExists=true
 	for i in range(xsize):
 		for j in range(ysize):
 			var x:Bubble=bubble.instantiate()
@@ -249,9 +250,11 @@ func _mute_button_pressed() -> void:
 func _exit_button_pressed() -> void:
 	#boardHistory.clear()
 	SceneNavigation._on_MainMenuPressed()
+	
 func _exit_tree() -> void:
-	print("cleared history")
 	boardHistory.clear()
+	boardExists=false
+	
 func _input(event):
 	if event is InputEventKey and event.pressed:
 		if (event.as_text() == "Left" && (turnOrder[(len(boardHistory)-1)%6].get_is_player() || hasEnded)):
