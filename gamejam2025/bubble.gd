@@ -85,9 +85,9 @@ func _on_button_button_down() -> void:
 	if board.get_node("Node2D") != null:
 		seq = board.get_node("Node2D").totalSequence
 		turn = board.get_node("Node2D").turn
-	if(len(seq)>turn-1):
-		if(board.tutorial and seq[turn-1] != tileIndex):
-			return
+		if(len(seq)>turn-1):
+			if(board.tutorial and seq[turn-1] != tileIndex):
+				return
 	
 	if(board.turnOrder[board.currentTurn].get_is_player()==true and not(board.turnOrder[board.currentTurn].skip)):
 		setTileType(board.turnOrder[board.currentTurn].playerType)
