@@ -17,10 +17,11 @@ func makeMove(observation:Board):
 	print("agentStage=",agentStage)
 	gameBoard = observation
 	await observation.get_tree().create_timer(2.0).timeout
-	gameBoard.gridList[t[agentStage]].setTileType(3, false)
-	agentStage += 1
+	if(len(t)>agentStage):
+		gameBoard.gridList[t[agentStage]].setTileType(3, false)
+		agentStage += 1
 
-	moveMade.emit(observation)
+		moveMade.emit(observation)
 	
 	
 func _ready() -> void:

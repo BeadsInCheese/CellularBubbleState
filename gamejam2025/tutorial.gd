@@ -61,7 +61,8 @@ func turnChanged(param) -> void:
 			gameBoard.gridList[sequence[tStage]].get_node("Button").text="X"
 			
 		#handle text prompts using different index, tStage
-		gameBoard.get_tree().root.get_node("root/Board/Node2D/text").text=tPrompts[tStage]
+		if(len(tPrompts)>tStage):
+			gameBoard.get_tree().root.get_node("root/Board/Node2D/text").text=tPrompts[tStage]
 		tStage += 1
 	turn += 1
 	
