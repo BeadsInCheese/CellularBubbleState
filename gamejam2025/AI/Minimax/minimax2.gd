@@ -11,6 +11,8 @@ var max_actions_decay: int
 
 var turn_order: Array[String] = ["P1", "P2A", "A", "P2", "P1A", "A"]
 
+var transpos = {}
+
 func get_next_turn_index(turn: int):
 	if turn == 1: return 3
 	if turn == 4: return 0
@@ -103,21 +105,23 @@ func minimax(state: Array, turn: int, alpha: float, beta: float, current_depth: 
 	curr_zobrist_key ^= zobrist_turns[get_previous_turn_index(turn)]
 	curr_zobrist_key ^= zobrist_turns[turn]
 
-	var possible_actions: Array = possible_actions_func.call(state, max_actions)
 	var optimal_value: float = -INF if not is_adversary else INF
 
 	# Evaluate possible actions recursively using alpha-beta pruning.
-	for _action in possible_actions:
-		var results = result_func.call(state, _action, turn_order[turn])
+	for container in get_possible_action_containers(state, max_actions):
+		var results = result_func.call(state, container.action, turn_order[turn])
 		var result_state = results[0]
 		var new_zobrist_key = update_zobrist_key(results[1], curr_zobrist_key)
-		print(_action, " zobr: ", new_zobrist_key, " oldzobr:", curr_zobrist_key)
+		print(container.action, " zobr: ", new_zobrist_key, " oldzobr:", curr_zobrist_key)
 		var new_gen_zob_key = generate_zobrist_key(result_state, turn)
-		print(current_depth, "recalc zobr: ", new_gen_zob_key)
-		print_state(state)
-		print("->")
-		print_state(result_state)
-		print()
+		
+		if (new_zobrist_key != new_gen_zob_key):
+			print(current_depth, "recalc zobr: ", new_gen_zob_key)
+			print_state(state)
+			print("->")
+			print_state(result_state)
+			print()
+		
 		states_explored += 1
 
 		var value_of_result_state = self.minimax(result_state, get_next_turn_index(turn), alpha, beta, current_depth + 1, max_actions - max_actions_decay, new_zobrist_key)
@@ -148,6 +152,18 @@ static func print_state(state: Array):
 				char = "."
 			line += char
 		print(line)
+
+class ActionContainer:
+	var action: Array
+
+func get_possible_action_containers(state: Array, max_actions: int) -> Array:
+	var arr = possible_actions_func.call(state, max_actions).map(func(a): return get_container_for_action(a))
+	return arr
+
+func get_container_for_action(action: Array) -> ActionContainer:
+	var container = ActionContainer.new()
+	container.action = action
+	return container
 
 static func random_64bit_int():
 	return (randi() << 32) | randi()
