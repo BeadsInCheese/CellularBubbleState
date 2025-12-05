@@ -30,8 +30,12 @@ func _on_PlayerMenuPressed() -> void:
 	goToScene("res://PlayerSelect.tscn")
 
 
+var loading=false
 func goToScene(scene: String):
 	# Wait hide animation
+	if loading:
+		return
+	loading=true
 	for i in range(51):
 		RenderingServer.global_shader_parameter_set("tt",i*0.02)
 		if(get_tree()!=null):
@@ -41,7 +45,7 @@ func goToScene(scene: String):
 	if(get_tree()!=null):
 		await get_tree().process_frame
 		get_tree().change_scene_to_packed(load(scene))
-
+	loading=false
 func showall():
 	for i in range(51):
 		RenderingServer.global_shader_parameter_set("tt",1-i*0.02)
