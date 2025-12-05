@@ -11,7 +11,7 @@ func diagonal_heuristic(observation:Array,ii)->int:
 	var offsets:Array[Vector2]=[Vector2(1,1),Vector2(-1,-1),Vector2(-1,1),Vector2(1,-1)]
 	var offsets2:Array[Vector2]=[Vector2(1,0),Vector2(-1,0),Vector2(0,1),Vector2(0,-1)]
 	var score=0
-	print(playerType)
+	#print(playerType)
 	for i in offsets:
 		var p = calcToPos(i+calcFromPos(ii,ob.xsize),ob.xsize)
 		if(p<observation.size()):
@@ -80,7 +80,9 @@ func test_heuristics(ii:int)->int:
 	return val
 func makeMove(observation:Board):
 	var offset=0
-	await observation.get_tree().create_timer(0.10).timeout
+	await observation.get_tree().create_timer(0.1).timeout
+	if(!Board.boardExists):
+		return
 	var best_move:int
 	var best_score:int=-99999999
 	aa_cache=observation.automataAgent
