@@ -16,9 +16,15 @@ func makeMove(observation:Board):
 		if(observation!=null):
 			if(skip):
 				await makeRandomMove(observation)
+				if(!Board.boardExists):
+					return
 				await observation.get_tree().process_frame
+				if(!Board.boardExists):
+					return
 				break
 			await observation.get_tree().process_frame
+			if(!Board.boardExists):
+				return
 		else:
 			return
 		#print((makingMove))
