@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3 uid="uid://ceaervy6ostek"]
+
+[ext_resource type="Texture2D" uid="uid://bypjf2xe5qumf" path="res://resources/GFX/Bubble icons/bubble03b_2.png" id="1_5r54s"]
+[ext_resource type="Shader" path="res://Token.gdshader" id="2_e8i6x"]
+[ext_resource type="Texture2D" uid="uid://bmhbegdsa6jji" path="res://resources/GFX/Bubble icons/bubble03b.png" id="3_lw5nc"]
+[ext_resource type="Texture2D" uid="uid://diyktfuctrlqv" path="res://icon.svg" id="4_a1lcp"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6ba7c"]
+shader = ExtResource("2_e8i6x")
+shader_parameter/treshold = -0.09
+shader_parameter/color = Vector3(0.64, 0, 0)
+shader_parameter/type = 4
+shader_parameter/angle = 21.0
+shader_parameter/offset = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uo3b8"]
+shader = ExtResource("2_e8i6x")
+shader_parameter/treshold = -0.06
+shader_parameter/color = null
+shader_parameter/type = 2
+shader_parameter/angle = null
+shader_parameter/offset = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wska3"]
+shader = ExtResource("2_e8i6x")
+shader_parameter/treshold = -0.34
+shader_parameter/color = Vector3(-0.025, 0, 0)
+shader_parameter/type = null
+shader_parameter/angle = -0.72
+shader_parameter/offset = null
+
+[node name="Test" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(225, 481)
+texture = ExtResource("1_5r54s")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(868, 449)
+texture = ExtResource("1_5r54s")
+
+[node name="Sprite2D3" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_6ba7c")
+position = Vector2(256, 139)
+texture = ExtResource("1_5r54s")
+
+[node name="Sprite2D4" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_uo3b8")
+position = Vector2(861, 150)
+texture = ExtResource("3_lw5nc")
+
+[node name="Icon" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_wska3")
+position = Vector2(517, 448)
+texture = ExtResource("4_a1lcp")

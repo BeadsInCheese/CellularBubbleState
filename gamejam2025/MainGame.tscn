@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://1bsyxxel7wtb"]
+[gd_scene load_steps=24 format=3 uid="uid://1bsyxxel7wtb"]
 
 [ext_resource type="Script" path="res://Grid.gd" id="1_aixle"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="1_qw4ww"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="8_3ddsp"]
 [ext_resource type="Texture2D" uid="uid://4q6k2lul8wet" path="res://resources/TurnOrderAssets/turnOrder.png" id="8_l4w7h"]
 [ext_resource type="Script" path="res://turnOrder.gd" id="8_ncibk"]
+[ext_resource type="Theme" uid="uid://dck8e4axi58hk" path="res://resources/fonts/regularTheme.tres" id="9_olk37"]
 
 [sub_resource type="Gradient" id="Gradient_ubn5m"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -157,6 +158,8 @@ offset_left = 22.0
 offset_top = 37.0
 offset_right = 35.0
 offset_bottom = 652.0
+theme = ExtResource("9_olk37")
+theme_override_constants/line_spacing = 5
 theme_override_font_sizes/font_size = 16
 text = "1
 
@@ -188,6 +191,7 @@ offset_left = 45.0
 offset_top = 15.0
 offset_right = 669.0
 offset_bottom = 91.0
+theme = ExtResource("9_olk37")
 theme_override_font_sizes/font_size = 16
 text = "A          B          C          D          E          F          G          H          I           J           K          L"
 
@@ -239,24 +243,29 @@ size_flags_stretch_ratio = 2.74
 
 [node name="Button" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("9_olk37")
 text = "Skip"
 
 [node name="Button4" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("9_olk37")
 text = "Mute"
 
 [node name="Button2" type="Button" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_stretch_ratio = 3.46
+theme = ExtResource("9_olk37")
 text = "Save"
 
 [node name="Button3" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("9_olk37")
 text = "Load"
 
 [node name="Button5" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("9_olk37")
 text = "Exit"
 
 [connection signal="tree_exiting" from="Board" to="Board" method="_on_tree_exiting"]

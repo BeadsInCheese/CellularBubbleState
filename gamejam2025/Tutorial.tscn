@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cxrytcxo1bp0p"]
+[gd_scene load_steps=3 format=3 uid="uid://cxrytcxo1bp0p"]
 
 [ext_resource type="Script" path="res://tutorial.gd" id="1_iagd1"]
+[ext_resource type="Theme" uid="uid://dck8e4axi58hk" path="res://resources/fonts/regularTheme.tres" id="2_a7gh6"]
 
 [node name="Node2D" type="Control"]
 z_index = 10
@@ -27,6 +28,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_a7gh6")
 text = "Welcome to Cellular Bubble State tutorial!
 "
 horizontal_alignment = 1

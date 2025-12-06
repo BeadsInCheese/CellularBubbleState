@@ -41,7 +41,9 @@ func disappear():
 func update_gfx(type):
 	#print("update called "+str(type))
 	$Button.visible=false
-	
+	$BubbleGfx.material.set_shader_parameter("type",type)
+	$BubbleGfx.material.set_shader_parameter("offset",randf()*100)
+	$BubbleGfx.material.set_shader_parameter("angle",21)
 	if type == 1:
 		$BubbleGfx.material.set_shader_parameter("color",Vector3(0,0,1))
 		$BubbleGfx.set_texture(load("res://resources/GFX/towers/pillar_player1.png"))
