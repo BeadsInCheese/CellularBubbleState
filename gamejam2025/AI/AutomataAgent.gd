@@ -37,15 +37,16 @@ static func simulateAutomataStep(board: Array):
 	board = automata.AutomataStep(board)
 
 static func simulateAutomataStepAndReturnActions(board: Array) -> Array:
+	var oldBoard = board.duplicate()
 	var newBoard = automata.AutomataStep(board)
 	
 	var automataActions = []
 	
 	for i in len(board):
-		var tile = board[i]
+		var tile = oldBoard[i]
 		var newTile = newBoard[i]
 		
 		if tile != newTile:
-			automataActions.append([i, newTile])
+			automataActions.append([i, newTile, tile])
 	
 	return [newBoard, automataActions]

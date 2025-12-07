@@ -44,7 +44,7 @@ func init(board: Board):
 func minimax_step() -> void:
 	var tempBoard = game_board.getBoardCopy()
 	
-	var action: Array = minimax.action(tempBoard, game_board.currentTurn, 2, 5, 0)
+	var action: Array = minimax.action(tempBoard, game_board.currentTurn, 3, 10, 0)
 	if len(action) == 0:
 		return
 
@@ -58,7 +58,7 @@ func result(state: Array, action: Array, player_state: String) -> Array:
 	var tileType = 3 if player_state.begins_with("P2") else 1
 	tempBoard[action[0]] = tileType
 	
-	var resultActions = [[action[0], tileType]] # this action and the resulting automata actions
+	var resultActions = [[action[0], tileType, 0]] # this action and the resulting automata actions
 	
 	if player_state.ends_with("A"):
 		var results = game_board.automataAgent.simulateAutomataStepAndReturnActions(tempBoard)

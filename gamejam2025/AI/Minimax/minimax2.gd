@@ -37,7 +37,7 @@ func action(state: Array, current_turn: int, max_depth: int, max_actions: int, m
 	var is_adversary = turn_order[current_turn].begins_with("P2")
 	
 	var initial_zobrist_key = generate_zobrist_key(state, current_turn)
-	print("initial zobr: ", initial_zobrist_key)
+	#print("initial zobr: ", initial_zobrist_key)
 	
 	#state[0] = 1
 	#var key2 = generate_zobrist_key(state, current_turn)
@@ -60,18 +60,21 @@ func action(state: Array, current_turn: int, max_depth: int, max_actions: int, m
 	
 	#print("start", str(state), " ADVERSARY" if is_adversary else " NON-A")
 
-
 	# Evaluate each possible action and update optimal values based on pruning.
 	for _action in possible_actions:
 		var results = result_func.call(state, _action, turn_order[current_turn])
 		var result_state = results[0]
 		var zobrist_key = update_zobrist_key(results[1], initial_zobrist_key)
-		print(_action, " i zobr: ", zobrist_key)
-		#print("i recalc zobr: ", generate_zobrist_key(result_state, current_turn))
-		#print_state(state)
-		#print("->")
-		#print_state(result_state)
-		#print()
+		#print(_action, " i zobr: ", zobrist_key)
+		var new_gen_zob_key = generate_zobrist_key(result_state, current_turn)
+		if (zobrist_key != new_gen_zob_key):
+			print(states_explored, " irecalc zobr: ", new_gen_zob_key, " update zobr: ", zobrist_key, " initial zobr: ", initial_zobrist_key)
+			print_state(state)
+			print("->")
+			print_state(result_state)
+			print()
+		
+		states_explored += 1
 		
 		var value_of_result_state: float = self.minimax(result_state, get_next_turn_index(current_turn), alpha, beta, current_depth + 1, max_actions - max_actions_decay, zobrist_key)
 	
@@ -112,11 +115,11 @@ func minimax(state: Array, turn: int, alpha: float, beta: float, current_depth: 
 		var results = result_func.call(state, container.action, turn_order[turn])
 		var result_state = results[0]
 		var new_zobrist_key = update_zobrist_key(results[1], curr_zobrist_key)
-		print(container.action, " zobr: ", new_zobrist_key, " oldzobr:", curr_zobrist_key)
+		#print(container.action, " zobr: ", new_zobrist_key, " oldzobr:", curr_zobrist_key)
 		var new_gen_zob_key = generate_zobrist_key(result_state, turn)
 		
 		if (new_zobrist_key != new_gen_zob_key):
-			print(current_depth, "recalc zobr: ", new_gen_zob_key)
+			print(states_explored, " d: ", current_depth, " recalc zobr: ", new_gen_zob_key, " update zobr: ", new_zobrist_key, " curr zobr: ", curr_zobrist_key)
 			print_state(state)
 			print("->")
 			print_state(result_state)
@@ -172,10 +175,10 @@ var zobrist_board: Array = []
 var zobrist_turns: Array[int] = []
 
 func init_zobrist():
-	for i in 4:
+	for i in 5: # 0-empty, 1-P1, 2-P1b, 3-P2, 4-P2b
 		zobrist_board.append([])
 		for j in 144:
-			zobrist_board[i].append(random_64bit_int())
+			zobrist_board[i].append(random_64bit_int() if i > 0 else 0)
 	
 	zobrist_turns.append(0) # append P1 turn as 0, so the zobrist key on turn 1 stays as 0
 	for i in 5: # init other turns
@@ -187,7 +190,7 @@ func generate_zobrist_key(state: Array, turn: int) -> int:
 	for index in len(state):
 		var tileType = state[index]
 		if tileType != 0:
-			var value = zobrist_board[tileType-1][index]
+			var value = zobrist_board[tileType][index]
 			key ^= value
 	
 	key ^= zobrist_turns[turn]
@@ -196,7 +199,7 @@ func generate_zobrist_key(state: Array, turn: int) -> int:
 
 func update_zobrist_key(actions: Array, key: int) -> int:
 	for action in actions:
-		var value = zobrist_board[action[1]-1][action[0]]
-		key ^= value
+		key ^= zobrist_board[action[2]][action[0]] # remove old tile
+		key ^= zobrist_board[action[1]][action[0]] # place new tile
 	
 	return key
