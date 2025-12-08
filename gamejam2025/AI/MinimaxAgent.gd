@@ -13,10 +13,16 @@ func makeMove(observation:Board):
 	thread.start(minimax_step)
 	
 	while thread.is_alive():
+		if observation == null || observation.get_tree() == null:
+			break;
+
 		await observation.get_tree().process_frame
 
 	thread.wait_to_finish()
 	
+	if game_board == null:
+		return
+
 	game_board.gridList[calculated_action].setTileType(playerType)
 	
 	moveMade.emit(game_board)
