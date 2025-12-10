@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://bubble.gd" id="1_k25p1"]
 [ext_resource type="Shader" path="res://Token.gdshader" id="2_5ncrq"]
 [ext_resource type="AudioStream" uid="uid://xv2itqg1romi" path="res://resources/Sound/SFX/stone_rock_or_wood_moved_no_tick.mp3" id="3_50q4b"]
-[ext_resource type="Texture2D" uid="uid://babdc3qshfn7k" path="res://Scenes/shadertest/NoiseTest2.tres" id="3_gork6"]
-[ext_resource type="Texture2D" uid="uid://h3emvdklglsp" path="res://Scenes/shadertest/NoiseTest.tres" id="4_8vp0b"]
+[ext_resource type="Texture2D" uid="uid://dk0kwybsd338t" path="res://Scenes/shadertest/NoiseTest2.tres" id="3_gork6"]
+[ext_resource type="Texture2D" uid="uid://d4b06b0bas7t4" path="res://Scenes/shadertest/NoiseTest.tres" id="4_8vp0b"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_oabc8"]
 resource_local_to_scene = true

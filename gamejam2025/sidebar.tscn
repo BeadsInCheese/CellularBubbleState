@@ -143,6 +143,8 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("4_qbin2")
+placeholder_text = "
+"
 editable = false
 scroll_smooth = true
 

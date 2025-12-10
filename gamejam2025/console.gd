@@ -13,8 +13,13 @@ func _exit_tree() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+var lines=0
 func write(author:String,msg:String,end:String="\n"):
-	$VBoxContainer/log.text+=author+ ("" if author=="" else ": ")+msg+end
+	var result=author+ ("" if author=="" else ": ")+msg+end
+	lines+=result.count("\n")
+	$VBoxContainer/log.text+=result
+	$VBoxContainer/log.scroll_vertical=lines
+
 func systemWrite(msg:String):
 	write("System",msg)
 	
@@ -25,7 +30,10 @@ func commandProcessor(cmd:String):
 	if(args[0]=="help"):
 		systemWrite("commands:\n/time gets time\n/help get information about available commands")
 func _on_input_text_submitted(new_text: String) -> void:
+	if(len(new_text)==0):
+		return
 	write("Player",new_text)
 	$VBoxContainer/input.text=""
+
 	if(new_text[0]=="/"):
 		commandProcessor(new_text.substr(1))
