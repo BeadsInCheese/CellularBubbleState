@@ -71,6 +71,9 @@ func minimax(state: Array, turn: int, alpha: float, beta: float, current_depth: 
 	# Recursively evaluate the state using minimax with alpha-beta pruning.
 	var is_adversary = turn_order[turn].begins_with("P2")
 	
+	if not Board.boardExists:
+		return 0
+	
 	if terminal_func.call(state) == true or (max_depth != -1 and current_depth > max_depth):
 		# If terminal state or max depth reached, return the utility value of the state.
 		return utility_func.call(state)

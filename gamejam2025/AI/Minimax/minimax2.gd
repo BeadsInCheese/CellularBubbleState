@@ -83,6 +83,10 @@ func action(state: Array, current_turn: int, depth: int, max_actions: int, max_a
 
 ## Recursively evaluate the state using minimax with alpha-beta pruning.
 func minimax(state: Array, turn: int, alpha: float, beta: float, current_depth: int, max_actions: int, zobrist_key: int) -> float:
+	# If the board has been closed, prevent further calculations
+	if not Board.boardExists:
+		return 0
+
 	# If terminal state or max depth reached, return the utility value of the state.
 	if current_depth == 0 or terminal_func.call(state) == true:
 		return utility_func.call(state)
