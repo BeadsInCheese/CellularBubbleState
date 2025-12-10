@@ -88,7 +88,7 @@ func _on_button_button_down() -> void:
 	var seq 
 	var turn
 	
-	if board.get_node("Node2D") != null:
+	if board.get_node_or_null("Node2D") != null:
 		seq = board.get_node("Node2D").totalSequence
 		turn = board.get_node("Node2D").turn
 		if(len(seq)>turn-1):
