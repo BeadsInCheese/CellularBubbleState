@@ -9,9 +9,15 @@ func setTileType(type, is_automata: bool = false):
 	update_gfx(tileType)
 	
 	if not is_automata:
+		board.latestAutomataIndexes.clear()
 		board.latestTileIndexes.append(tileIndex)
 		if len(board.latestTileIndexes) > 3:
 			board.latestTileIndexes.pop_front()
+	if is_automata:
+		board.latestAutomataIndexes.append(tileIndex)
+	
+	for bubble in board.gridList:
+		bubble.update_highlight_gfx()
 
 var appearing = false
 
@@ -68,6 +74,11 @@ func update_gfx(type):
 		disappear()
 		#$BubbleGfx.set_texture(null)
 		$Button.visible=true
+
+func update_highlight_gfx():
+	var is_latest_tower = (len(board.latestTileIndexes) > 0 and tileIndex == board.latestTileIndexes[len(board.latestTileIndexes) - 1])
+	var is_latest_automata = tileIndex in board.latestAutomataIndexes
+	$BubbleGfx.material.set_shader_parameter("highlight", 0.7 if is_latest_tower or is_latest_automata else 1.0)
 	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

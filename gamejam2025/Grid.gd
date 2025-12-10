@@ -14,6 +14,8 @@ var ysize: int = 12
 var currentAgent
 var gridList: Array[Bubble] = []
 var latestTileIndexes: Array[int] = []
+var latestAutomataIndexes: Array[int] = []
+
 static var boardHistory : Array[String] = []
 static var boardExists=false
 var currentBoardStatePointer = 0
