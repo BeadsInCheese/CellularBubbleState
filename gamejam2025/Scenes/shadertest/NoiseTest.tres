@@ -1,0 +1,22 @@
+[gd_resource type="NoiseTexture2D" load_steps=2 format=3 uid="uid://d4b06b0bas7t4"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_kmvhh"]
+noise_type = 2
+seed = 2915
+frequency = 0.0176
+offset = Vector3(-515.32, -271.6, 0)
+cellular_distance_function = 1
+cellular_jitter = 0.905
+cellular_return_type = 0
+domain_warp_enabled = true
+domain_warp_type = 1
+domain_warp_amplitude = 125.14
+domain_warp_frequency = 0.0
+domain_warp_fractal_type = 0
+domain_warp_fractal_octaves = 1
+domain_warp_fractal_lacunarity = 0.27
+domain_warp_fractal_gain = 0.44
+
+[resource]
+seamless = true
+noise = SubResource("FastNoiseLite_kmvhh")

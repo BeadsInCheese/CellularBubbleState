@@ -15,6 +15,7 @@ mouse_filter = 2
 script = ExtResource("1_iagd1")
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 0
 offset_left = 78.0
 offset_top = 119.0
 offset_right = 461.0
@@ -37,6 +38,7 @@ autowrap_mode = 3
 
 [node name="Exit" type="Button" parent="."]
 visible = false
+layout_mode = 0
 offset_left = 410.0
 offset_top = 223.0
 offset_right = 457.0

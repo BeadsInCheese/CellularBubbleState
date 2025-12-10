@@ -1,14 +1,21 @@
-[gd_scene load_steps=7 format=3 uid="uid://dmerm3r4u3pn8"]
+[gd_scene load_steps=9 format=3 uid="uid://dmerm3r4u3pn8"]
 
 [ext_resource type="Script" path="res://bubble.gd" id="1_k25p1"]
 [ext_resource type="Shader" path="res://Token.gdshader" id="2_5ncrq"]
 [ext_resource type="AudioStream" uid="uid://xv2itqg1romi" path="res://resources/Sound/SFX/stone_rock_or_wood_moved_no_tick.mp3" id="3_50q4b"]
+[ext_resource type="Texture2D" uid="uid://dk0kwybsd338t" path="res://Scenes/shadertest/NoiseTest2.tres" id="3_gork6"]
+[ext_resource type="Texture2D" uid="uid://d4b06b0bas7t4" path="res://Scenes/shadertest/NoiseTest.tres" id="4_8vp0b"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_oabc8"]
 resource_local_to_scene = true
 shader = ExtResource("2_5ncrq")
 shader_parameter/treshold = 1.0
 shader_parameter/color = null
+shader_parameter/type = null
+shader_parameter/angle = null
+shader_parameter/offset = null
+shader_parameter/NOISE_PATTERN = ExtResource("3_gork6")
+shader_parameter/NOISE_PATTERN2 = ExtResource("4_8vp0b")
 
 [sub_resource type="Gradient" id="Gradient_wi3sw"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
