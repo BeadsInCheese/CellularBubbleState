@@ -64,12 +64,12 @@ func action(state: Array, current_turn: int, max_depth: int, max_actions: int, m
 	
 		if is_adversary:
 			if result_state_eval < optimal_value:
-				optimal_action = container.action
+				optimal_action = [container.index]
 				optimal_value = result_state_eval
 			beta = min(beta, optimal_value)
 		else:
 			if result_state_eval > optimal_value:
-				optimal_action = container.action
+				optimal_action = [container.index]
 				optimal_value = result_state_eval
 			alpha = max(alpha, optimal_value)
 
@@ -137,7 +137,8 @@ static func print_state(state: Array):
 		print(line)
 
 class ActionContainer:
-	var action: Array
+	var index: int
+	var dist_from_latest: int
 	var stored_eval: float
 	var stored_eval_exists: bool
 	var new_zobrist_key: int
@@ -151,26 +152,29 @@ func get_possible_action_containers(state: Array, max_actions: int, curr_zobrist
 	for action in possible_actions_func.call(state, max_actions):
 		containers.append(get_container_for_action(action, state, curr_zobrist_key, current_turn))
 	
-	#containers.sort_custom(func(a: ActionContainer, b: ActionContainer): a.stored_eval < b.stored_eval)
+	containers.sort_custom(func(a: ActionContainer, b: ActionContainer): 
+		a.stored_eval < b.stored_eval if a.stored_eval != b.stored_eval else a.dist_from_latest < b.dist_from_latest
+	)
 	
 	return containers
 
 func get_container_for_action(action: Array, state: Array, curr_zobrist_key: int, current_turn: int) -> ActionContainer:
 	var container = ActionContainer.new()
-	container.action = action
+	container.index = action[0]
+	container.dist_from_latest = action[1]
 	
 	var results = result_func.call(state, action, turn_order[current_turn])
 	var result_state = results[0]
 
 	var new_zobrist_key = update_zobrist_key(results[1], curr_zobrist_key)
-	var new_gen_zob_key = generate_zobrist_key(result_state, current_turn)
+	#var new_gen_zob_key = generate_zobrist_key(result_state, current_turn)
 	
-	if (new_zobrist_key != new_gen_zob_key):
-		print("recalc zobr: ", new_gen_zob_key)
-		print_state(state)
-		print("->")
-		print_state(result_state)
-		print()
+	#if (new_zobrist_key != new_gen_zob_key):
+		#print("recalc zobr: ", new_gen_zob_key)
+		#print_state(state)
+		#print("->")
+		#print_state(result_state)
+		#print()
 	
 	container.new_zobrist_key = new_zobrist_key
 	container.result_state = result_state

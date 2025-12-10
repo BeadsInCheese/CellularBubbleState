@@ -54,7 +54,7 @@ func minimax_step() -> void:
 	
 	recalc_distances_to_latest_tiles(tempBoard)
 	
-	var action: Array = minimax.action(tempBoard, game_board.currentTurn, 3, 18, 2)
+	var action: Array = minimax.action(tempBoard, game_board.currentTurn, 5, 20, 2)
 	if len(action) == 0:
 		return
 
@@ -104,10 +104,10 @@ func possible_actions(state: Array, max_actions: int) -> Array[Array]:
 	for i in len(state):
 		if state[i] == 0:
 			actions.append([i, distances_to_latest_tiles[i]])
-	
+
 	if max_actions < 2 or len(game_board.latestTileIndexes) < 2:
 		max_actions = 2
-	
+
 	if len(actions) <= max_actions:
 		return actions
 
@@ -133,7 +133,11 @@ func distance_to_latest_tile_indexes(action_index: int):
 	if second_last_index == null:
 		second_last_index = (game_board.xsize / 2) + (game_board.ysize / 2 * game_board.ysize)
 	
-	return min(manhattan_distance(action_index, last_index), manhattan_distance(action_index, second_last_index))
+	var third_last_index = latest_indexes.pop_back()
+	if third_last_index == null:
+		third_last_index = (game_board.xsize / 2) + (game_board.ysize / 2 * game_board.ysize)
+	
+	return min(manhattan_distance(action_index, last_index), manhattan_distance(action_index, second_last_index), manhattan_distance(action_index, third_last_index))
 	
 func get_xypos_for_index(index: int) -> Array[int]:
 	return [index%game_board.xsize, index/game_board.ysize]

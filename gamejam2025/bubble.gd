@@ -10,7 +10,7 @@ func setTileType(type, is_automata: bool = false):
 	
 	if not is_automata:
 		board.latestTileIndexes.append(tileIndex)
-		if len(board.latestTileIndexes) > 2:
+		if len(board.latestTileIndexes) > 3:
 			board.latestTileIndexes.pop_front()
 
 var appearing = false
