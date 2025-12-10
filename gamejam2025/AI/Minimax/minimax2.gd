@@ -13,8 +13,8 @@ var turn_order: Array[String] = ["P1", "P2A", "A", "P2", "P1A", "A"]
 var zobrist_board: Array = []
 var zobrist_turns: Array[int] = []
 
-var transposEval = {}
-var transposDepth = {}
+var transpos_eval = {}
+var transpos_depth = {}
 var transpos_results = {}
 
 func get_next_turn_index(turn: int):
@@ -130,8 +130,8 @@ func process_eval(container: ActionContainer, current_turn: int, alpha: float, b
 	
 	var eval = self.minimax(container.result_state, get_next_turn_index(current_turn), alpha, beta, depth - 1, max_actions - max_actions_decay, container.new_zobrist_key)
 	
-	transposEval[container.new_zobrist_key] = eval
-	transposDepth[container.new_zobrist_key] = depth
+	transpos_eval[container.new_zobrist_key] = eval
+	transpos_depth[container.new_zobrist_key] = depth
 	return eval
 
 static func print_state(state: Array):
@@ -208,11 +208,11 @@ func get_container_for_action(action: Array, state: Array, curr_zobrist_key: int
 	container.result_state = result_state
 	container.result_actions = actions
 	
-	var eval = transposEval.get(new_zobrist_key)
+	var eval = transpos_eval.get(new_zobrist_key)
 	container.stored_eval_exists = eval != null
 	if eval != null:
 		container.stored_eval = eval
-		container.stored_eval_depth = transposDepth[new_zobrist_key]
+		container.stored_eval_depth = transpos_depth[new_zobrist_key]
 	
 	#print(container.action, " zobr: ", new_zobrist_key, " oldzobr:", curr_zobrist_key, "  ", states_explored, " eval: ", eval)
 	
