@@ -11,13 +11,15 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6ba7c"]
 shader = ExtResource("2_e8i6x")
-shader_parameter/treshold = -0.09
+shader_parameter/treshold = -3.09
 shader_parameter/color = Vector3(0.64, 0, 0)
 shader_parameter/type = 4
-shader_parameter/angle = 7.715
-shader_parameter/highlight = null
-shader_parameter/offset = null
+shader_parameter/angle = 9.135
+shader_parameter/highlight = 1.0
+shader_parameter/offset = 3.72
+shader_parameter/b = 1.15
 shader_parameter/NOISE_PATTERN = ExtResource("3_sgh67")
+shader_parameter/NOISE_PATTERN2 = ExtResource("4_3rb1x")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_uo3b8"]
 shader = ExtResource("2_e8i6x")
@@ -27,6 +29,7 @@ shader_parameter/type = 2
 shader_parameter/angle = 8.94
 shader_parameter/highlight = null
 shader_parameter/offset = null
+shader_parameter/b = null
 shader_parameter/NOISE_PATTERN = ExtResource("3_sgh67")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wska3"]
@@ -37,6 +40,7 @@ shader_parameter/type = null
 shader_parameter/angle = -0.72
 shader_parameter/highlight = null
 shader_parameter/offset = null
+shader_parameter/b = null
 shader_parameter/NOISE_PATTERN = ExtResource("3_sgh67")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lqelr"]
@@ -47,6 +51,7 @@ shader_parameter/type = 1
 shader_parameter/angle = null
 shader_parameter/highlight = null
 shader_parameter/offset = null
+shader_parameter/b = null
 shader_parameter/NOISE_PATTERN = ExtResource("4_3rb1x")
 shader_parameter/NOISE_PATTERN2 = ExtResource("4_3rb1x")
 
@@ -58,6 +63,7 @@ shader_parameter/type = 3
 shader_parameter/angle = 0.26
 shader_parameter/highlight = null
 shader_parameter/offset = null
+shader_parameter/b = null
 shader_parameter/NOISE_PATTERN = ExtResource("3_sgh67")
 shader_parameter/NOISE_PATTERN2 = ExtResource("4_3rb1x")
 
@@ -82,6 +88,8 @@ position = Vector2(868, 449)
 texture = ExtResource("1_5r54s")
 
 [node name="Sprite2D3" type="Sprite2D" parent="."]
+texture_filter = 1
+texture_repeat = 1
 material = SubResource("ShaderMaterial_6ba7c")
 position = Vector2(256, 139)
 texture = ExtResource("1_5r54s")

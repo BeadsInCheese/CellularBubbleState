@@ -78,7 +78,7 @@ func update_gfx(type):
 func update_highlight_gfx():
 	var is_latest_tower = (len(board.latestTileIndexes) > 0 and tileIndex == board.latestTileIndexes[len(board.latestTileIndexes) - 1])
 	var is_latest_automata = tileIndex in board.latestAutomataIndexes
-	$BubbleGfx.material.set_shader_parameter("highlight", 0.7 if is_latest_tower or is_latest_automata else 1.0)
+	$BubbleGfx.material.set_shader_parameter("highlight", 1.0 if is_latest_tower or is_latest_automata else 0.9)
 	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

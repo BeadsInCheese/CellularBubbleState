@@ -11,6 +11,7 @@ uniform float highlight;
 uniform sampler2D NOISE_PATTERN;
 uniform sampler2D NOISE_PATTERN2;
 uniform float offset;
+uniform float b;
 void fragment() {
 	// Called for every pixel the material is visible on.
 	if(UV.y<treshold){
@@ -18,6 +19,8 @@ void fragment() {
 	}
 
 	float mult=smoothstep(treshold+0.1,treshold,UV.y)*6.;
+	
+	float blur=texture(TEXTURE,((UV+((b-1.)*0.5))/b)).a;
 	if(mult>3.){
 		COLOR=vec4(color*mult,COLOR.a);
 	}
@@ -35,19 +38,25 @@ void fragment() {
 		float dist=clamp(0.15*max(-d*d,(1.-d))+0.6*dl,0.,1.);
 		float v=1.-smoothstep(0.0,0.10,dist);//+clamp(step(0.99,sin(UV.x+UV.y+TIME)),0.,1.);
 		COLOR=0.9*highlight*vec4(COLOR*(1.-v))+(type==2?vec4(0.6,1.8,1.9,COLOR.a):vec4(1.6,0.9,0.8,COLOR.a))*v;
+		
 	}
+	float noise=0.;
 	if(type==1 || type==3){
 	float n1=texture(NOISE_PATTERN2,vec2(fract(UV.x+TIME/10.+offset),fract(UV.y))).r;
 	float n2=texture(NOISE_PATTERN2,vec2(fract(UV.x-TIME/10.+offset),fract(UV.y))).r;
 	float n3=texture(NOISE_PATTERN2,vec2(fract(UV.x+offset),fract(UV.y+TIME/20.))).r;
 	float n4=texture(NOISE_PATTERN2,vec2(fract(UV.x+offset),fract(UV.y-TIME/20.))).r;
-	COLOR=highlight*mix(COLOR,vec4(vec3(0.6,1.0,0.6)+color,COLOR.a),clamp(n2*n1*n3*n4,0,1));
+	noise=n2*n1*n3*n4;
+	COLOR=highlight*mix(COLOR,vec4(vec3(0.6,1.0,0.6)+color,COLOR.a),clamp(noise,0,1));
 
 	}else{
 	float n1=texture(NOISE_PATTERN,vec2(fract(UV.x+TIME/10.+offset),fract(UV.y))).r;
 	float n2=texture(NOISE_PATTERN,vec2(fract(UV.x-TIME/10.+offset),fract(UV.y))).r;
-	COLOR=mix(COLOR,vec4(vec3(0.6,1.0,0.6)+color,COLOR.a),clamp(n2*n2*n1*n1,0,1));
+	noise=n2*n2*n1*n1;
+	COLOR=mix(COLOR,vec4(vec3(0.6,1.0,0.6)+color,COLOR.a),clamp(noise,0,1));
 	}
+	COLOR=mix(blur*noise*highlight*vec4(0.6,1.0,0.6,1.),COLOR,COLOR.a);
+	
 }
 
 //void light() {
