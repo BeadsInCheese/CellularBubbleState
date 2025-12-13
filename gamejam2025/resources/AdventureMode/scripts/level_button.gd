@@ -1,15 +1,15 @@
 extends Control
 @export
 var opponent:int
-class opponentData:
-	var opponentName:String
-	var dialogue:Array[String]
-	var image	
+signal buttonPressed(opponent)
 
 
 # Called when the node enters the scene tree for the first time.
+func emitBtnPressed():
+	emit_signal("buttonPressed",opponent)
+	$Btn.disabled=true
 func _ready() -> void:
-	pass # Replace with function body.
+	$Btn.connect("button_down",emitBtnPressed)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

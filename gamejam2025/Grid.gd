@@ -22,7 +22,7 @@ var currentBoardStatePointer = 0
 var loading = false
 var hasEnded=false
 static var tutorial = false
-
+static var adventure=false
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
 var turnOrder=[]
 var currentTurn=0

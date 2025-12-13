@@ -28,7 +28,8 @@ func _on_SettingsPressed() -> void:
 		
 func _on_PlayerMenuPressed() -> void:
 	goToScene("res://PlayerSelect.tscn")
-
+func _on_MapPressed()-> void:
+	goToScene("res://resources/AdventureMode/Scenes/Map.tscn")
 
 var loading=false
 func goToScene(scene: String):

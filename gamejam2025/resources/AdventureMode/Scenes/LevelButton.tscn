@@ -12,7 +12,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_kpbay")
 
-[node name="TextureButton" type="TextureButton" parent="."]
+[node name="Btn" type="TextureButton" parent="."]
 layout_mode = 0
 offset_left = -16.0
 offset_top = -18.0

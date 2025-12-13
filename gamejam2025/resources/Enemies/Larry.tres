@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="enemyResource" load_steps=2 format=3 uid="uid://dwon4e85bq6bx"]
+
+[ext_resource type="Script" path="res://resources/Enemies/enemyResource.gd" id="1_kvgfh"]
+
+[resource]
+script = ExtResource("1_kvgfh")
+dialogue = Array[String](["You@A sea urchin has landed on the beach.", "You@It is holding something. It looks like a map of some sort.", "You@There is only one thing to do", "You@Beat the sea urchin in a battle of wits.", "Larry@Ululululu"])
