@@ -1,9 +1,9 @@
-extends MinimaxAgent2
+extends MinimaxStrategolAgent
 
-class_name MinimaxAgent
+class_name MinimaxGolgathAgent
 
 func get_custom_class_name():
-	return "MinimaxAgent"
+	return "MinimaxGolgathAgent"
 
 func init(board: Board):
 	minimax.init_zobrist()

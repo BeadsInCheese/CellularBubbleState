@@ -1,4 +1,4 @@
-class_name Minimax2
+class_name Minimax
 
 var result_func: Callable
 var terminal_func: Callable

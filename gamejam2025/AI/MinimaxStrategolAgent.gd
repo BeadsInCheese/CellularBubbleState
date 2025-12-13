@@ -1,6 +1,6 @@
 extends AgentBase
 
-class_name MinimaxAgent2
+class_name MinimaxStrategolAgent
 
 
 # Called when the node enters the scene tree for the first time.
@@ -40,7 +40,7 @@ func get_custom_class_name():
 
 var thread: Thread
 var game_board: Board
-var minimax: Minimax2 = Minimax2.new(result, terminal, utility, possible_actions)
+var minimax: Minimax = Minimax.new(result, terminal, utility, possible_actions)
 
 var distances_to_latest_tiles = []
 
