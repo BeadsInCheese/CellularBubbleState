@@ -46,6 +46,10 @@ var distances_to_latest_tiles = []
 
 var calculated_action: int
 
+var max_actions = 22
+var max_actions_decay = 2
+var max_depth = 6
+
 func init(board: Board):
 	minimax.init_zobrist()
 
@@ -63,8 +67,8 @@ func minimax_iterative(initial_state: Array):
 	#minimax.eval_misses = 0
 	minimax.timeout = false
 	
-	for current_depth in range(1, 7):
-		var action: Array = minimax.action(initial_state, game_board.currentTurn, current_depth, 20, 2)
+	for current_depth in range(1, max_depth + 1):
+		var action: Array = minimax.action(initial_state, game_board.currentTurn, current_depth, max_actions, max_actions_decay)
 		if len(action) == 0:
 			break
 

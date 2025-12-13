@@ -3,6 +3,9 @@ extends AgentBase
 class_name AutomataAgent
 
 func makeMove(observation:Board):
+	if observation == null or observation.get_tree() == null:
+		return
+
 	await observation.get_tree().create_timer(0.20).timeout
 	game_board = observation
 	automata_step()
@@ -22,6 +25,9 @@ func get_custom_class_name():
 	
 	
 func automata_step() -> void:
+	if game_board == null:
+		return
+
 	var baseGrid = game_board.getBoardCopy()
 	var tempGrid = baseGrid.duplicate(true)
 	var result=automata.AutomataStep(tempGrid)
