@@ -21,7 +21,7 @@ static var boardExists=false
 var currentBoardStatePointer = 0
 var loading = false
 var hasEnded=false
-var tutorial = false
+static var tutorial = false
 
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
 var turnOrder=[]
@@ -37,10 +37,15 @@ var lastMove=[-1,-1]
 
 var p1AgentInstance
 var p2AgentInstance
-var player1Agent=load("res://AI/LDAgent.gd")
-var player2Agent=load("res://AI/PlayerAgent.gd")
-var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxGolgathAgent.gd"),load("res://AI/LDAgent.gd"),load("res://AI/BasicHeuristicEval.gd"),load("res://AI/MinimaxStrategolAgent.gd"),load("res://TutorialAgent.gd")]
+
+static var mp = true
+
+var playerAgent=load("res://AI/PlayerAgent.gd")
+var multiplayerAgent=load("res://AI/MultiplayerAgent.gd")
+var tutorialAgent=load("res://TutorialAgent.gd")
+var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxGolgathAgent.gd"),load("res://AI/LDAgent.gd"),load("res://AI/BasicHeuristicEval.gd"),load("res://AI/MinimaxStrategolAgent.gd"),load("res://AI/RandomFollowerAgent.gd")]
 var automataAgent: AutomataAgent = load("res://AI/AutomataAgent.gd").new()
+
 signal turnChangedSignal(absoluteTurn: int)
 
 var victor=-1
@@ -58,6 +63,7 @@ func updateScore():
 			player1Score += 1
 		if(i.tileType == 3 or i.tileType == 4):
 			player2Score += 1
+
 func asArray():
 	var arr=[]
 	for i in gridList:
@@ -73,8 +79,10 @@ func getVictor():
 	else:
 		v=1
 	return v
+
 var dataAquisition=false
-var  dataCounter=0
+var dataCounter=0
+
 func changeTurn()->void:
 	currentAgent = turnOrder[currentTurn]
 	await turnOrder[currentTurn].makeMove(self)
@@ -133,11 +141,8 @@ func updateCursor():
 	Input.set_custom_mouse_cursor(new_cursor_image, Input.CURSOR_ARROW, Vector2(15,15))
 
 # Called when the node enters the scene tree for the first time.
-static var mp=true
-var temp=load("res://AI/PlayerAgent.gd")
-var temp2=load("res://AI/MultiplayerAgent.gd")
 func _ready() -> void:
-	boardExists=true
+	boardExists = true
 	for i in range(xsize):
 		for j in range(ysize):
 			var x:Bubble=bubble.instantiate()
@@ -148,16 +153,21 @@ func _ready() -> void:
 			gridList.append(x)
 			
 	boardHistory.append(DataUtility.get_board_string(gridList,currentTurn))
-	if(mp):
-
-		p1AgentInstance= temp.new()
+	
+	if mp:
+		p1AgentInstance = playerAgent.new()
 		p1AgentInstance.playerType=Players.PLAYER1
-		p2AgentInstance=temp2.new()
+		p2AgentInstance = multiplayerAgent.new()
+		p2AgentInstance.playerType=Players.PLAYER2
+	if tutorial:
+		p1AgentInstance = playerAgent.new()
+		p1AgentInstance.playerType=Players.PLAYER1
+		p2AgentInstance = tutorialAgent.new()
 		p2AgentInstance.playerType=Players.PLAYER2
 	else:
-		p1AgentInstance= agentlist[Settings.P1Index].new()
+		p1AgentInstance = agentlist[Settings.P1Index].new()
 		p1AgentInstance.playerType=Players.PLAYER1
-		p2AgentInstance=agentlist[Settings.P2Index].new()
+		p2AgentInstance = agentlist[Settings.P2Index].new()
 		p2AgentInstance.playerType=Players.PLAYER2
 	
 	await p1AgentInstance.init(self)
@@ -174,8 +184,7 @@ func _ready() -> void:
 	for i in turnOrder:
 		print(i.get_custom_class_name())
 	
-	if(Settings.P2Index == 6):
-		tutorial = true
+	if tutorial:
 		var x = tutorialPanel.instantiate()
 		add_child(x)
 	

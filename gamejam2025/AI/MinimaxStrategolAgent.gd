@@ -36,7 +36,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 func get_custom_class_name():
-	return "MinimaxAgent2"
+	return "MinimaxStrategolAgent"
 
 var thread: Thread
 var game_board: Board
