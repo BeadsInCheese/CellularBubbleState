@@ -2,33 +2,30 @@ extends AgentBase
 
 class_name RandomFollowerAgent
 
-
+var distances_to_latest_tiles = []
 var game_board: Board
 
-var distances_to_latest_tiles = []
-
-
 func makeMove(observation:Board):
-	if observation == null or observation.get_tree() == null:
+	if observation == null or not observation.exists():
 		return
 	
-	await observation.get_tree().create_timer(0.10).timeout
-	
 	game_board = observation
+
+	await observation.get_tree().create_timer(0.05).timeout
 	
-	var initial_state = game_board.getBoardCopy()
-	
+	if observation == null or not observation.exists():
+		return
+		
+	var initial_state = observation.getBoardCopy()
 	recalc_distances_to_latest_tiles(initial_state)
 	
 	var actions = possible_actions(initial_state, 1)
 	
-	if game_board == null:
+	if observation == null or not observation.exists():
 		return
 	
-	game_board.gridList[actions[0][0]].setTileType(playerType)
-	
-	moveMade.emit(game_board)
-	
+	observation.gridList[actions[0][0]].setTileType(playerType)
+	moveMade.emit(observation)
 	Console.instance.write("Laroy","I will follow you!")
 
 # Get all possible valid moves on the current board

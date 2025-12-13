@@ -26,7 +26,7 @@ func appear():
 	$AudioStreamPlayer2D.play()
 	for i in range(100):
 		$BubbleGfx.material.set_shader_parameter("treshold",0.05*(10-i))
-		if get_tree()!=null:
+		if is_inside_tree() and get_tree()!=null:
 			await get_tree().process_frame
 		else:
 			return
@@ -38,7 +38,7 @@ func disappear():
 	$AudioStreamPlayer2D.play()
 	for i in range(100):
 		$BubbleGfx.material.set_shader_parameter("treshold",0.05*(i))
-		if get_tree()!=null:
+		if is_inside_tree() and get_tree()!=null:
 			await get_tree().process_frame
 		else:
 			return

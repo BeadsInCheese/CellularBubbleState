@@ -5,7 +5,7 @@ class_name MinimaxStrategolAgent
 
 # Called when the node enters the scene tree for the first time.
 func makeMove(observation: Board):
-	if observation == null:
+	if observation == null or not observation.exists():
 		return
 		
 	game_board = observation
@@ -14,15 +14,17 @@ func makeMove(observation: Board):
 	thread.start(minimax_step)
 	
 	while thread.is_alive():
-		if observation == null || observation.get_tree() == null:
-			break;
+		if observation == null or not observation.exists():
+			break
 
 		await observation.get_tree().process_frame
 
 	thread.wait_to_finish()
 	
-	if game_board == null:
+	if observation == null or not observation.exists():
 		return
+	
+	Console.instance.write(get_custom_class_name(), str((Time.get_ticks_msec() - minimax.start_time) / 1000.0) + " seconds")
 	
 	game_board.gridList[calculated_action].setTileType(playerType)
 	
@@ -76,8 +78,7 @@ func minimax_iterative(initial_state: Array):
 		
 		if Time.get_ticks_msec() - minimax.start_time > minimax.timeout_msec - 500:
 			break
-	
-	print("time: " + str((Time.get_ticks_msec() - minimax.start_time) / 1000.0))
+
 	return best_action_index
 
 # Simulate the result of an action on the board state

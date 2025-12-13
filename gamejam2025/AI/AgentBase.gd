@@ -17,8 +17,11 @@ func _ready() -> void:
 func makeRandomMove(observation:Board):
 	var x=randi()%100
 	var offset=0
-	await observation.get_tree().create_timer(0.1).timeout
+	await observation.get_tree().create_timer(0.05).timeout
 	for i in range(x):
+		if observation == null or not observation.exists():
+			return
+
 		while(observation.gridList[(i+offset)%len(observation.gridList)].tileType!=0):
 			offset+=1
 			if(offset>100000):

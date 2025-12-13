@@ -49,6 +49,11 @@ var automataAgent: AutomataAgent = load("res://AI/AutomataAgent.gd").new()
 signal turnChangedSignal(absoluteTurn: int)
 
 var victor=-1
+
+## Check if the board exists and is in the tree
+func exists() -> bool:
+	return boardExists and is_inside_tree() and get_tree() != null
+
 func isEnd()->bool:
 	for i in gridList:
 		if(i.tileType==0):
@@ -99,7 +104,7 @@ func changeTurn()->void:
 	
 	updateScore()
 	#print(player1Score,"   ",player2Score)
-	if(not(isEnd())):
+	if(not isEnd() and not hasEnded):
 		changeTurn()
 		turnChangedSignal.emit(absoluteTurn)
 
@@ -156,19 +161,16 @@ func _ready() -> void:
 	
 	if mp:
 		p1AgentInstance = playerAgent.new()
-		p1AgentInstance.playerType=Players.PLAYER1
 		p2AgentInstance = multiplayerAgent.new()
-		p2AgentInstance.playerType=Players.PLAYER2
 	if tutorial:
 		p1AgentInstance = playerAgent.new()
-		p1AgentInstance.playerType=Players.PLAYER1
 		p2AgentInstance = tutorialAgent.new()
-		p2AgentInstance.playerType=Players.PLAYER2
 	else:
 		p1AgentInstance = agentlist[Settings.P1Index].new()
-		p1AgentInstance.playerType=Players.PLAYER1
 		p2AgentInstance = agentlist[Settings.P2Index].new()
-		p2AgentInstance.playerType=Players.PLAYER2
+
+	p1AgentInstance.playerType=Players.PLAYER1
+	p2AgentInstance.playerType=Players.PLAYER2
 	
 	await p1AgentInstance.init(self)
 	await p2AgentInstance.init(self)
@@ -259,12 +261,13 @@ func _mute_button_pressed() -> void:
 		Settings.setMaster(0)
 
 func _exit_button_pressed() -> void:
-	#boardHistory.clear()
 	SceneNavigation._on_MainMenuPressed()
+	hasEnded = true
 	
 func _exit_tree() -> void:
 	boardHistory.clear()
-	boardExists=false
+	boardExists = false
+	hasEnded = true
 	
 func _input(event):
 	if event is InputEventKey and event.pressed:
