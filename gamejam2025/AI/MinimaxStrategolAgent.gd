@@ -1,6 +1,6 @@
 extends AgentBase
 
-class_name MinimaxAgent2
+class_name MinimaxStrategolAgent
 
 
 # Called when the node enters the scene tree for the first time.
@@ -40,26 +40,45 @@ func get_custom_class_name():
 
 var thread: Thread
 var game_board: Board
-var minimax: Minimax2 = Minimax2.new(result, terminal, utility, possible_actions)
+var minimax: Minimax = Minimax.new(result, terminal, utility, possible_actions)
 
 var distances_to_latest_tiles = []
 
 var calculated_action: int
 
+var max_actions = 22
+var max_actions_decay = 2
+var max_depth = 6
+
 func init(board: Board):
 	minimax.init_zobrist()
 
 func minimax_step() -> void:
-	var tempBoard = game_board.getBoardCopy()
+	var initial_state = game_board.getBoardCopy()
 	
-	recalc_distances_to_latest_tiles(tempBoard)
+	recalc_distances_to_latest_tiles(initial_state)
 	
-	var action: Array = minimax.action(tempBoard, game_board.currentTurn, 5, 20, 2)
-	if len(action) == 0:
-		return
+	calculated_action = minimax_iterative(initial_state)
 
-	calculated_action = action[0]
+func minimax_iterative(initial_state: Array):
+	var best_action_index = 0
+	minimax.start_time = Time.get_ticks_msec()
+	#minimax.eval_hits = 0
+	#minimax.eval_misses = 0
+	minimax.timeout = false
+	
+	for current_depth in range(1, max_depth + 1):
+		var action: Array = minimax.action(initial_state, game_board.currentTurn, current_depth, max_actions, max_actions_decay)
+		if len(action) == 0:
+			break
 
+		best_action_index = action[0]
+		
+		if Time.get_ticks_msec() - minimax.start_time > minimax.timeout_msec - 500:
+			break
+	
+	print("time: " + str((Time.get_ticks_msec() - minimax.start_time) / 1000.0))
+	return best_action_index
 
 # Simulate the result of an action on the board state
 # Returns the resulting board state and the separate actions made on the board by this action
@@ -87,15 +106,21 @@ func terminal(state: Array) -> bool:
 
 # Evaluate the board state
 func utility(state: Array) -> float:
-	var p1Score=0
-	var p2Score=0
-	for tile in state:
-		if(tile == 1 or tile == 2):
-			p1Score += 1
-		if(tile == 3 or tile == 4):
-			p2Score += 1
+	var score = 0
 
-	return p1Score - p2Score
+	for tile in state:
+		if tile == 0:
+			continue
+		elif tile == 1:
+			score += 1
+		elif tile == 2:
+			score += 1.1
+		elif tile == 3:
+			score -= 1
+		elif tile == 4:
+			score -= 1.1
+
+	return score
 
 # Get all possible valid moves on the current board
 func possible_actions(state: Array, max_actions: int) -> Array[Array]:
@@ -104,9 +129,6 @@ func possible_actions(state: Array, max_actions: int) -> Array[Array]:
 	for i in len(state):
 		if state[i] == 0:
 			actions.append([i, distances_to_latest_tiles[i]])
-
-	if max_actions < 2 or len(game_board.latestTileIndexes) < 2:
-		max_actions = 2
 
 	if len(actions) <= max_actions:
 		return actions
