@@ -6,7 +6,7 @@ func get_custom_class_name():
 	return "MinimaxGolgathAgent"
 
 func init(board: Board):
-	minimax.init_zobrist()
+	super.init(board)
 
 	max_actions = 18
 	max_actions_decay = 2
