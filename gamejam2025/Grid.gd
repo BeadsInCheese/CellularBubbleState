@@ -137,6 +137,8 @@ func changeTurn()->void:
 		for i in turnOrder:
 			i.destructor(self)
 		x.get_node("ColorRect/VBoxContainer/Text").text="[center]DRAW[/center]" if player1Score==player2Score  else "[center]Player 1 Wins[/center]" if player1Score>player2Score else "[center]Player 2 Wins[/center]"  
+		if(adventure and player1Score>player2Score):
+			Map.fightsWon=max(Map.fightsWon,Settings.P2Index)
 		add_child(x)
 		
 	
