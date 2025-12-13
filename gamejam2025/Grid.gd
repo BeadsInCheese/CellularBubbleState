@@ -43,7 +43,7 @@ static var mp = true
 var playerAgent=load("res://AI/PlayerAgent.gd")
 var multiplayerAgent=load("res://AI/MultiplayerAgent.gd")
 var tutorialAgent=load("res://TutorialAgent.gd")
-var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxGolgathAgent.gd"),load("res://AI/LDAgent.gd"),load("res://AI/BasicHeuristicEval.gd"),load("res://AI/MinimaxStrategolAgent.gd"),load("res://AI/RandomFollowerAgent.gd")]
+var agentlist=[playerAgent,load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxGolgathAgent.gd"),load("res://AI/LDAgent.gd"),load("res://AI/BasicHeuristicEval.gd"),load("res://AI/MinimaxStrategolAgent.gd"),load("res://AI/RandomFollowerAgent.gd")]
 var automataAgent: AutomataAgent = load("res://AI/AutomataAgent.gd").new()
 
 signal turnChangedSignal(absoluteTurn: int)
