@@ -53,7 +53,14 @@ var max_actions_decay = 2
 var max_depth = 6
 
 func init(board: Board):
+	minimax.zobrist_board.clear()
+	minimax.zobrist_turns.clear()
+	
 	minimax.init_zobrist()
+
+	minimax.transpos_eval.clear()
+	minimax.transpos_depth.clear()
+	minimax.transpos_results.clear()
 
 func minimax_step() -> void:
 	var initial_state = game_board.getBoardCopy()

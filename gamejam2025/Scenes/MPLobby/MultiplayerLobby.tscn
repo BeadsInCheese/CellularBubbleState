@@ -113,7 +113,7 @@ theme_override_constants/separation = 40
 custom_minimum_size = Vector2(0, 69.86)
 layout_mode = 2
 theme = ExtResource("4_0hk7f")
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 43
 script = ExtResource("4_caqv2")
 
 [node name="JoinButton" type="Button" parent="VBoxContainer"]

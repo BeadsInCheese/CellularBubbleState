@@ -5,7 +5,6 @@ var terminal_func: Callable
 var utility_func: Callable
 var possible_actions_func: Callable
 
-var states_explored: int = 0
 var max_actions_decay: int
 
 var result_value: float
@@ -23,6 +22,7 @@ var start_time = 0
 var timeout = false
 var timeout_msec = 5000
 
+#var states_explored = 0
 #var eval_hits = 0
 #var eval_misses = 0
 #var alpha_beta_misses = 0
