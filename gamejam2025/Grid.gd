@@ -52,7 +52,7 @@ var victor=-1
 
 ## Check if the board exists and is in the tree
 func exists() -> bool:
-	return boardExists and is_inside_tree() and get_tree() != null
+	return boardExists and is_inside_tree()
 
 func isEnd()->bool:
 	for i in gridList:
