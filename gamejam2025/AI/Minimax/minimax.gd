@@ -85,6 +85,9 @@ func action(state: Array, current_turn: int, depth: int, max_actions: int, max_a
 		if timeout or Time.get_ticks_msec() - start_time > timeout_msec:
 			return []
 	
+	if timeout:
+		return []
+	
 	self.result_value = optimal_value
 
 	return optimal_action
