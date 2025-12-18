@@ -218,6 +218,15 @@ bool Automata::match3x3(int posx,int posy,std::array<int,144> &board,rule &r){
     
 }
 int Automata::evaluateTile(int xpos,int ypos,std::array<int,144> &board,Array &target){
+        for(rule &j :rules){
+            if(match3x3(xpos,ypos,board,j)){
+               target[xpos+ypos*12]= j.result;
+               break;
+
+
+            }
+        }
+    
         int pos=xpos+ypos*12;
         //push rule
         if(board[pos]==0){
@@ -331,15 +340,6 @@ int Automata::evaluateTile(int xpos,int ypos,std::array<int,144> &board,Array &t
 
         }
 
-
-        for(rule &j :rules){
-            if(match3x3(xpos,ypos,board,j)){
-               target[xpos+ypos*12]= j.result;
-               break;
-
-
-            }
-        }
         return 0;
 }
 void Automata::runStep(std::array<int,144> &board,Array& target){
