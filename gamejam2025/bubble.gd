@@ -112,8 +112,8 @@ func _on_button_button_down() -> void:
 
 func set_tile_labels():
 	var s = "ABCDEFGHIJKL"
-	var i = tileIndex/12
-	var j = tileIndex%12
+	var i = tileIndex%12
+	var j = tileIndex/12
 	
 	if j == 0:
 		row_label.visible = true
