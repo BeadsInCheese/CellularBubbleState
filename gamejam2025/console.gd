@@ -19,26 +19,33 @@ func _exit_tree() -> void:
 func _process(delta: float) -> void:
 	pass
 var lines=0
-func write(author:String,msg:String,end:String="\n"):
+func _write(author:String,msg:String,end:String="\n"):
 	var result=author+ ("" if author=="" else ": ")+msg+end
 	lines+=result.count("\n")
 	consoleLog.text+=result
 	consoleLog.scroll_vertical=lines
 
-func systemWrite(msg:String):
+func _systemWrite(msg:String):
 	write("System",msg)
 	
-func commandProcessor(cmd:String):
+func _commandProcessor(cmd:String):
 	var args=cmd.split(" ")
 	if(args[0]=="time"):
-		systemWrite(Time.get_datetime_string_from_system())
+		_systemWrite(Time.get_datetime_string_from_system())
 	if(args[0]=="help"):
-		systemWrite("commands:\n/time gets time\n/help get information about available commands")
+		_systemWrite("commands:\n/time gets time\n/help get information about available commands")
 func _on_input_text_submitted(new_text: String) -> void:
 	if(len(new_text)==0):
 		return
-	write("Player",new_text)
+	_write("Player",new_text)
 	consoleInput.text=""
 
 	if(new_text[0]=="/"):
-		commandProcessor(new_text.substr(1))
+		_commandProcessor(new_text.substr(1))
+
+static func write(author:String,msg:String,end:String="\n"):
+	if(instance==null):
+		return
+	instance._write(author,msg,end)
+static func systemWrite(msg:String):
+	write("System",msg)
