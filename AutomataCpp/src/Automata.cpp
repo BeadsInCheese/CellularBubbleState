@@ -270,7 +270,23 @@ std::vector<rule> Automata::getRules()
         ;
         r9.matrixSize=5;
     r9.result=2;
+    
     rules.push_back(r9);
+
+    rule r10;
+    r10.rows={
+            -1,-1,-1,-1,-1,
+            -1,-1,-1,-1,-1,
+            1,0,1,-1,-1,
+            -1,-1,-1,-1,-1,
+            -1,-1,-1,-1,-1
+        }
+        ;
+        r10.matrixSize=5;
+    r10.result=0;
+    
+    rules.push_back(r10);
+
     int rl=rules.size();
     for (int j=0; j<rl;j++){
         rule nr;
@@ -404,89 +420,7 @@ int Automata::evaluateTile(int xpos, int ypos, std::array<int, 144> &board, Arra
         }
     }
 
-    int pos = xpos + ypos * 12;
-    // push rule
-    if (board[pos] == 0)
-    {
-
-    }
-    // birth Destroy 1
-    else if (board[pos] == 1)
-    {
-        if (getTile(xpos + 1, ypos, 12, 12, board) == 0)
-        {
-            if (getTile(xpos + 2, ypos, 12, 12, board) == 1)
-            {
-                target[pos] = 0;
-                return 0;
-            }
-        }
-
-        if (getTile(xpos - 1, ypos, 12, 12, board) == 0)
-        {
-            if (getTile(xpos - 2, ypos, 12, 12, board) == 1)
-            {
-                target[pos] = 0;
-                return 0;
-            }
-        }
-        if (getTile(xpos, ypos + 1, 12, 12, board) == 0)
-        {
-            if (getTile(xpos, ypos + 2, 12, 12, board) == 1)
-            {
-                target[pos] = 0;
-                return 0;
-            }
-        }
-
-        if (getTile(xpos, ypos - 1, 12, 12, board) == 0)
-        {
-            if (getTile(xpos, ypos - 2, 12, 12, board) == 1)
-            {
-                target[pos] = 0;
-                return 0;
-            }
-        }
-
-        // birth destroy 2
-    }
-    else if (board[pos] == 3)
-    {
-        if (getTile(xpos + 1, ypos, 12, 12, board) == 0)
-        {
-            if (getTile(xpos + 2, ypos, 12, 12, board) == 3)
-            {
-                target[pos] = 0;
-                return 0;
-            }
-        }
-
-        if (getTile(xpos - 1, ypos, 12, 12, board) == 0)
-        {
-            if (getTile(xpos - 2, ypos, 12, 12, board) == 3)
-            {
-                target[pos] = 0;
-                return 0;
-            }
-        }
-        if (getTile(xpos, ypos + 1, 12, 12, board) == 0)
-        {
-            if (getTile(xpos, ypos + 2, 12, 12, board) == 3)
-            {
-                target[pos] = 0;
-                return 0;
-            }
-        }
-
-        if (getTile(xpos, ypos - 1, 12, 12, board) == 0)
-        {
-            if (getTile(xpos, ypos - 2, 12, 12, board) == 3)
-            {
-                target[pos] = 0;
-                return 0;
-            }
-        }
-    }
+    
 
     return 0;
 }
