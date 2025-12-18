@@ -17,7 +17,7 @@ env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 
 library = env.SharedLibrary(
-        "../gamejam2025/bin/automata{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        "../gamejam2025/bin/libautomata{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources
 )
 
