@@ -36,7 +36,6 @@ func _on_MPbutton_3_button_down() -> void:
 
 
 func Tutorial_pressed() -> void:
-	Board.mp=false
-	Settings.P1Index = 0
-	Settings.P2Index = 6
+	Board.mp = false
+	Board.tutorial = true
 	SceneNavigation._onLocalMPSelected()

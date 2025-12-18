@@ -3,7 +3,8 @@ extends Button
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	if(Board.adventure):
+		text="Back to map"
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -13,4 +14,7 @@ func _process(delta: float) -> void:
 
 func _on_button_down() -> void:
 	get_tree().root.get_node("root/Board").boardHistory.clear()
-	SceneNavigation._on_MainMenuPressed()
+	if(Board.adventure):
+		SceneNavigation._on_MapPressed()
+	else:
+		SceneNavigation._on_MainMenuPressed()

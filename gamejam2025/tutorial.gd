@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 var gameBoard
 var tStage
@@ -63,7 +63,7 @@ func turnChanged(param) -> void:
 			
 		#handle text prompts using different index, tStage
 		if(len(tPrompts)>tStage):
-			gameBoard.get_tree().root.get_node("root/Board/Node2D/text").text=tPrompts[tStage]
+			$Panel/text.text=tPrompts[tStage]
 		tStage += 1
 	turn += 1
 	
@@ -76,7 +76,7 @@ func _ready() -> void:
 	gameBoard = get_tree().root.get_node("root/Board")
 	gameBoard.gridList[sequence[0]].get_node("Button").text="X"
 	gameBoard.turnChangedSignal.connect(turnChanged)
-	gameBoard.get_tree().root.get_node("root/Board/Node2D/text").text=tPrompts[0]
+	$Panel/text.text=tPrompts[0]
 	tStage = 1
 	turn = 1
 

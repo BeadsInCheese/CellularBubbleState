@@ -13,12 +13,18 @@ func makeMove(observation:Board):
 		observation.get_node("Node2D").sequence
 
 	while makingMove:
-		if(observation!=null):
+		if(observation != null and observation.get_tree() != null):
 			if(skip):
 				await makeRandomMove(observation)
+				if(!Board.boardExists):
+					return
 				await observation.get_tree().process_frame
+				if(!Board.boardExists):
+					return
 				break
 			await observation.get_tree().process_frame
+			if(!Board.boardExists):
+				return
 		else:
 			return
 		#print((makingMove))

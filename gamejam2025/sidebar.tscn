@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cdp1ptkk1qkda"]
+[gd_scene load_steps=6 format=3 uid="uid://cdp1ptkk1qkda"]
 
 [ext_resource type="Script" path="res://GUI.gd" id="1_50b85"]
 [ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="2_7aq0k"]
-[ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="3_55rcj"]
 [ext_resource type="Texture2D" uid="uid://cu4fk7dnuh5ci" path="res://resources/GFX/rules/finitebubblestate_rules02e.png" id="3_pycpc"]
+[ext_resource type="Script" path="res://console.gd" id="4_jd7s0"]
+[ext_resource type="Theme" uid="uid://dck8e4axi58hk" path="res://resources/fonts/regularTheme.tres" id="4_qbin2"]
 
 [node name="Sidebar" type="VBoxContainer"]
 custom_minimum_size = Vector2(100, 100)
@@ -117,37 +118,38 @@ layout_mode = 2
 [node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 2
 size_flags_stretch_ratio = 2.88
+theme = ExtResource("4_qbin2")
 theme_override_constants/side_margin = 0
-theme_override_fonts/font = ExtResource("3_55rcj")
 theme_override_font_sizes/font_size = 35
 current_tab = 0
 
 [node name="Console" type="Panel" parent="TabContainer"]
+custom_minimum_size = Vector2(0, 362.23)
 layout_mode = 2
 size_flags_stretch_ratio = 3.56
+theme = ExtResource("4_qbin2")
+script = ExtResource("4_jd7s0")
 metadata/_tab_index = 0
 
-[node name="TextEdit2" type="TextEdit" parent="TabContainer/Console"]
-layout_mode = 2
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Console"]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 2.0
-offset_right = -69.0
-offset_bottom = 358.0
-theme_override_fonts/font = ExtResource("3_55rcj")
-placeholder_text = "ove CanvasItem \"Sprite2D\" to (183, 381)
-Scene Undo: Move CanvasItem \"Sprite2D\" to (183, 381)
-Scene Undo: Set scale
-Create Node
-Reparent Node
-Create Nodefg
-fgdfgdfgfgg
-fgjggfggfgfg
-ghfghghf
-ghfghfgh
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="log" type="TextEdit" parent="TabContainer/Console/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("4_qbin2")
+placeholder_text = "
 "
 editable = false
 scroll_smooth = true
+
+[node name="input" type="LineEdit" parent="TabContainer/Console/VBoxContainer"]
+layout_mode = 2
 
 [node name="Rules" type="Panel" parent="TabContainer"]
 visible = false
@@ -159,3 +161,5 @@ metadata/_tab_index = 1
 position = Vector2(231, 145)
 scale = Vector2(0.434248, 0.445227)
 texture = ExtResource("3_pycpc")
+
+[connection signal="text_submitted" from="TabContainer/Console/VBoxContainer/input" to="TabContainer/Console" method="_on_input_text_submitted"]

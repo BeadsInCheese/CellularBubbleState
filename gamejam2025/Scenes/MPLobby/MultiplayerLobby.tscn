@@ -1,8 +1,9 @@
-[gd_scene load_steps=21 format=3 uid="uid://d3ksc6wuynx5a"]
+[gd_scene load_steps=22 format=3 uid="uid://d3ksc6wuynx5a"]
 
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="1_yplj2"]
 [ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/GFX/Bubble icons/bubble_player1.png" id="2_2dbcb"]
 [ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="3_evng2"]
+[ext_resource type="Theme" uid="uid://dck8e4axi58hk" path="res://resources/fonts/regularTheme.tres" id="4_0hk7f"]
 [ext_resource type="Script" path="res://MultiplayerLobby/LobbyText.gd" id="4_caqv2"]
 [ext_resource type="Shader" path="res://Scenes/MainMenu.gdshader" id="5_2qdjg"]
 [ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="6_uqh27"]
@@ -111,7 +112,8 @@ theme_override_constants/separation = 40
 [node name="TextEdit" type="TextEdit" parent="VBoxContainer"]
 custom_minimum_size = Vector2(0, 69.86)
 layout_mode = 2
-theme = ExtResource("3_evng2")
+theme = ExtResource("4_0hk7f")
+theme_override_font_sizes/font_size = 43
 script = ExtResource("4_caqv2")
 
 [node name="JoinButton" type="Button" parent="VBoxContainer"]

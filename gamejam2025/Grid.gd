@@ -14,12 +14,15 @@ var ysize: int = 12
 var currentAgent
 var gridList: Array[Bubble] = []
 var latestTileIndexes: Array[int] = []
+var latestAutomataIndexes: Array[int] = []
+
 static var boardHistory : Array[String] = []
+static var boardExists=false
 var currentBoardStatePointer = 0
 var loading = false
 var hasEnded=false
-var tutorial = false
-
+static var tutorial = false
+static var adventure=false
 enum Players{PLAYER1=1,PLAYER2=3,AUTOMATA=0}
 var turnOrder=[]
 var currentTurn=0
@@ -34,13 +37,23 @@ var lastMove=[-1,-1]
 
 var p1AgentInstance
 var p2AgentInstance
-var player1Agent=load("res://AI/LDAgent.gd")
-var player2Agent=load("res://AI/PlayerAgent.gd")
-var agentlist=[load("res://AI/PlayerAgent.gd"),load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxAgent.gd"),load("res://AI/LDAgent.gd"),load("res://AI/BasicHeuristicEval.gd"),load("res://AI/MinimaxAgent2.gd"),load("res://TutorialAgent.gd")]
+
+static var mp = true
+
+var playerAgent=load("res://AI/PlayerAgent.gd")
+var multiplayerAgent=load("res://AI/MultiplayerAgent.gd")
+var tutorialAgent=load("res://TutorialAgent.gd")
+var agentlist=[playerAgent,load("res://AI/RandomAIAgent.gd"),load("res://AI/MinimaxGolgathAgent.gd"),load("res://AI/LDAgent.gd"),load("res://AI/BasicHeuristicEval.gd"),load("res://AI/MinimaxStrategolAgent.gd"),load("res://AI/RandomFollowerAgent.gd")]
 var automataAgent: AutomataAgent = load("res://AI/AutomataAgent.gd").new()
+
 signal turnChangedSignal(absoluteTurn: int)
 
 var victor=-1
+
+## Check if the board exists and is in the tree
+func exists() -> bool:
+	return boardExists and is_inside_tree()
+
 func isEnd()->bool:
 	for i in gridList:
 		if(i.tileType==0):
@@ -55,6 +68,7 @@ func updateScore():
 			player1Score += 1
 		if(i.tileType == 3 or i.tileType == 4):
 			player2Score += 1
+
 func asArray():
 	var arr=[]
 	for i in gridList:
@@ -70,8 +84,10 @@ func getVictor():
 	else:
 		v=1
 	return v
+
 var dataAquisition=false
-var  dataCounter=0
+var dataCounter=0
+
 func changeTurn()->void:
 	currentAgent = turnOrder[currentTurn]
 	await turnOrder[currentTurn].makeMove(self)
@@ -88,7 +104,7 @@ func changeTurn()->void:
 	
 	updateScore()
 	#print(player1Score,"   ",player2Score)
-	if(not(isEnd())):
+	if(not isEnd() and not hasEnded):
 		changeTurn()
 		turnChangedSignal.emit(absoluteTurn)
 
@@ -121,6 +137,8 @@ func changeTurn()->void:
 		for i in turnOrder:
 			i.destructor(self)
 		x.get_node("ColorRect/VBoxContainer/Text").text="[center]DRAW[/center]" if player1Score==player2Score  else "[center]Player 1 Wins[/center]" if player1Score>player2Score else "[center]Player 2 Wins[/center]"  
+		if(adventure and player1Score>player2Score):
+			Map.fightsWon=max(Map.fightsWon,Settings.P2Index)
 		add_child(x)
 		
 	
@@ -130,11 +148,8 @@ func updateCursor():
 	Input.set_custom_mouse_cursor(new_cursor_image, Input.CURSOR_ARROW, Vector2(15,15))
 
 # Called when the node enters the scene tree for the first time.
-static var mp=true
-var temp=load("res://AI/PlayerAgent.gd")
-var temp2=load("res://AI/MultiplayerAgent.gd")
 func _ready() -> void:
-	
+	boardExists = true
 	for i in range(xsize):
 		for j in range(ysize):
 			var x:Bubble=bubble.instantiate()
@@ -145,17 +160,19 @@ func _ready() -> void:
 			gridList.append(x)
 			
 	boardHistory.append(DataUtility.get_board_string(gridList,currentTurn))
-	if(mp):
-
-		p1AgentInstance= temp.new()
-		p1AgentInstance.playerType=Players.PLAYER1
-		p2AgentInstance=temp2.new()
-		p2AgentInstance.playerType=Players.PLAYER2
+	
+	if mp:
+		p1AgentInstance = playerAgent.new()
+		p2AgentInstance = multiplayerAgent.new()
+	if tutorial:
+		p1AgentInstance = playerAgent.new()
+		p2AgentInstance = tutorialAgent.new()
 	else:
-		p1AgentInstance= agentlist[Settings.P1Index].new()
-		p1AgentInstance.playerType=Players.PLAYER1
-		p2AgentInstance=agentlist[Settings.P2Index].new()
-		p2AgentInstance.playerType=Players.PLAYER2
+		p1AgentInstance = agentlist[Settings.P1Index].new()
+		p2AgentInstance = agentlist[Settings.P2Index].new()
+
+	p1AgentInstance.playerType=Players.PLAYER1
+	p2AgentInstance.playerType=Players.PLAYER2
 	
 	await p1AgentInstance.init(self)
 	await p2AgentInstance.init(self)
@@ -171,8 +188,7 @@ func _ready() -> void:
 	for i in turnOrder:
 		print(i.get_custom_class_name())
 	
-	if(Settings.P2Index == 6):
-		tutorial = true
+	if tutorial:
 		var x = tutorialPanel.instantiate()
 		add_child(x)
 	
@@ -247,11 +263,14 @@ func _mute_button_pressed() -> void:
 		Settings.setMaster(0)
 
 func _exit_button_pressed() -> void:
-	#boardHistory.clear()
 	SceneNavigation._on_MainMenuPressed()
+	hasEnded = true
+	
 func _exit_tree() -> void:
-	print("cleared history")
 	boardHistory.clear()
+	boardExists = false
+	hasEnded = true
+	
 func _input(event):
 	if event is InputEventKey and event.pressed:
 		if (event.as_text() == "Left" && (turnOrder[(len(boardHistory)-1)%6].get_is_player() || hasEnded)):

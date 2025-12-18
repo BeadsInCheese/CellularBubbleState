@@ -1,0 +1,6 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://dck8e4axi58hk"]
+
+[ext_resource type="FontFile" uid="uid://dy8y2aotaxo4i" path="res://resources/fonts/Acme/Acme-Regular.ttf" id="1_ovnkf"]
+
+[resource]
+default_font = ExtResource("1_ovnkf")

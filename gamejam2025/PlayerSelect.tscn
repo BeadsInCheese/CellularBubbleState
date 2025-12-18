@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cj0un5t317b7y"]
+[gd_scene load_steps=20 format=3 uid="uid://cj0un5t317b7y"]
 
 [ext_resource type="Script" path="res://playerSelect.gd" id="1_ck5mi"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="2_64eh4"]
@@ -7,6 +7,7 @@
 [ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="5_uchd8"]
 [ext_resource type="FontFile" uid="uid://d15qcr4gpooi3" path="res://CaesarDressing-Regular.ttf" id="6_rls2n"]
 [ext_resource type="PackedScene" uid="uid://82ydshkri1ic" path="res://PlayermenuComponents/Playeroption_button.tscn" id="6_t4mh3"]
+[ext_resource type="Texture2D" uid="uid://chc8wlfmssi74" path="res://resources/GFX/AI icons/StrategolIcon.png" id="7_coeew"]
 [ext_resource type="PackedScene" uid="uid://buk1ghkxjvnfv" path="res://PlayermenuComponents/option_button.tscn" id="7_dknv5"]
 [ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="7_tav7e"]
 
@@ -123,10 +124,12 @@ offset_left = 213.0
 offset_top = 231.0
 offset_right = 373.0
 offset_bottom = 367.0
-item_count = 6
+item_count = 7
 popup/item_4/id = 4
-popup/item_5/text = "Strategol"
+popup/item_5/icon = ExtResource("7_coeew")
 popup/item_5/id = 5
+popup/item_6/text = "Laroy"
+popup/item_6/id = 6
 
 [node name="BackButton" parent="." instance=ExtResource("7_dknv5")]
 
@@ -143,10 +146,12 @@ offset_left = 733.0
 offset_top = 231.0
 offset_right = 893.0
 offset_bottom = 367.0
-item_count = 6
+item_count = 7
 popup/item_4/id = 4
-popup/item_5/text = "Strategol"
+popup/item_5/icon = ExtResource("7_coeew")
 popup/item_5/id = 5
+popup/item_6/text = "Laroy"
+popup/item_6/id = 6
 
 [node name="Transition" parent="." instance=ExtResource("7_tav7e")]
 visible = false

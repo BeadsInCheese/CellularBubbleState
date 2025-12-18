@@ -5,6 +5,8 @@ class_name BTAgent
 var root:BTNode=preload("res://AI/BTTree/root.tres")
 func makeMove(observation:Board):
 	await root.evaluate(observation,playerType)
+	if(!Board.boardExists):
+		return
 	moveMade.emit(observation)
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

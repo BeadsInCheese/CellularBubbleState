@@ -1,11 +1,11 @@
 extends AgentBase
 
-class_name MinimaxAgent2
+class_name MinimaxStrategolAgent
 
 
 # Called when the node enters the scene tree for the first time.
 func makeMove(observation: Board):
-	if observation == null:
+	if observation == null or not observation.exists():
 		return
 		
 	game_board = observation
@@ -14,9 +14,17 @@ func makeMove(observation: Board):
 	thread.start(minimax_step)
 	
 	while thread.is_alive():
+		if observation == null or not observation.exists():
+			break
+
 		await observation.get_tree().process_frame
 
 	thread.wait_to_finish()
+	
+	if observation == null or not observation.exists():
+		return
+	
+	Console.instance.write(get_custom_class_name(), str((Time.get_ticks_msec() - minimax.start_time) / 1000.0) + " seconds")
 	
 	game_board.gridList[calculated_action].setTileType(playerType)
 	
@@ -30,26 +38,55 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 func get_custom_class_name():
-	return "MinimaxAgent2"
+	return "MinimaxStrategolAgent"
 
 var thread: Thread
 var game_board: Board
-var minimax: Minimax2 = Minimax2.new(result, terminal, utility, possible_actions)
+var minimax: Minimax = Minimax.new(result, terminal, utility, possible_actions)
+
+var distances_to_latest_tiles = []
 
 var calculated_action: int
 
+var max_actions = 22
+var max_actions_decay = 2
+var max_depth = 6
+
 func init(board: Board):
+	minimax.zobrist_board.clear()
+	minimax.zobrist_turns.clear()
+	
 	minimax.init_zobrist()
 
+	minimax.transpos_eval.clear()
+	minimax.transpos_depth.clear()
+	minimax.transpos_results.clear()
+
 func minimax_step() -> void:
-	var tempBoard = game_board.getBoardCopy()
+	var initial_state = game_board.getBoardCopy()
 	
-	var action: Array = minimax.action(tempBoard, game_board.currentTurn, 2, 5, 0)
-	if len(action) == 0:
-		return
+	recalc_distances_to_latest_tiles(initial_state)
+	
+	calculated_action = minimax_iterative(initial_state)
 
-	calculated_action = action[0]
+func minimax_iterative(initial_state: Array):
+	var best_action_index = 0
+	minimax.start_time = Time.get_ticks_msec()
+	#minimax.eval_hits = 0
+	#minimax.eval_misses = 0
+	minimax.timeout = false
+	
+	for current_depth in range(1, max_depth + 1):
+		var action: Array = minimax.action(initial_state, game_board.currentTurn, current_depth, max_actions, max_actions_decay)
+		if len(action) == 0:
+			break
 
+		best_action_index = action[0]
+		
+		if Time.get_ticks_msec() - minimax.start_time > minimax.timeout_msec - 500:
+			break
+
+	return best_action_index
 
 # Simulate the result of an action on the board state
 # Returns the resulting board state and the separate actions made on the board by this action
@@ -58,7 +95,7 @@ func result(state: Array, action: Array, player_state: String) -> Array:
 	var tileType = 3 if player_state.begins_with("P2") else 1
 	tempBoard[action[0]] = tileType
 	
-	var resultActions = [[action[0], tileType]] # this action and the resulting automata actions
+	var resultActions = [[action[0], tileType, 0]] # this action and the resulting automata actions
 	
 	if player_state.ends_with("A"):
 		var results = game_board.automataAgent.simulateAutomataStepAndReturnActions(tempBoard)
@@ -77,35 +114,45 @@ func terminal(state: Array) -> bool:
 
 # Evaluate the board state
 func utility(state: Array) -> float:
-	var p1Score=0
-	var p2Score=0
-	for tile in state:
-		if(tile == 1 or tile == 2):
-			p1Score += 1
-		if(tile == 3 or tile == 4):
-			p2Score += 1
+	var score = 0
 
-	return p1Score - p2Score
+	for tile in state:
+		if tile == 0:
+			continue
+		elif tile == 1:
+			score += 1
+		elif tile == 2:
+			score += 1.1
+		elif tile == 3:
+			score -= 1
+		elif tile == 4:
+			score -= 1.1
+
+	return score
 
 # Get all possible valid moves on the current board
 func possible_actions(state: Array, max_actions: int) -> Array[Array]:
 	var actions: Array[Array] = []
-	for i in range(len(state)):
+
+	for i in len(state):
 		if state[i] == 0:
-			actions.append([i])
-	
-	if max_actions < 2 or len(game_board.latestTileIndexes) < 2:
-		max_actions = 2
-	
+			actions.append([i, distances_to_latest_tiles[i]])
+
 	if len(actions) <= max_actions:
 		return actions
 
-	actions.sort_custom(func(a, b): return distance_from_latest_tile_indexes(a) < distance_from_latest_tile_indexes(b))
+	actions.sort_custom(func(a, b): return a[1] < b[1])
 	
 	actions = actions.slice(0, max_actions)
 	return actions
 
-func distance_from_latest_tile_indexes(action: Array):
+func recalc_distances_to_latest_tiles(state: Array):
+	distances_to_latest_tiles = []
+	distances_to_latest_tiles.resize(len(state))
+	for i in len(state):
+		distances_to_latest_tiles[i] = distance_to_latest_tile_indexes(i)
+
+func distance_to_latest_tile_indexes(action_index: int):
 	var latest_indexes = game_board.latestTileIndexes.duplicate()
 	
 	var last_index = latest_indexes.pop_back()
@@ -116,7 +163,11 @@ func distance_from_latest_tile_indexes(action: Array):
 	if second_last_index == null:
 		second_last_index = (game_board.xsize / 2) + (game_board.ysize / 2 * game_board.ysize)
 	
-	return min(manhattan_distance(action[0], last_index), manhattan_distance(action[0], second_last_index))
+	var third_last_index = latest_indexes.pop_back()
+	if third_last_index == null:
+		third_last_index = (game_board.xsize / 2) + (game_board.ysize / 2 * game_board.ysize)
+	
+	return min(manhattan_distance(action_index, last_index), manhattan_distance(action_index, second_last_index), manhattan_distance(action_index, third_last_index))
 	
 func get_xypos_for_index(index: int) -> Array[int]:
 	return [index%game_board.xsize, index/game_board.ysize]
