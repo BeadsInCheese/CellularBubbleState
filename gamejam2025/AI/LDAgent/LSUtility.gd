@@ -13,7 +13,7 @@ static func mult(M,N):
 	for i in range(0,n):
 		for j in range(0,n):
 			for k in range(0,n):
-				sum += M[k+n*i]*N[j+n*k]
+				sum += M[k+n*i] * N[j+n*k]
 			O.append(sum)
 			sum = 0
 	return O
@@ -88,18 +88,20 @@ static func getAngularError(v1:Vector2,v2:Vector2):
 	
 	
 
-#ofunc format: [id,a0,a1,a2,a3,a4,a5]
+#ofunc format: [a0,a1,a2,a3,a4,a5]
 static func getDVector(ofunc:Array,x) -> Vector2:
 	var dy = 0
-	if(ofunc[0] < 16):
-		for i in range(1,7):
-			dy += i*ofunc[i+1]*(x**(i-1))
-	else:
-		if(ofunc[0] == 16): #sin(x)
-			dy = ofunc[2]*ofunc[1]*cos(ofunc[2]*x)
-		elif(ofunc[0] == 17): #exp(x)
-			dy = ofunc[1]*exp(ofunc[2]*x)
-	return Vector2(1,dy).normalized()
+	for i in range(0,6):
+		dy += (5-i)*ofunc[1][i]*(x**(5-i-1)) #only y-component used!!
+		
+	#if(ofunc[0] < 16):
+		#
+	#else:
+		#if(ofunc[0] == 16): #sin(x)
+			#dy = ofunc[2]*ofunc[1]*cos(ofunc[2]*x)
+		#elif(ofunc[0] == 17): #exp(x)
+			#dy = ofunc[1]*exp(ofunc[2]*x)
+	return Vector2(1,dy)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

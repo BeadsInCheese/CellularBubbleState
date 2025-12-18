@@ -148,6 +148,37 @@ func add_data(list : Array[Point]):
 func add_point(p : Point):
 	data.append(p)
 	
+'''fd
+i=2,j=1
+p = (2,1), q = (1,1), c nearest corner
+temp = min{c.x-p.x+1 + c.y-p.y, c.x-p.x-1 + c.y-p.y} 
+temp2 = min{c.x-p.x + c.y-p.y-1, c.y-p.x + c.y-p.y+1}
+temp3 = max{c.x-p.x+1 + c.y-p.y, c.x-p.x-1 + c.y-p.y} 
+temp4 = max{c.x-p.x + c.y-p.y-1, c.y-p.x + c.y-p.y+1}
+"np" -> return (i+temp,j+temp2)
+"pn" -> return (i+temp3,j+temp4)
+"mp" -> return (i-1,j) 
+"pm" -> return (i+1,j)
+"pA" -> return [(i+1,j),(i-1,j),(i,j+1),(i,j-1)] 
+"pD" -> return [diagonals]
+"pmd" -> return (i+1,j-1)
+"mpd" -> (i+1,j+1)
+"pmD" -> [(i-1,j-1),(i+1,j-1)]
+"cpnd" -> (i+1,j+1)
+"pn.p" -> [(i+3,j),(i,j)]
+"fp" -> (i,j-2)
+"pw" -> (i+2,j)
+"npD,pmD:pD" -> [(i-1,j+1),(i+1,j-1)]
+
+. – 'union'
+, – 'symmetric difference, makes disjoint' 'if no intersection, no effect'
+: – 'intersection of two sets'
+
+
+
+'''
+
+	
 # Add two Regions onto one
 func add(G1 : Region) -> Region:
 	var R : Region = Region.new()
