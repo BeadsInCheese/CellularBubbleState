@@ -35,33 +35,115 @@ Automata::~Automata() {
 
 rule Automata::rotate( rule& r) {
     rule rotated; 
+    rotated.matrixSize=r.matrixSize;
+        if(r.matrixSize==3){
+             // Perform a 90-degree clockwise rotation:
+            rotated.rows[0] = r.rows[6];
+            rotated.rows[1] = r.rows[3];
+            rotated.rows[2] = r.rows[0];
+            
+            rotated.rows[3] = r.rows[7];
+            rotated.rows[4] = r.rows[4]; // Center remains the same
+            rotated.rows[5] = r.rows[1];
+            
+            rotated.rows[6] = r.rows[8];
+            rotated.rows[7] = r.rows[5];
+            rotated.rows[8] = r.rows[2];
+            
+            rotated.result = r.result;
     
+        
+    }
+    else{
 
-        // Perform a 90-degree clockwise rotation:
-        rotated.rows[0] = r.rows[6];
-        rotated.rows[1] = r.rows[3];
-        rotated.rows[2] = r.rows[0];
-        
-        rotated.rows[3] = r.rows[7];
-        rotated.rows[4] = r.rows[4]; // Center remains the same
-        rotated.rows[5] = r.rows[1];
-        
-        rotated.rows[6] = r.rows[8];
-        rotated.rows[7] = r.rows[5];
-        rotated.rows[8] = r.rows[2];
-        
-        // Copy other fields if any
+        rotated.rows[0] = r.rows[20];
+        rotated.rows[1] = r.rows[15];
+        rotated.rows[2] = r.rows[10]; 
+        rotated.rows[3] = r.rows[5];
+        rotated.rows[4] = r.rows[0]; 
+        rotated.rows[5] = r.rows[21];
+            
+        rotated.rows[6] = r.rows[16];
+        rotated.rows[7] = r.rows[11];
+        rotated.rows[8] = r.rows[6];
+            
+        rotated.rows[9] = r.rows[1];
+        rotated.rows[10] = r.rows[22];
+        rotated.rows[11] = r.rows[17];
+            
+        rotated.rows[12] = r.rows[12];
+        rotated.rows[13] = r.rows[7]; 
+        rotated.rows[14] = r.rows[2];
+            
+        rotated.rows[15] = r.rows[23];
+        rotated.rows[16] = r.rows[18];
+        rotated.rows[17] = r.rows[13];
+            
+        rotated.rows[18] = r.rows[8];
+        rotated.rows[19] = r.rows[3];
+        rotated.rows[20] = r.rows[24];
+            
+        rotated.rows[21] = r.rows[19];
+        rotated.rows[22] = r.rows[14]; 
+        rotated.rows[23] = r.rows[9];  
+        rotated.rows[24] = r.rows[4];
+
         rotated.result = r.result;
-    
-        return rotated;
+
+    }
+    return rotated;
+}
+
+rule5x5 godot::Automata::rotate(rule5x5 &r)
+{
+    rule5x5 rotated{};
+    rotated.rows[0] = r.rows[20];
+    rotated.rows[1] = r.rows[15];
+    rotated.rows[2] = r.rows[10]; 
+    rotated.rows[3] = r.rows[5];
+    rotated.rows[4] = r.rows[0]; 
+    rotated.rows[5] = r.rows[21];
+        
+    rotated.rows[6] = r.rows[16];
+    rotated.rows[7] = r.rows[11];
+    rotated.rows[8] = r.rows[6];
+        
+    rotated.rows[9] = r.rows[1];
+    rotated.rows[10] = r.rows[22];
+    rotated.rows[11] = r.rows[17];
+        
+    rotated.rows[12] = r.rows[12];
+    rotated.rows[13] = r.rows[7]; 
+    rotated.rows[14] = r.rows[2];
+        
+    rotated.rows[15] = r.rows[23];
+    rotated.rows[16] = r.rows[18];
+    rotated.rows[17] = r.rows[13];
+        
+    rotated.rows[18] = r.rows[8];
+    rotated.rows[19] = r.rows[3];
+    rotated.rows[20] = r.rows[24];
+        
+    rotated.rows[21] = r.rows[19];
+    rotated.rows[22] = r.rows[14]; 
+    rotated.rows[23] = r.rows[9];  
+    rotated.rows[24] = r.rows[4];
+
+    rotated.result = r.result;
+
+    return rotated;
 }
 
 void Automata::printRules(){
 
     for(auto &i :rules){
         UtilityFunctions::print("Rule: ");
-        for(int j=0;j<3; j++){
-            UtilityFunctions::print(String::num(i.rows[j*3])+" , "+String::num(i.rows[j*3+1])+" , "+String::num(i.rows[j*3+2]));
+        for(int j=0;j<i.matrixSize; j++){
+            String text="";
+            for(int k=0;k<i.matrixSize; k++){
+               text+= String::num(i.rows[j*i.matrixSize+k])+" , ";
+            }  
+            UtilityFunctions::print(text);
         }
 
         UtilityFunctions::print("Result: "+String::num(i.result));
@@ -70,6 +152,7 @@ void Automata::printRules(){
 }
 std::vector<rule> Automata::getRules(){
     std::vector<rule> rules;
+    std::vector<rule5x5> rules5x5;
 
     rule r;
     r.rows={-1,2,-1,
@@ -123,13 +206,24 @@ std::vector<rule> Automata::getRules(){
     r8.rows={-1,-1,-1,
             -1,2,0,
             -1,2,1};
-    r8.result=0;
     rules.push_back(r8);
+    rule r9;
+    r9.rows={
+            -1,-1,-1,-1,-1,
+            -1,-1,-1,-1,-1,
+            1,2,0,-1,-1,
+            -1,-1,-1,-1,-1,
+            -1,-1,-1,-1,-1
+        }
+        ;
+        r9.matrixSize=5;
+    r9.result=2;
+    rules.push_back(r9);
     int rl=rules.size();
     for (int j=0; j<rl;j++){
         rule nr;
         bool changed=false;
-        for(int k=0; k<9; k++){
+        for(int k=0; k<25; k++){
             auto x=rules[j].rows[k];
             if(x==2){
 
@@ -167,6 +261,7 @@ std::vector<rule> Automata::getRules(){
         }
         
         if(changed){
+            nr.matrixSize=rules[j].matrixSize;
             rules.push_back(nr);
         }
     }
@@ -217,130 +312,131 @@ bool Automata::match3x3(int posx,int posy,std::array<int,144> &board,rule &r){
 
     
 }
-int Automata::evaluateTile(int xpos,int ypos,std::array<int,144> &board,Array &target){
-        for(rule &j :rules){
-            if(match3x3(xpos,ypos,board,j)){
-               target[xpos+ypos*12]= j.result;
-               break;
+bool godot::Automata::match5x5(int posx, int posy, std::array<int, 144> &board, rule &r)
+{
+    for(int i=0; i<5;i++){
+        for(int j=0; j<5;j++){
+            
+            int a=r.rows[i+j*5];
+            int b=getTile(posx-2+i,posy+j-2,12,12,board);
+            
+            if(a==-1){
+                continue;
+            }
+            if(b!=a){
+                return false;
+            }
+            
+        }
+        
+        
+    }
+    return true;
+}
+bool godot::Automata::matchMatrix(int posx, int posy, std::array<int, 144> &board, rule &r){
+    if(r.matrixSize==3){
+        return match3x3( posx,  posy,  board, r);
+    }else{
+        return match5x5( posx,  posy,  board, r);
+    }
 
+}
+int Automata::evaluateTile(int xpos, int ypos, std::array<int, 144> &board, Array &target)
+{
+    for (rule &j : rules)
+    {
+        if (matchMatrix(xpos, ypos, board, j))
+        {
+            target[xpos + ypos * 12] = j.result;
+            break;
+        }
+    }
 
+    int pos = xpos + ypos * 12;
+    // push rule
+    if (board[pos] == 0)
+    {
+
+    }
+    // birth Destroy 1
+    else if (board[pos] == 1)
+    {
+        if (getTile(xpos + 1, ypos, 12, 12, board) == 0)
+        {
+            if (getTile(xpos + 2, ypos, 12, 12, board) == 1)
+            {
+                target[pos] = 0;
+                return 0;
             }
         }
-    
-        int pos=xpos+ypos*12;
-        //push rule
-        if(board[pos]==0){
-            if(getTile(xpos+1,ypos,12,12,board)==2 && getTile(xpos+2,ypos,12,12,board)==1){
-                
-                    target[pos]=2;
-                    return 0;
-                
-            }
-            else if(getTile(xpos+1,ypos,12,12,board)==4 && getTile(xpos+2,ypos,12,12,board)==3){
-                
-                    target[pos]=4;
-                    return 0;
-                
-            }
-            else if(getTile(xpos-1,ypos,12,12,board)==2 && getTile(xpos-2,ypos,12,12,board)==1){
-                    target[pos]=2;
-                    return 0;
-                
-            }
-            else if(getTile(xpos-1,ypos,12,12,board)==4 && getTile(xpos-2,ypos,12,12,board)==3){
-                
-                    target[pos]=4;
-                    return 0;
-                
-            }
-            else if(getTile(xpos,ypos+1,12,12,board)==2 && getTile(xpos,ypos+2,12,12,board)==1){
-                
-                    target[pos]=2;
 
-                    return 0;
-                
-            }
-            else if(getTile(xpos,ypos+1,12,12,board)==4 && getTile(xpos,ypos+2,12,12,board)==3){
-                
-                    target[pos]=4;
-                    return 0;
-                
-            }
-            else if(getTile(xpos,ypos-1,12,12,board)==2 && getTile(xpos,ypos-2,12,12,board)==1){
-                
-                    target[pos]=2;
-                    return 0;
-                
-            }
-
-
-            else if(getTile(xpos,ypos-1,12,12,board)==4 && getTile(xpos,ypos-2,12,12,board)==3){
-                    target[pos]=4;
-                    return 0;
-                
+        if (getTile(xpos - 1, ypos, 12, 12, board) == 0)
+        {
+            if (getTile(xpos - 2, ypos, 12, 12, board) == 1)
+            {
+                target[pos] = 0;
+                return 0;
             }
         }
-        //birth Destroy 1
-        else if(board[pos]==1){
-            if(getTile(xpos+1,ypos,12,12,board)==0){
-                if(getTile(xpos+2,ypos,12,12,board)==1){
-                    target[pos]=0;
-                    return 0;
-                }
+        if (getTile(xpos, ypos + 1, 12, 12, board) == 0)
+        {
+            if (getTile(xpos, ypos + 2, 12, 12, board) == 1)
+            {
+                target[pos] = 0;
+                return 0;
             }
-
-             if(getTile(xpos-1,ypos,12,12,board)==0){
-                if(getTile(xpos-2,ypos,12,12,board)==1){
-                    target[pos]=0;
-                    return 0;
-                }
-            }
-             if(getTile(xpos,ypos+1,12,12,board)==0){
-                if(getTile(xpos,ypos+2,12,12,board)==1){
-                    target[pos]=0;
-                    return 0;
-                }
-            }
-
-             if(getTile(xpos,ypos-1,12,12,board)==0){
-                if(getTile(xpos,ypos-2,12,12,board)==1){
-                    target[pos]=0;
-                    return 0;
-                }
-            }
-
-            //birth destroy 2
-        }else if(board[pos]==3) {
-            if(getTile(xpos+1,ypos,12,12,board)==0){
-                if(getTile(xpos+2,ypos,12,12,board)==3){
-                    target[pos]=0;
-                    return 0;
-                }
-            }
-
-             if(getTile(xpos-1,ypos,12,12,board)==0){
-                if(getTile(xpos-2,ypos,12,12,board)==3){
-                    target[pos]=0;
-                    return 0;
-                }
-            }
-             if(getTile(xpos,ypos+1,12,12,board)==0){
-                if(getTile(xpos,ypos+2,12,12,board)==3){
-                    target[pos]=0;
-                    return 0;
-                }
-            }
-
-             if(getTile(xpos,ypos-1,12,12,board)==0){
-                if(getTile(xpos,ypos-2,12,12,board)==3){
-                    target[pos]=0;
-                    return 0;
-                }
-            }
-
         }
 
-        return 0;
+        if (getTile(xpos, ypos - 1, 12, 12, board) == 0)
+        {
+            if (getTile(xpos, ypos - 2, 12, 12, board) == 1)
+            {
+                target[pos] = 0;
+                return 0;
+            }
+        }
+
+        // birth destroy 2
+    }
+    else if (board[pos] == 3)
+    {
+        if (getTile(xpos + 1, ypos, 12, 12, board) == 0)
+        {
+            if (getTile(xpos + 2, ypos, 12, 12, board) == 3)
+            {
+                target[pos] = 0;
+                return 0;
+            }
+        }
+
+        if (getTile(xpos - 1, ypos, 12, 12, board) == 0)
+        {
+            if (getTile(xpos - 2, ypos, 12, 12, board) == 3)
+            {
+                target[pos] = 0;
+                return 0;
+            }
+        }
+        if (getTile(xpos, ypos + 1, 12, 12, board) == 0)
+        {
+            if (getTile(xpos, ypos + 2, 12, 12, board) == 3)
+            {
+                target[pos] = 0;
+                return 0;
+            }
+        }
+
+        if (getTile(xpos, ypos - 1, 12, 12, board) == 0)
+        {
+            if (getTile(xpos, ypos - 2, 12, 12, board) == 3)
+            {
+                target[pos] = 0;
+                return 0;
+            }
+        }
+    }
+
+    return 0;
 }
 void Automata::runStep(std::array<int,144> &board,Array& target){
     for(int i=0; i< board.size(); i++){
