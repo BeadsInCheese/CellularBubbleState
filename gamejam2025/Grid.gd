@@ -152,12 +152,12 @@ func _ready() -> void:
 	boardExists = true
 	for i in range(xsize):
 		for j in range(ysize):
-			var x:Bubble=bubble.instantiate()
-			x.tileType=0
-			x.tileIndex=j+i*xsize
+			var b:Bubble=bubble.instantiate()
+			b.tileType=0
+			b.tileIndex=i+j*xsize
 			
-			add_child(x)
-			gridList.append(x)
+			add_child(b)
+			gridList.append(b)
 			
 	boardHistory.append(DataUtility.get_board_string(gridList,currentTurn))
 	
