@@ -17,6 +17,7 @@ func init(board:Board):
 	game_board=board
 	automata=board.get_child(0)
 	automata.printRules()
+	
 
 var game_board: Board
 	

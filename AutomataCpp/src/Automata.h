@@ -33,6 +33,9 @@ protected:
 public:
 
     void printRules();
+    void clearRuleset();
+    void addRule(Array Rules);
+    void compileRuleset();
     rule rotate(rule& r);
     std::vector<rule> getRules();
     int getTile(int xpos,int ypos,int xsize,int ysize,std::array<int,144> &board);

@@ -8,6 +8,10 @@ void Automata::_bind_methods() {
     ClassDB::bind_method(D_METHOD("AutomataStep", "board"),&Automata::AutomataStep);
     ClassDB::bind_method(D_METHOD("printRules"),&Automata::printRules);
 
+    ClassDB::bind_method(D_METHOD("clearRuleset"),&Automata::clearRuleset);
+    ClassDB::bind_method(D_METHOD("addRule"),&Automata::addRule);
+    ClassDB::bind_method(D_METHOD("compileRuleset"),&Automata::compileRuleset);
+
 
 
     ClassDB::bind_method(D_METHOD("checkRuleForPos", "xpos", "ypos", "board", "rules"), &Automata::checkRuleForPosStatic);
@@ -30,10 +34,95 @@ std::vector<rule> rules;
 Automata::~Automata() {
     // Cleanup code.
 }
+void godot::Automata::clearRuleset()
+{
+    rules.clear();
+}
+void godot::Automata::addRule(Array r)
+{
+    if(r.size()!=3&&r.size()!=5){
+        print_error("Error matrix must be eather size 3 or size 5");
+        return;
+    }
+    rule rul;
+    rul.matrixSize=r.size();
+    for(int i=0; i<r.size(); i++){
+        if(r[i].get_type() == godot::Variant::Type::INT){
+            rul.rows[i]=r[i];
+        }else{
+            print_error("Error incompatible matrix parameter "+r[i].get_type());
+        return;
+        }
+
+    }
+    rules.emplace_back(rul);
 
 
+}
 
-rule Automata::rotate( rule& r) {
+void godot::Automata::compileRuleset()
+{
+    int rl=rules.size();
+    for (int j=0; j<rl;j++){
+        rule nr;
+        bool changed=false;
+        for(int k=0; k<25; k++){
+            auto x=rules[j].rows[k];
+            if(x==2){
+
+                nr.rows[k]=4;
+                changed=true;
+            }
+            else if(x==1){
+                changed=true;
+                nr.rows[k]=3;
+            }
+            else if(x==3){
+                changed=true;
+                nr.rows[k]=1;
+            }
+            else if(x==4){
+                changed=true;
+                nr.rows[k]=2;
+            }else{
+                nr.rows[k]=x;
+            }
+           
+        }
+        nr.result=rules[j].result;
+        if(rules[j].result==1){
+            nr.result=3;
+        }
+        else if(rules[j].result==2){
+            nr.result=4;
+        }else if(rules[j].result==3){
+            nr.result=1;
+        }else if(rules[j].result==4){
+            nr.result=2;
+        }else{
+            nr.result=rules[j].result;
+        }
+        
+        if(changed){
+            nr.matrixSize=rules[j].matrixSize;
+            rules.push_back(nr);
+        }
+    }
+    rl=rules.size();
+    
+    for (int j=0; j<rl;j++){ 
+        rule rot=rules[j];
+        for(int i=0; i<4;i++){
+            rot=rotate(rot);
+            rules.push_back(rot);
+
+        }
+    }
+    
+}
+
+rule Automata::rotate(rule &r)
+{
     rule rotated; 
     rotated.matrixSize=r.matrixSize;
         if(r.matrixSize==3){
@@ -94,8 +183,6 @@ rule Automata::rotate( rule& r) {
     return rotated;
 }
 
-
-
 void Automata::printRules(){
 
     for(auto &i :rules){
@@ -112,7 +199,11 @@ void Automata::printRules(){
     }
 
 }
-std::vector<rule> Automata::getRules(){
+
+
+
+std::vector<rule> Automata::getRules()
+{
     std::vector<rule> rules;
 
     rule r;
