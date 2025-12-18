@@ -94,45 +94,7 @@ rule Automata::rotate( rule& r) {
     return rotated;
 }
 
-rule5x5 godot::Automata::rotate(rule5x5 &r)
-{
-    rule5x5 rotated{};
-    rotated.rows[0] = r.rows[20];
-    rotated.rows[1] = r.rows[15];
-    rotated.rows[2] = r.rows[10]; 
-    rotated.rows[3] = r.rows[5];
-    rotated.rows[4] = r.rows[0]; 
-    rotated.rows[5] = r.rows[21];
-        
-    rotated.rows[6] = r.rows[16];
-    rotated.rows[7] = r.rows[11];
-    rotated.rows[8] = r.rows[6];
-        
-    rotated.rows[9] = r.rows[1];
-    rotated.rows[10] = r.rows[22];
-    rotated.rows[11] = r.rows[17];
-        
-    rotated.rows[12] = r.rows[12];
-    rotated.rows[13] = r.rows[7]; 
-    rotated.rows[14] = r.rows[2];
-        
-    rotated.rows[15] = r.rows[23];
-    rotated.rows[16] = r.rows[18];
-    rotated.rows[17] = r.rows[13];
-        
-    rotated.rows[18] = r.rows[8];
-    rotated.rows[19] = r.rows[3];
-    rotated.rows[20] = r.rows[24];
-        
-    rotated.rows[21] = r.rows[19];
-    rotated.rows[22] = r.rows[14]; 
-    rotated.rows[23] = r.rows[9];  
-    rotated.rows[24] = r.rows[4];
 
-    rotated.result = r.result;
-
-    return rotated;
-}
 
 void Automata::printRules(){
 
@@ -152,7 +114,6 @@ void Automata::printRules(){
 }
 std::vector<rule> Automata::getRules(){
     std::vector<rule> rules;
-    std::vector<rule5x5> rules5x5;
 
     rule r;
     r.rows={-1,2,-1,

@@ -14,10 +14,7 @@ struct rule{
     std::array<int,25> rows;
     int result;
 };
-struct rule5x5{
-    std::array<int,25> rows;
-    int result;
-};
+
 
 namespace godot {
 
@@ -37,7 +34,6 @@ public:
 
     void printRules();
     rule rotate(rule& r);
-    rule5x5 rotate(rule5x5& r);
     std::vector<rule> getRules();
     int getTile(int xpos,int ypos,int xsize,int ysize,std::array<int,144> &board);
     bool matchMatrix(int posx,int posy,std::array<int,144> &board,rule &r);

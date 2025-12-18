@@ -150,8 +150,8 @@ func updateCursor():
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	boardExists = true
-	for i in range(xsize):
-		for j in range(ysize):
+	for j in range(ysize):
+		for i in range(xsize):
 			var b:Bubble=bubble.instantiate()
 			b.tileType=0
 			b.tileIndex=i+j*xsize
