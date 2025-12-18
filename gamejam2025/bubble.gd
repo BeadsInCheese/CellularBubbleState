@@ -4,6 +4,9 @@ var tileType=1
 var board:Board
 var tileIndex=0
 
+@onready var row_label: RichTextLabel = $RowLabel
+@onready var column_label: RichTextLabel = $ColumnLabel
+
 func setTileType(type, is_automata: bool = false):
 	tileType=type
 	update_gfx(tileType)
@@ -83,13 +86,7 @@ func update_highlight_gfx():
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	board=get_tree().get_root().get_node("root/Board")
-	
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	$RichTextLabel.text="[center]"+str(tileType)+"[/center]"
+	set_tile_labels()
 
 
 func _on_button_button_down() -> void:
@@ -112,3 +109,16 @@ func _on_button_button_down() -> void:
 		board.turnOrder[board.currentTurn].makingMove=false
 	
 	pass # Replace with function body.
+
+func set_tile_labels():
+	var s = "ABCDEFGHIJKL"
+	var i = tileIndex/12
+	var j = tileIndex%12
+	
+	if j == 0:
+		row_label.visible = true
+		row_label.text = s[i]
+
+	if i == 0:
+		column_label.visible = true
+		column_label.text = str(j + 1)
