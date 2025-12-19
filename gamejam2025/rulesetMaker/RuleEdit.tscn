@@ -1,0 +1,144 @@
+[gd_scene load_steps=6 format=3 uid="uid://214remvmo35p"]
+
+[ext_resource type="Script" path="res://rulesetMaker/rulesetController.gd" id="1_3418t"]
+[ext_resource type="Texture2D" uid="uid://bfkyh5nr4motd" path="res://resources/GFX/towers/pillar_player1.png" id="1_ptmno"]
+[ext_resource type="Script" path="res://rulesetMaker/rulesetTile.gd" id="2_0afhf"]
+[ext_resource type="Script" path="res://rulesetMaker/matrix_base.gd" id="2_t362q"]
+[ext_resource type="Texture2D" uid="uid://ceky1qx1sms8e" path="res://rulesetMaker/UIarrow.png" id="3_7q3co"]
+
+[node name="RuleEdit" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("1_3418t")
+
+[node name="addRuleButton" type="Button" parent="CanvasLayer"]
+offset_left = 423.0
+offset_top = 449.0
+offset_right = 721.0
+offset_bottom = 544.0
+text = "Add rule"
+
+[node name="MenuButton" type="MenuButton" parent="CanvasLayer"]
+offset_left = 493.0
+offset_top = 24.0
+offset_right = 643.0
+offset_bottom = 95.0
+text = "3x3"
+flat = false
+item_count = 2
+popup/item_0/text = "3x3"
+popup/item_1/text = "5x5"
+popup/item_1/id = 1
+
+[node name="resultButton" type="TextureButton" parent="CanvasLayer"]
+offset_left = 664.0
+offset_top = 181.0
+offset_right = 819.0
+offset_bottom = 337.0
+texture_normal = ExtResource("1_ptmno")
+ignore_texture_size = true
+stretch_mode = 4
+script = ExtResource("2_0afhf")
+
+[node name="MatrixBase" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 53.0
+offset_top = 97.0
+offset_right = 387.0
+offset_bottom = 407.0
+script = ExtResource("2_t362q")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MatrixBase"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Arrow" type="TextureRect" parent="CanvasLayer"]
+offset_left = 452.0
+offset_top = 210.0
+offset_right = 603.0
+offset_bottom = 337.0
+texture = ExtResource("3_7q3co")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="ListBg" type="Panel" parent="CanvasLayer"]
+custom_minimum_size = Vector2(300, 0)
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/ListBg"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ListBg/ScrollContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="LineEdit" type="LineEdit" parent="CanvasLayer"]
+offset_left = 422.0
+offset_top = 406.0
+offset_right = 719.0
+offset_bottom = 437.0
+
+[node name="save" type="FileDialog" parent="CanvasLayer"]
+initial_position = 1
+size = Vector2i(352, 385)
+ok_button_text = "Yes"
+dialog_hide_on_ok = true
+cancel_button_text = "No"
+access = 2
+filters = PackedStringArray("*.rule")
+use_native_dialog = true
+
+[node name="load" type="FileDialog" parent="CanvasLayer"]
+auto_translate_mode = 1
+title = "Open a File"
+initial_position = 1
+size = Vector2i(352, 385)
+ok_button_text = "Open"
+dialog_hide_on_ok = true
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.rule")
+use_native_dialog = true
+
+[node name="SaveButton" type="Button" parent="CanvasLayer"]
+offset_left = 15.0
+offset_top = 612.0
+offset_right = 59.0
+offset_bottom = 643.0
+text = "Save"
+
+[node name="loadButton" type="Button" parent="CanvasLayer"]
+offset_left = 72.0
+offset_top = 609.0
+offset_right = 116.0
+offset_bottom = 640.0
+text = "load"
+
+[connection signal="pressed" from="CanvasLayer/addRuleButton" to="CanvasLayer" method="_on_add_rule_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/resultButton" to="CanvasLayer/resultButton" method="_on_pressed"]
+[connection signal="file_selected" from="CanvasLayer/save" to="CanvasLayer" method="_on_save_file_selected"]
+[connection signal="file_selected" from="CanvasLayer/load" to="CanvasLayer" method="_on_load_file_selected"]
+[connection signal="pressed" from="CanvasLayer/SaveButton" to="CanvasLayer" method="_on_save_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/loadButton" to="CanvasLayer" method="_on_load_button_pressed"]

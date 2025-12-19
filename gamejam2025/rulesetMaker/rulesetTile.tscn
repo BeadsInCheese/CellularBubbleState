@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4pls12ssqor6"]
+
+[ext_resource type="Texture2D" uid="uid://bfkyh5nr4motd" path="res://resources/GFX/towers/pillar_player1.png" id="1_qrdo2"]
+[ext_resource type="Script" path="res://rulesetMaker/rulesetTile.gd" id="2_gppt8"]
+
+[node name="Tile" type="TextureButton"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("1_qrdo2")
+ignore_texture_size = true
+stretch_mode = 4
+script = ExtResource("2_gppt8")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

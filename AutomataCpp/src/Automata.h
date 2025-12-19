@@ -13,7 +13,18 @@ struct rule{
     size_t matrixSize=3;
     std::array<int,25> rows;
     int result;
+    unsigned int hash()const;
 };
+namespace std{
+    template<>
+    struct hash<rule>{
+    inline size_t operator()(const rule& x)const{
+        return x.hash();
+    }
+    };
+}
+int unsafePow(unsigned int a,unsigned int b);
+bool operator ==(const rule&,const rule&);
 
 
 namespace godot {
@@ -34,8 +45,9 @@ public:
 
     void printRules();
     void clearRuleset();
-    void addRule(Array Rules);
+    void addRule(Array Rules,int result);
     void compileRuleset();
+    void removeDuplicateRules();
     rule rotate(rule& r);
     std::vector<rule> getRules();
     int getTile(int xpos,int ypos,int xsize,int ysize,std::array<int,144> &board);

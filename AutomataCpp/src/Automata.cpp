@@ -9,7 +9,7 @@ void Automata::_bind_methods() {
     ClassDB::bind_method(D_METHOD("printRules"),&Automata::printRules);
 
     ClassDB::bind_method(D_METHOD("clearRuleset"),&Automata::clearRuleset);
-    ClassDB::bind_method(D_METHOD("addRule"),&Automata::addRule);
+    ClassDB::bind_method(D_METHOD("addRule","pattern","result"),&Automata::addRule);
     ClassDB::bind_method(D_METHOD("compileRuleset"),&Automata::compileRuleset);
 
 
@@ -38,14 +38,14 @@ void godot::Automata::clearRuleset()
 {
     rules.clear();
 }
-void godot::Automata::addRule(Array r)
+void godot::Automata::addRule(Array r,int result)
 {
-    if(r.size()!=3&&r.size()!=5){
+    if(r.size()!=3*3&&r.size()!=5*5){
         print_error("Error matrix must be eather size 3 or size 5");
         return;
     }
     rule rul;
-    rul.matrixSize=r.size();
+    rul.matrixSize=sqrt(r.size());
     for(int i=0; i<r.size(); i++){
         if(r[i].get_type() == godot::Variant::Type::INT){
             rul.rows[i]=r[i];
@@ -55,6 +55,7 @@ void godot::Automata::addRule(Array r)
         }
 
     }
+    rul.result=result;
     rules.emplace_back(rul);
 
 
@@ -118,7 +119,25 @@ void godot::Automata::compileRuleset()
 
         }
     }
+    removeDuplicateRules();
     
+}
+
+void godot::Automata::removeDuplicateRules()
+{
+
+    std::unordered_map<rule,rule> table;
+
+    for(auto& i : rules){
+        print_line(i.hash());
+        table[i]=i;
+    }
+    rules.clear();
+    for(auto& i:table){
+        rules.push_back(i.second);
+    }
+
+
 }
 
 rule Automata::rotate(rule &r)
@@ -184,7 +203,7 @@ rule Automata::rotate(rule &r)
 }
 
 void Automata::printRules(){
-
+    UtilityFunctions::print(" rulecount "+String::num(rules.size()));
     for(auto &i :rules){
         UtilityFunctions::print("Rule: ");
         for(int j=0;j<i.matrixSize; j++){
@@ -571,4 +590,32 @@ Array Automata::getMarkIndexes(Array matchGrid) {
 }
 
 void Automata::_process(double delta) {
+}
+
+unsigned int rule::hash()const
+{
+    unsigned int h=0;
+    for(int i=0; i<matrixSize; i++){
+        h+=unsafePow(6,i)*(rows[i]+2);
+    }
+    return h;
+}
+int unsafePow(unsigned int a,unsigned int b){
+    if(b==0){
+        return 1;
+    }
+    if(b%2==1){
+        return a*unsafePow(a,b-1);
+    }
+    int half=b/2;
+    return unsafePow(a,half)*unsafePow(a,half);
+
+}
+
+bool operator==(const rule& a, const rule& b) {
+    if (a.matrixSize != b.matrixSize) return false;
+    for (int i = 0; i < a.matrixSize * a.matrixSize; i++) {
+        if (a.rows[i] != b.rows[i]) return false;
+    }
+    return true;
 }
