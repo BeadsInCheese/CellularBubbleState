@@ -17,10 +17,10 @@ func init(board:Board):
 	game_board=board
 	automata=board.get_child(0)
 	automata.printRules()
-	automata.clearRuleset()
-	automata.addRule([1,1,1, 1,1,1, 1,1,1],0)
-	automata.compileRuleset()
-	automata.printRules()
+	#automata.clearRuleset()
+	#automata.addRule([1,1,1, 1,1,1, 1,1,1],0)
+	#automata.compileRuleset()
+	#automata.printRules()
 
 var game_board: Board
 	
