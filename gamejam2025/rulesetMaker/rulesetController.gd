@@ -28,6 +28,7 @@ func addRule(ruleName,pattern,result):
 	rule.ruleName=ruleName
 	rule.result=result
 	rule.rule=pattern
+	
 	$ListBg/ScrollContainer/VBoxContainer.add_child(rule)
 func _on_add_rule_button_pressed() -> void:
 	var rule=ruleTemplate.instantiate()
@@ -65,3 +66,7 @@ func _on_load_file_selected(path: String) -> void:
 		i.queue_free()
 	for i in ruleset.rules.keys():
 		addRule(i,ruleset.rules[i].pattern,ruleset.rules[i].result)
+
+
+func _on_exit_pressed() -> void:
+	SceneNavigation._on_PlayerMenuPressed()

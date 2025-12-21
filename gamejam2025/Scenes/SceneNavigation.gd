@@ -30,7 +30,8 @@ func _on_PlayerMenuPressed() -> void:
 	goToScene("res://PlayerSelect.tscn")
 func _on_MapPressed()-> void:
 	goToScene("res://resources/AdventureMode/Scenes/Map.tscn")
-
+func _on_RulesetCreatorPressed():
+	goToScene("res://rulesetMaker/RuleEdit.tscn")
 var loading=false
 func goToScene(scene: String):
 	# Wait hide animation

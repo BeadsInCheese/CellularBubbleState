@@ -107,7 +107,7 @@ ok_button_text = "Yes"
 dialog_hide_on_ok = true
 cancel_button_text = "No"
 access = 2
-filters = PackedStringArray("*.rule")
+filters = PackedStringArray("*.rule.json")
 use_native_dialog = true
 
 [node name="load" type="FileDialog" parent="CanvasLayer"]
@@ -119,26 +119,32 @@ ok_button_text = "Open"
 dialog_hide_on_ok = true
 file_mode = 0
 access = 2
-filters = PackedStringArray("*.rule")
+filters = PackedStringArray("*.rule.json")
 use_native_dialog = true
 
-[node name="SaveButton" type="Button" parent="CanvasLayer"]
-offset_left = 15.0
-offset_top = 612.0
-offset_right = 59.0
-offset_bottom = 643.0
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 597.0
+offset_right = 138.0
+offset_bottom = 637.0
+
+[node name="SaveButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
 text = "Save"
 
-[node name="loadButton" type="Button" parent="CanvasLayer"]
-offset_left = 72.0
-offset_top = 609.0
-offset_right = 116.0
-offset_bottom = 640.0
+[node name="loadButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
 text = "load"
+
+[node name="exit" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "exit"
 
 [connection signal="pressed" from="CanvasLayer/addRuleButton" to="CanvasLayer" method="_on_add_rule_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/resultButton" to="CanvasLayer/resultButton" method="_on_pressed"]
 [connection signal="file_selected" from="CanvasLayer/save" to="CanvasLayer" method="_on_save_file_selected"]
 [connection signal="file_selected" from="CanvasLayer/load" to="CanvasLayer" method="_on_load_file_selected"]
-[connection signal="pressed" from="CanvasLayer/SaveButton" to="CanvasLayer" method="_on_save_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/loadButton" to="CanvasLayer" method="_on_load_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/SaveButton" to="CanvasLayer" method="_on_save_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/loadButton" to="CanvasLayer" method="_on_load_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/exit" to="CanvasLayer" method="_on_exit_pressed"]

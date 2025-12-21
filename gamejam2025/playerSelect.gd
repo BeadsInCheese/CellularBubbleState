@@ -39,3 +39,7 @@ func _on_tutorial_button_button_down() -> void:
 	Settings.P1Index = 0
 	Settings.P2Index = 6
 	SceneNavigation._onLocalMPSelected()
+
+
+func _on_ruleset_creator_button_pressed() -> void:
+	SceneNavigation._on_RulesetCreatorPressed()
