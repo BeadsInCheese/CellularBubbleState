@@ -22,22 +22,63 @@ func _on_menu_button_pressed(id) -> void:
 		$MenuButton.text="5x5"
 	$MatrixBase.updateUI()
 
+func entryExists(nodeName:String):
+	for child in $ListBg/ScrollContainer/VBoxContainer.get_children():
+		if(child.name==nodeName):
+			return true
+	return false
+func setRule(ruleName,pattern,result):
+	for child in $ListBg/ScrollContainer/VBoxContainer.get_children():
+		if(child.name==ruleName):
+			child.rule=pattern
+			child.result=result
+			child.get_node("rulename").text=ruleName+str(pattern)+"-->"+str(result)
+func getHovered():
+	for i in $ListBg/ScrollContainer/VBoxContainer.get_children():
+		if(i.hovered):
+			return i
+var selected
+var pressed:bool=false
+func _input(event: InputEvent) -> void:
+	if(event.is_action_pressed("mouse_left")):
+		print("click")
+		pressed=true
+		var hoveredObject=getHovered()
+		if(hoveredObject!=null):
+			selected=hoveredObject
+	if(event.is_action_released("mouse_left")):
+		if( selected!=null):
+			selected=null
+		var pressed:bool=false
+	if(event is InputEventMouseMotion and pressed and selected!=null):
+		print("drag")
+		recalculatePosition()
+func recalculatePosition():
+	var container=$ListBg/ScrollContainer/VBoxContainer
+	for child in container.get_children():
+		if(child.position.y<get_viewport().get_mouse_position().y):
+			if(child.get_index()>selected.get_index()):
+				container.move_child(selected,child.get_index())
+				return
+		if(child.position.y>get_viewport().get_mouse_position().y):
+			if(child.get_index()<selected.get_index()):
+				container.move_child(selected,child.get_index())
+				return
+
 func addRule(ruleName,pattern,result):
+	if(entryExists(ruleName)):
+		setRule(ruleName,pattern,result)
+		return
 	var rule=ruleTemplate.instantiate()
 	rule.get_node("rulename").text=ruleName+str(pattern)+"-->"+str(result)
 	rule.ruleName=ruleName
 	rule.result=result
 	rule.rule=pattern
-	
 	$ListBg/ScrollContainer/VBoxContainer.add_child(rule)
+	rule.name=ruleName
 func _on_add_rule_button_pressed() -> void:
-	var rule=ruleTemplate.instantiate()
 	var mat=$MatrixBase.getMatrix()
-	rule.get_node("rulename").text=$LineEdit.text+str(mat)+"-->"+str($resultButton.tileType)
-	rule.ruleName=$LineEdit.text
-	rule.result=$resultButton.tileType
-	rule.rule=mat
-	$ListBg/ScrollContainer/VBoxContainer.add_child(rule)
+	addRule($LineEdit.text,mat,$resultButton.tileType)
 
 
 func _on_load_button_pressed() -> void:

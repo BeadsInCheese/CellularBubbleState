@@ -12,8 +12,10 @@ class rule:
 	func toDic():
 		return {"pattern":pattern,"result": result,"index":index}
 func addRule(ruleName:String,pattern:Array,result:int ):
-	rules[ruleName]=rule.new(pattern,result,rules.keys().size())
-	
+	if(!rules.has(ruleName)):
+		rules[ruleName]=rule.new(pattern,result,rules.keys().size())
+	else:
+		rules[ruleName]=rule.new(pattern,result,rules[ruleName].index)
 func getAsArray():
 	var arr=[]
 	arr.resize(rules.keys().size())

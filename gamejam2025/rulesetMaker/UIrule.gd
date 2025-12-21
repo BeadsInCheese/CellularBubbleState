@@ -13,6 +13,14 @@ var rule
 var ruleName
 var result
 
-
+var hovered=false
 func _on_delete_button_pressed() -> void:
 	queue_free()
+
+
+func _on_mouse_entered() -> void:
+	hovered=true
+
+
+func _on_mouse_exited() -> void:
+	hovered=false
