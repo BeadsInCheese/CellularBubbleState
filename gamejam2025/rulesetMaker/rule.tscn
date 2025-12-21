@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bf6207lon0bx4"]
+[gd_scene load_steps=5 format=3 uid="uid://bf6207lon0bx4"]
 
 [ext_resource type="Script" path="res://rulesetMaker/UIrule.gd" id="1_gnt6y"]
 [ext_resource type="Texture2D" uid="uid://dhiudrfwueh4d" path="res://Scenes/Kenney_gameIcons/PNG/Black/1x/trashcan.png" id="1_w6noc"]
+[ext_resource type="Theme" uid="uid://dck8e4axi58hk" path="res://resources/fonts/regularTheme.tres" id="2_dnpd7"]
 [ext_resource type="Texture2D" uid="uid://cygjjsjnq5thb" path="res://Scenes/Kenney_gameIcons/PNG/Black/1x/trashcanOpen.png" id="2_nigs8"]
 
 [node name="Rule" type="Panel"]
@@ -16,6 +17,7 @@ offset_left = 13.0
 offset_top = 8.0
 offset_right = 237.0
 offset_bottom = 114.0
+theme = ExtResource("2_dnpd7")
 text = "name"
 autowrap_mode = 3
 

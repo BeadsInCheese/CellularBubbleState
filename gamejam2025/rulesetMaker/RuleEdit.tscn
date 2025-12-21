@@ -1,10 +1,16 @@
-[gd_scene load_steps=6 format=3 uid="uid://214remvmo35p"]
+[gd_scene load_steps=10 format=3 uid="uid://214remvmo35p"]
 
 [ext_resource type="Script" path="res://rulesetMaker/rulesetController.gd" id="1_3418t"]
 [ext_resource type="Texture2D" uid="uid://bfkyh5nr4motd" path="res://resources/GFX/towers/pillar_player1.png" id="1_ptmno"]
 [ext_resource type="Script" path="res://rulesetMaker/rulesetTile.gd" id="2_0afhf"]
+[ext_resource type="Shader" path="res://rulesetMaker/RuleEditbg.gdshader" id="2_aqom0"]
+[ext_resource type="Theme" uid="uid://dck8e4axi58hk" path="res://resources/fonts/regularTheme.tres" id="2_m1ob4"]
 [ext_resource type="Script" path="res://rulesetMaker/matrix_base.gd" id="2_t362q"]
 [ext_resource type="Texture2D" uid="uid://ceky1qx1sms8e" path="res://rulesetMaker/UIarrow.png" id="3_7q3co"]
+[ext_resource type="Texture2D" uid="uid://c1xm7r8r0bcvf" path="res://resources/GFX/UI icons/audio_icon.png" id="3_t2jq8"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ba6xd"]
+shader = ExtResource("2_aqom0")
 
 [node name="RuleEdit" type="Control"]
 layout_mode = 3
@@ -17,11 +23,21 @@ grow_vertical = 2
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 script = ExtResource("1_3418t")
 
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_ba6xd")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_t2jq8")
+
 [node name="addRuleButton" type="Button" parent="CanvasLayer"]
 offset_left = 423.0
 offset_top = 449.0
 offset_right = 721.0
 offset_bottom = 544.0
+theme = ExtResource("2_m1ob4")
 text = "Add rule"
 
 [node name="MenuButton" type="MenuButton" parent="CanvasLayer"]
@@ -29,6 +45,7 @@ offset_left = 493.0
 offset_top = 24.0
 offset_right = 643.0
 offset_bottom = 95.0
+theme = ExtResource("2_m1ob4")
 text = "3x3"
 flat = false
 item_count = 2
@@ -131,14 +148,17 @@ offset_bottom = 637.0
 
 [node name="SaveButton" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("2_m1ob4")
 text = "Save"
 
 [node name="loadButton" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("2_m1ob4")
 text = "load"
 
 [node name="exit" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("2_m1ob4")
 text = "exit"
 
 [connection signal="pressed" from="CanvasLayer/addRuleButton" to="CanvasLayer" method="_on_add_rule_button_pressed"]
