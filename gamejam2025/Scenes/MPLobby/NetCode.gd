@@ -2,6 +2,7 @@ extends Node2D
 class_name NetCode
 
 static var client: StreamPeerTCP = null
+static var peer: WebSocketMultiplayerPeer
 
 var connected = false
 var _status = -1
@@ -12,27 +13,27 @@ signal _disconnected
 
 var use_localhost = true
 
-# Called when the node enters the scene tree for the first time.
 var scene = preload("res://MainGame.tscn")
-
 var game = null
 
-func sendkey(message:String) -> bool:
+const PORT: int = 25565
+
+static func start_server() -> void:
+	peer = WebSocketMultiplayerPeer.new()
+	peer.create_server(PORT)
+
+
+func start_client(host: String) -> void:
+	peer = WebSocketMultiplayerPeer.new()
+	peer.create_client("ws://" + host + ":" + str(PORT))
+
+
+func sendkey(message:String) -> void:
 	print("sending data...")
 	
 	client.put_data(message.to_utf8_buffer())
 	
 	print("Sent: ", message)
-	return true
-	
-func send(x:float,v:int) -> bool:
-	print("sending data...")
-
-	client.put_32(x)
-	client.put_32(v)
-	
-	print("Sent integers: ", x, ", ", v)
-	return true
 
 func _blocking_read():
 	while connected:
@@ -49,7 +50,7 @@ func _blocking_read():
 func connect_to_server(host: String) -> void:
 	client = StreamPeerTCP.new()
 	
-	var err = await client.connect_to_host(host, 25565)
+	var err = await client.connect_to_host(host, PORT)
 	while not connected:
 		await get_tree().process_frame
 	
@@ -61,17 +62,22 @@ func connect_to_server(host: String) -> void:
 
 func get_server_ip() -> String:
 	var config = ConfigFile.new()
-	var load_status = config.load("res://config/INI_Settings.cfg")
 	var localhost = "127.0.0.1"
+	if use_localhost:
+		return localhost
 
-	if load_status == OK and not use_localhost: 
+	var load_status = config.load("res://config/INI_Settings.cfg")
+
+	if load_status == OK: 
 		var ip=config.get_value("MULTIPLAYER", "SERVER_IP", localhost)
-		print("loaded IP: "+ip+" fron config")
+		print("loaded IP: " + ip + " from config")
 		return ip
 
 	return localhost
 
 func _ready() -> void:
+	multiplayer.multiplayer_peer = peer
+	
 	await connect_to_server(get_server_ip())
 	
 	print(client.get_status())

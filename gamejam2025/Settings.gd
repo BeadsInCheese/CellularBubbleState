@@ -23,7 +23,8 @@ func setMaster(volume):
 	AudioServer.set_bus_volume_db(Master_index, masterVolume-80)
 
 func _ready() -> void:
-	pass # Replace with function body.
+	if DisplayServer.get_name() == "headless":
+		NetCode.start_server()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
