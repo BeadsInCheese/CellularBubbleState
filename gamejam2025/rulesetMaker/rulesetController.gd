@@ -41,7 +41,6 @@ var selected
 var pressed:bool=false
 func _input(event: InputEvent) -> void:
 	if(event.is_action_pressed("mouse_left")):
-		print("click")
 		pressed=true
 		var hoveredObject=getHovered()
 		if(hoveredObject!=null):
@@ -51,7 +50,6 @@ func _input(event: InputEvent) -> void:
 			selected=null
 		var pressed:bool=false
 	if(event is InputEventMouseMotion and pressed and selected!=null):
-		print("drag")
 		recalculatePosition()
 func recalculatePosition():
 	var container=$ListBg/ScrollContainer/VBoxContainer
