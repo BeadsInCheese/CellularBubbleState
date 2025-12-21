@@ -3,7 +3,7 @@ class_name Console
 
 # Called when the node enters the scene tree for the first time.
 static var instance:Console=null
-signal messageWritten(msg)
+signal messageWritten(author,msg,end)
 @export
 var consoleLog:TextEdit
 @export
@@ -25,6 +25,7 @@ func _write(author:String,msg:String,end:String="\n"):
 	lines+=result.count("\n")
 	consoleLog.text+=result
 	consoleLog.scroll_vertical=lines
+	messageWritten.emit(author,msg,end)
 
 func _systemWrite(msg:String):
 	write("System",msg)
