@@ -7,7 +7,7 @@ var sizey=3
 func _ready() -> void:
 	updateUI()
 	print(getMatrix())
-
+signal sizeChanged(sizex,sizey)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
@@ -17,6 +17,24 @@ func getMatrix():
 		for j in i.get_children():
 			matrix.append(j.tileType)
 	return matrix
+func __setMatrix(mat):
+	await get_tree().process_frame
+	var index=0
+	for i in $VBoxContainer.get_children():
+		for j in i.get_children():
+			
+			j.tileType=mat[index]
+			j.updateUI()
+			index+=1
+func setMatrix(mat):
+	if(mat.size()==sizey*sizex):
+		__setMatrix(mat)
+	else:
+		sizex=sqrt(mat.size())
+		sizey=sqrt(mat.size())
+		updateUI()
+		sizeChanged.emit(sizex,sizey)
+		__setMatrix(mat)
 func updateUI():
 	for node in $VBoxContainer.get_children():
 		node.queue_free()

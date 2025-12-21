@@ -27,6 +27,11 @@ func entryExists(nodeName:String):
 		if(child.name==nodeName):
 			return true
 	return false
+func UImodifyRule():
+	$MatrixBase.setMatrix(selected.rule)
+	$resultButton.tileType=selected.result
+	$resultButton.updateUI()
+	$LineEdit.text=selected.name
 func setRule(ruleName,pattern,result):
 	for child in $ListBg/ScrollContainer/VBoxContainer.get_children():
 		if(child.name==ruleName):
@@ -39,12 +44,14 @@ func getHovered():
 			return i
 var selected
 var pressed:bool=false
+
 func _input(event: InputEvent) -> void:
 	if(event.is_action_pressed("mouse_left")):
 		pressed=true
 		var hoveredObject=getHovered()
 		if(hoveredObject!=null):
 			selected=hoveredObject
+			UImodifyRule()
 	if(event.is_action_released("mouse_left")):
 		if( selected!=null):
 			selected=null
@@ -116,3 +123,7 @@ func _on_exit_pressed() -> void:
 
 func _on_line_edit_text_submitted(new_text: String) -> void:
 	_on_add_rule_button_pressed()
+
+
+func _on_matrix_base_size_changed(sizex: Variant, sizey: Variant) -> void:
+	$MenuButton.text=str(sizex)+"x"+str(sizey)

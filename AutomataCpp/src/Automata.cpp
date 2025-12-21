@@ -277,7 +277,9 @@ std::vector<rule> Automata::getRules()
     r8.rows={-1,-1,-1,
             -1,2,0,
             -1,2,1};
+    r8.result=0;
     rules.push_back(r8);
+
     rule r9;
     r9.rows={
             -1,-1,-1,-1,-1,

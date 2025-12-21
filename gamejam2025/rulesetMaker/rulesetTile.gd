@@ -12,6 +12,9 @@ func _process(delta: float) -> void:
 	pass
 
 var textures=["res://resources/GFX/Bubble icons/bubble_player1.png","res://resources/GFX/towers/pillar_player1.png","res://resources/GFX/Bubble icons/bubble03b.png","res://resources/GFX/towers/pillar_player2.png","res://resources/GFX/Bubble icons/bubble03b_2.png"]
+func updateUI():
+	texture_normal=load(textures[tileType])
+	
 func _on_pressed() -> void:
 	tileType=(tileType+1)%5
-	texture_normal=load(textures[tileType])
+	updateUI()
