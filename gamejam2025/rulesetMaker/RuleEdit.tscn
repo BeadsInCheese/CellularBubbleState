@@ -143,6 +143,7 @@ text = "exit"
 
 [connection signal="pressed" from="CanvasLayer/addRuleButton" to="CanvasLayer" method="_on_add_rule_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/resultButton" to="CanvasLayer/resultButton" method="_on_pressed"]
+[connection signal="text_submitted" from="CanvasLayer/LineEdit" to="CanvasLayer" method="_on_line_edit_text_submitted"]
 [connection signal="file_selected" from="CanvasLayer/save" to="CanvasLayer" method="_on_save_file_selected"]
 [connection signal="file_selected" from="CanvasLayer/load" to="CanvasLayer" method="_on_load_file_selected"]
 [connection signal="pressed" from="HBoxContainer/SaveButton" to="CanvasLayer" method="_on_save_button_pressed"]

@@ -54,11 +54,11 @@ func _input(event: InputEvent) -> void:
 func recalculatePosition():
 	var container=$ListBg/ScrollContainer/VBoxContainer
 	for child in container.get_children():
-		if(child.position.y<get_viewport().get_mouse_position().y):
+		if(child.global_position.y<get_viewport().get_mouse_position().y):
 			if(child.get_index()>selected.get_index()):
 				container.move_child(selected,child.get_index())
 				return
-		if(child.position.y>get_viewport().get_mouse_position().y):
+		if(child.global_position.y+(child.size.y)>get_viewport().get_mouse_position().y):
 			if(child.get_index()<selected.get_index()):
 				container.move_child(selected,child.get_index())
 				return
@@ -76,7 +76,10 @@ func addRule(ruleName,pattern,result):
 	rule.name=ruleName
 func _on_add_rule_button_pressed() -> void:
 	var mat=$MatrixBase.getMatrix()
-	addRule($LineEdit.text,mat,$resultButton.tileType)
+	var Rulename=$LineEdit.text
+	if(Rulename!=""):
+		addRule(Rulename,mat,$resultButton.tileType)
+		$LineEdit.text=""
 
 
 func _on_load_button_pressed() -> void:
@@ -109,3 +112,7 @@ func _on_load_file_selected(path: String) -> void:
 
 func _on_exit_pressed() -> void:
 	SceneNavigation._on_PlayerMenuPressed()
+
+
+func _on_line_edit_text_submitted(new_text: String) -> void:
+	_on_add_rule_button_pressed()
