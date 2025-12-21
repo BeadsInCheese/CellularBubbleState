@@ -101,7 +101,7 @@ offset_right = 750.0
 offset_bottom = 728.0
 theme_override_constants/separation = 40
 
-[node name="Button3" type="Button" parent="VBoxContainer"]
+[node name="BackButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("3_47075")
 text = "Back"
@@ -141,4 +141,4 @@ offset_bottom = 673.0
 mouse_filter = 2
 script = ExtResource("9_2c3u5")
 
-[connection signal="pressed" from="VBoxContainer/Button3" to="." method="_on_button_3_pressed"]
+[connection signal="pressed" from="VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

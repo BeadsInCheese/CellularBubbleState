@@ -1,25 +1,26 @@
 extends AgentBase
 class_name MultiplayerAgent
 
-
 var client = StreamPeerTCP.new()
 var connected = false
-func init(board:Board):
-	await connect_to_server("127.0.0.1")
+var latestBoardHistory = null
+var done=false
+
+func init(board: Board):
+	client=NetCode.client
 	connected=true
-	await syncronizeTurnOrder(board)
-	print("MultiplayerAgent Ready")
-func syncronizeTurnOrder(board:Board):
+	await synchronize_turn_order(board)
+
+func synchronize_turn_order(board: Board):
 	while connected:
-		print(client.get_available_bytes())
 		await board.get_tree().process_frame
+		
 		if client.get_available_bytes() >= 4:
 			client.poll()
 			var x=client.get_32()
-			print("got data: "+str(x))
+			print("got data: " + str(x))
 			
-			board.p1AgentInstance.moveMade.connect(sendOb)
-			#board.p2AgentInstance.moveMade.connect(syncronize)
+			board.p1AgentInstance.moveMade.connect(send_move)
 			
 			if(x==1):
 				var temp=board.p1AgentInstance
@@ -34,80 +35,42 @@ func syncronizeTurnOrder(board:Board):
 		else:		# Sleep for a short duration to avoid busy-waiting
 			await board.get_tree().process_frame
 
+
+func send_move(ob:Board):
+	var tileIndex = ob.lastMove[0]
+	var tileType = ob.lastMove[1]
 	
+	client.put_32(tileIndex)
+	client.put_32(tileType)
 	
-func connect_to_server(host: String) -> void:
-	client=NetCode.client
-func _blocking_read(observation:Board):
-	while connected:
-		if client.get_available_bytes() >= 4:
-			print("message")
-			client.poll()
-			var x=client.get_32()
-			var v=client.get_32()
-			print("Received data: ", x,"  , ",v)
-			return [x,v]
-		else:
-			# Sleep for a short duration to avoid busy-waiting
-			await observation.get_tree().process_frame
-func sendOb(ob:Board):
-	send(ob.lastMove[0],ob.lastMove[1])
-func send(x:float,v:int) -> bool:
-	print("sending data...")
-	client.put_32(x)
-	client.put_32(v)
-	print("Sent integers: ", x, ", ", v)
-	return true
-	print("connection lost")
-	return false
-func syncronize(observation:Board):
-	print("syncronizing...")
-	var temp=await _blocking_read(observation)
-	if(temp[0]==-1):
-		print("INVALID")
-		syncronize(observation)
-		return
-		pass
-	print(temp)
-	if(true or observation.gridList[temp[0]].tileType==0):
-		observation.gridList[temp[0]].setTileType(observation.turnOrder[observation.currentTurn].playerType)
-		done=true
-	else:
-		print("DESYNC")
+	print("Sent integers: ", tileIndex, ", ", tileType)
 
 
-var latestBoardHistory = null
-var done=false
 func makeMove(observation:Board):
 	if(observation!=null):
 		await observation.get_tree().process_frame
 	while !done and connected:
 		client.poll()
-		#print(client.get_available_bytes())
 		client.poll()
+		
 		if client.get_status() != StreamPeerTCP.STATUS_CONNECTED:
 			DataUtility.save_to_file(latestBoardHistory, "save-"+Time.get_datetime_string_from_system(),"res://Saves")
 			SceneNavigation.goToMultiplayerSelection()
 			connected = false
 		
-		if client.get_available_bytes() >0:
-				print("message")
-				var x=client.get_32()
-				var v=client.get_32()
-				print("Received data: ", x,"  , ",v)
-				observation.gridList[x].setTileType(observation.turnOrder[observation.currentTurn].playerType)
+		if client.get_available_bytes() > 0:
+				var tileIndex = client.get_32()
+				var tileType = client.get_32()
+				print("Received data: ", tileIndex,"  , ", tileType)
+				observation.gridList[tileIndex].setTileType(observation.turnOrder[observation.currentTurn].playerType)
 				latestBoardHistory = observation.boardHistory
 				
-				return [x,v]
+				return [tileIndex, tileType]
+
 		if(observation!=null):
 			await observation.get_tree().process_frame
 		else:
 			return
-			
+
 	if(observation!=null):
 		await observation.get_tree().process_frame
-	#await send(observation.lastMove[0],observation.lastMove[1])
-	#await syncronize(observation)
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.

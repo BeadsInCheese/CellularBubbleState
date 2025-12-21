@@ -164,7 +164,7 @@ func _ready() -> void:
 	if mp:
 		p1AgentInstance = playerAgent.new()
 		p2AgentInstance = multiplayerAgent.new()
-	if tutorial:
+	elif tutorial:
 		p1AgentInstance = playerAgent.new()
 		p2AgentInstance = tutorialAgent.new()
 	else:
