@@ -2,7 +2,6 @@
 class_name ruleSet
 var rules:Dictionary={}
 class rule:
-	extends Object
 	var pattern:Array
 	var result:int
 	var index:int

@@ -1,7 +1,8 @@
 extends AgentBase
 
 class_name AutomataAgent
-
+static var  loadCustomRuleset:bool=false
+static var ruleset:Array
 func makeMove(observation:Board):
 	if observation == null or not observation.exists():
 		return
@@ -12,6 +13,12 @@ func makeMove(observation:Board):
 	moveMade.emit(game_board)
 
 static var automata:Automata=null
+
+func loadRuleset():
+	automata.clearRuleset()
+	for rule in ruleset:
+		automata.addRule(rule[0],rule[1])
+	automata.compileRuleset()
 
 func init(board:Board):
 	game_board=board

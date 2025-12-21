@@ -3,6 +3,7 @@ class_name Console
 
 # Called when the node enters the scene tree for the first time.
 static var instance:Console=null
+signal messageWritten(msg)
 @export
 var consoleLog:TextEdit
 @export
