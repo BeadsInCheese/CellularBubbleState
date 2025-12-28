@@ -10,9 +10,9 @@ static constexpr int t = -1;   //# shortcut for Tower
 static constexpr int b = -2;   //# shortcut for Bubble
 
 struct rule{
-    size_t matrixSize=3;
-    std::array<int,25> rows;
-    int result;
+    uint8_t matrixSize=3;
+    std::array<int_fast8_t,25> rows;
+    int_fast8_t result;
     unsigned int hash()const;
 };
 
