@@ -24,8 +24,9 @@ namespace std{
     }
     };
 }
+#define MEMSIZE 112
 struct arena{
-    std::array<rule,1000> ruleArray;
+    std::array<rule,MEMSIZE> ruleArray;
     void push_back(rule element);
     void clear();
     int ptr=0;
@@ -61,10 +62,8 @@ public:
     void removeDuplicateRules();
     rule rotate(rule& r);
     arena getRules();
-    int_fast8_t getTile(int xpos,int ypos,int xsize,int ysize,std::array<int_fast8_t,144> &board);
-    bool matchMatrix(int posx,int posy,std::array<int_fast8_t,144> &board,rule &r);
-    bool match3x3(int posx,int posy,std::array<int_fast8_t,144> &board,rule &r);
-    bool match5x5(int posx,int posy,std::array<int_fast8_t,144> &board,rule &r);
+    inline int_fast8_t getTile(int xpos,int ypos,int xsize,int ysize,std::array<int_fast8_t,144> &board);
+    inline bool matchMatrix(int posx,int posy,std::array<int_fast8_t,144> &board,rule &r);
     int_fast8_t evaluateTile(int xpos,int ypos,std::array<int_fast8_t,144> &board,Array &target);
     void runStep(std::array<int_fast8_t,144> &board,Array &target);
     Array AutomataStep(Array board);
@@ -74,16 +73,7 @@ public:
 
     Automata();
     ~Automata();
-     int checkRuleForPosStatic(int xpos,int ypos,Array board, Dictionary rules);
-     int checkRuleStatic(Array matchGrid,int matchResult,int xpos,int ypos,int xmark,int ymark,Array board);
-     int getGridTileTypeStatic(int xsize,int ysize,int xpos, int ypos,Array board);
-     Array rotateGrid(Array grid);
-     Array rotate2x2Grid(Array grid);
-     Array rotate3x1Grid(Array grid);
-     Array rotate1x3Grid(Array grid);
-     Array rotate3x3Grid(Array grid);
 
-     Array getMarkIndexes(Array matchGrid);
     
     void _process(double delta) override;
 };
