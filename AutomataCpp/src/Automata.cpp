@@ -28,7 +28,7 @@ void Automata::_bind_methods() {
 
 
 }
-std::vector<rule> rules;
+arena rules;
 
 
 Automata::~Automata() {
@@ -56,14 +56,13 @@ void godot::Automata::addRule(Array r,int result)
 
     }
     rul.result=result;
-    rules.emplace_back(rul);
+    rules.push_back(rul);
 
 
 }
-
 void godot::Automata::compileRuleset()
 {
-    int rl=rules.size();
+    int rl=rules.ptr;
     for (int j=0; j<rl;j++){
         rule nr;
         bool changed=false;
@@ -128,9 +127,9 @@ void godot::Automata::removeDuplicateRules()
 
     std::unordered_map<rule,rule> table;
 
-    for(auto& i : rules){
-        print_line(i.hash());
-        table[i]=i;
+    for(int i=0; i< rules.ptr; i++){
+        print_line(rules[i].hash());
+        table[rules[i]]=rules[i];
     }
     rules.clear();
     for(auto& i:table){
@@ -204,26 +203,26 @@ rule Automata::rotate(rule &r)
 
 void Automata::printRules(){
     UtilityFunctions::print(" rulecount "+String::num(rules.size()));
-    for(auto &i :rules){
+    for(int i=0;i<rules.ptr; i++){
         UtilityFunctions::print("Rule: ");
-        for(int j=0;j<i.matrixSize; j++){
+        for(int j=0;j<rules[i].matrixSize; j++){
             String text="";
-            for(int k=0;k<i.matrixSize; k++){
-               text+= String::num(i.rows[j*i.matrixSize+k])+" , ";
+            for(int k=0;k<rules[i].matrixSize; k++){
+               text+= String::num(rules.ruleArray[i].rows[j*rules.ruleArray[i].matrixSize+k])+" , ";
             }  
             UtilityFunctions::print(text);
         }
 
-        UtilityFunctions::print("Result: "+String::num(i.result));
+        UtilityFunctions::print("Result: "+String::num(rules[i].result));
     }
 
 }
 
 
 
-std::vector<rule> Automata::getRules()
+arena Automata::getRules()
 {
-    std::vector<rule> rules;
+    arena rules;
 
     rule r;
     r.rows={-1,2,-1,
@@ -432,11 +431,11 @@ bool godot::Automata::matchMatrix(int posx, int posy, std::array<int, 144> &boar
 }
 int Automata::evaluateTile(int xpos, int ypos, std::array<int, 144> &board, Array &target)
 {
-    for (rule &j : rules)
+    for (int i=0;i<rules.ptr;i++)
     {
-        if (matchMatrix(xpos, ypos, board, j))
+        if (matchMatrix(xpos, ypos, board, rules[i]))
         {
-            target[xpos + ypos * 12] = j.result;
+            target[xpos + ypos * 12] = rules[i].result;
             break;
         }
     }
@@ -620,4 +619,20 @@ bool operator==(const rule& a, const rule& b) {
         if (a.rows[i] != b.rows[i]) return false;
     }
     return true;
+}
+
+void arena::push_back(rule element)
+{
+    ruleArray[ptr]=element;
+    ptr++;
+}
+
+void arena::clear()
+{
+    ptr=0;
+}
+
+size_t arena::size()
+{
+    return ptr;
 }

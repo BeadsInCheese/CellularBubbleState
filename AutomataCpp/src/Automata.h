@@ -15,6 +15,7 @@ struct rule{
     int result;
     unsigned int hash()const;
 };
+
 namespace std{
     template<>
     struct hash<rule>{
@@ -23,6 +24,16 @@ namespace std{
     }
     };
 }
+struct arena{
+    std::array<rule,1000> ruleArray;
+    void push_back(rule element);
+    void clear();
+    int ptr=0;
+    rule& operator[](int index){
+        return ruleArray[index];
+    }
+    size_t size();
+};
 int unsafePow(unsigned int a,unsigned int b);
 bool operator ==(const rule&,const rule&);
 
@@ -49,7 +60,7 @@ public:
     void compileRuleset();
     void removeDuplicateRules();
     rule rotate(rule& r);
-    std::vector<rule> getRules();
+    arena getRules();
     int getTile(int xpos,int ypos,int xsize,int ysize,std::array<int,144> &board);
     bool matchMatrix(int posx,int posy,std::array<int,144> &board,rule &r);
     bool match3x3(int posx,int posy,std::array<int,144> &board,rule &r);
