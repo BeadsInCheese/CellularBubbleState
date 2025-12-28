@@ -61,12 +61,12 @@ public:
     void removeDuplicateRules();
     rule rotate(rule& r);
     arena getRules();
-    int getTile(int xpos,int ypos,int xsize,int ysize,std::array<int,144> &board);
-    bool matchMatrix(int posx,int posy,std::array<int,144> &board,rule &r);
-    bool match3x3(int posx,int posy,std::array<int,144> &board,rule &r);
-    bool match5x5(int posx,int posy,std::array<int,144> &board,rule &r);
-    int evaluateTile(int xpos,int ypos,std::array<int,144> &board,Array &target);
-    void runStep(std::array<int,144> &board,Array &target);
+    int_fast8_t getTile(int xpos,int ypos,int xsize,int ysize,std::array<int_fast8_t,144> &board);
+    bool matchMatrix(int posx,int posy,std::array<int_fast8_t,144> &board,rule &r);
+    bool match3x3(int posx,int posy,std::array<int_fast8_t,144> &board,rule &r);
+    bool match5x5(int posx,int posy,std::array<int_fast8_t,144> &board,rule &r);
+    int_fast8_t evaluateTile(int xpos,int ypos,std::array<int_fast8_t,144> &board,Array &target);
+    void runStep(std::array<int_fast8_t,144> &board,Array &target);
     Array AutomataStep(Array board);
 
 

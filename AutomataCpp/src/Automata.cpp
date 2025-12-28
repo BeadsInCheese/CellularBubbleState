@@ -370,14 +370,14 @@ Automata::Automata() {
     UtilityFunctions::print("Automata rules initiated rulecount "+String::num(r.size()));
     rules=r;
 }
-int Automata::getTile(int xpos,int ypos,int xsize,int ysize,std::array<int,144> &board){
+int_fast8_t Automata::getTile(int xpos,int ypos,int xsize,int ysize,std::array<int_fast8_t,144> &board){
     if (xpos < 0 || ypos < 0 || xpos >= xsize || ypos >= ysize) {
         return 5;
     }
     return board[xpos + ypos * ysize];
 }
 
-bool Automata::match3x3(int posx,int posy,std::array<int,144> &board,rule &r){
+bool Automata::match3x3(int posx,int posy,std::array<int_fast8_t,144> &board,rule &r){
     
     for(int i=0; i<3;i++){
         for(int j=0; j<3;j++){
@@ -400,7 +400,7 @@ bool Automata::match3x3(int posx,int posy,std::array<int,144> &board,rule &r){
 
     
 }
-bool godot::Automata::match5x5(int posx, int posy, std::array<int, 144> &board, rule &r)
+bool godot::Automata::match5x5(int posx, int posy, std::array<int_fast8_t, 144> &board, rule &r)
 {
     for(int i=0; i<5;i++){
         for(int j=0; j<5;j++){
@@ -421,7 +421,7 @@ bool godot::Automata::match5x5(int posx, int posy, std::array<int, 144> &board, 
     }
     return true;
 }
-bool godot::Automata::matchMatrix(int posx, int posy, std::array<int, 144> &board, rule &r){
+bool godot::Automata::matchMatrix(int posx, int posy, std::array<int_fast8_t, 144> &board, rule &r){
     if(r.matrixSize==3){
         return match3x3( posx,  posy,  board, r);
     }else{
@@ -429,7 +429,7 @@ bool godot::Automata::matchMatrix(int posx, int posy, std::array<int, 144> &boar
     }
 
 }
-int Automata::evaluateTile(int xpos, int ypos, std::array<int, 144> &board, Array &target)
+int_fast8_t Automata::evaluateTile(int xpos, int ypos, std::array<int_fast8_t, 144> &board, Array &target)
 {
     for (int i=0;i<rules.ptr;i++)
     {
@@ -444,7 +444,7 @@ int Automata::evaluateTile(int xpos, int ypos, std::array<int, 144> &board, Arra
 
     return 0;
 }
-void Automata::runStep(std::array<int,144> &board,Array& target){
+void Automata::runStep(std::array<int_fast8_t,144> &board,Array& target){
     for(int i=0; i< board.size(); i++){
         int x=i%12;
         int y=i/12;
@@ -454,7 +454,7 @@ void Automata::runStep(std::array<int,144> &board,Array& target){
 
 }
 Array Automata::AutomataStep(Array board){
-    std::array<int, 144> b;
+    std::array<int_fast8_t, 144> b;
     for(int i=0; i<144; i++){
         b[i]=int(board[i]);
 
