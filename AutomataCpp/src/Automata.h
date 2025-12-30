@@ -4,6 +4,8 @@
 #include <godot_cpp/classes/node2d.hpp>
 #include <map>
 #include <vector>
+#include <thread>
+#include <chrono>
 
 static constexpr int o = 5; //# shortcut for Any
 static constexpr int t = -1;   //# shortcut for Tower
@@ -15,6 +17,9 @@ struct rule{
     int_fast8_t result;
     unsigned int hash()const;
 };
+
+
+
 
 namespace std{
     template<>
@@ -40,8 +45,46 @@ bool operator ==(const rule&,const rule&);
 
 
 namespace godot {
+class Automata;
+struct work{
+    int start;
+    int end;
 
-  
+};
+class threadPool;
+class worker{
+    public:
+    std::thread workerThread;
+    threadPool* pool;
+    bool executing=false;
+    work wrk;
+    worker(threadPool* pool);
+    void kernel();    
+};
+class threadPool{
+    public:
+    size_t threadCount;
+    bool dispatchStart=false;
+    std::condition_variable dispatchCV;
+    std::condition_variable doneCV;
+    std::mutex dispatch;
+    std::mutex done;
+    bool executing=false;
+    bool stop=false;
+    size_t workersFinished=0;
+    threadPool();
+    ~threadPool();
+    const std::array<int_fast8_t,144>* board;
+     std::array<int_fast8_t,144>* target;
+    std::vector<worker> pool;
+    size_t workloadSize;
+    size_t workloadLastSize;
+    void runStepThreaded(const std::array<int_fast8_t,144> &board,std::array<int_fast8_t,144> &target);
+    void workerDone();
+};
+inline int_fast8_t getTile(int xpos,int ypos,int xsize,int ysize,const std::array<int_fast8_t,144> &board);
+inline bool matchMatrix(int posx,int posy,const std::array<int_fast8_t,144> &board,const rule &r);
+int_fast8_t evaluateTile(int xpos,int ypos,const std::array<int_fast8_t,144> &board,std::array<int_fast8_t,144> &target);
 class Automata : public Node2D {
     GDCLASS(Automata, Node2D)
 
@@ -54,18 +97,17 @@ protected:
     static void _bind_methods();
 
 public:
-
+    threadPool pool=threadPool();
     void printRules();
+    void stats();
     void clearRuleset();
     void addRule(Array Rules,int result);
     void compileRuleset();
     void removeDuplicateRules();
     rule rotate(rule& r);
-    arena getRules();
-    inline int_fast8_t getTile(int xpos,int ypos,int xsize,int ysize,std::array<int_fast8_t,144> &board);
-    inline bool matchMatrix(int posx,int posy,std::array<int_fast8_t,144> &board,rule &r);
-    int_fast8_t evaluateTile(int xpos,int ypos,std::array<int_fast8_t,144> &board,Array &target);
-    void runStep(std::array<int_fast8_t,144> &board,Array &target);
+    std::vector<rule> getRules();
+
+    void runStep(const std::array<int_fast8_t,144> &board,std::array<int_fast8_t,144> &target);
     Array AutomataStep(Array board);
 
 
@@ -77,6 +119,8 @@ public:
     
     void _process(double delta) override;
 };
+
+
 }
 
 

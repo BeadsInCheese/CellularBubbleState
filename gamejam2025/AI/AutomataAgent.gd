@@ -30,7 +30,7 @@ func init(board:Board):
 	#automata.addRule([1,1,1, 1,1,1, 1,1,1],0)
 	#automata.compileRuleset()
 	#automata.printRules()
-
+	automata.stats()
 var game_board: Board
 	
 func get_custom_class_name():
