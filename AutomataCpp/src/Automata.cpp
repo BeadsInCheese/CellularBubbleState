@@ -6,6 +6,8 @@ using namespace godot;
 void Automata::_bind_methods() {
     
     ClassDB::bind_method(D_METHOD("AutomataStep", "board"),&Automata::AutomataStep);
+    ClassDB::bind_method(D_METHOD("AutomataStepPackedByte", "board"),&Automata::AutomataStepPackedByte);
+    ClassDB::bind_method(D_METHOD("simulateAutomataStepAndReturnActions", "board", "changes"),&Automata::simulateAutomataStepAndReturnActions);
     ClassDB::bind_method(D_METHOD("printRules"),&Automata::printRules);
 
     ClassDB::bind_method(D_METHOD("clearRuleset"),&Automata::clearRuleset);
@@ -435,11 +437,12 @@ int_fast8_t godot::evaluateTile(int xpos, int ypos,const std::array<int_fast8_t,
 {
     for (const rule& i:rules)
     {
-        if (matchMatrix(xpos, ypos, board, i))
+        if (matchMatrix(xpos, ypos, board, i))[[unlikely]]
         {
             target[xpos + ypos * 12] = i.result;
             break;
         }
+        
     }
 
     
@@ -474,11 +477,44 @@ Array Automata::AutomataStep(Array board){
     return board;
 
 }
+godot::PackedByteArray godot::Automata::simulateAutomataStepAndReturnActions(godot::PackedByteArray board,Array changes)
+{
+    std::lock_guard<std::mutex> lock(automata_mutex);
+    std::array<int_fast8_t, 144> b;
+    memcpy(b.data(),board.ptr(),b.size()*sizeof(int_fast8_t));
+    std::array<int_fast8_t, 144> target;
+    memcpy(target.data(),b.data(),b.size()*sizeof(int_fast8_t));
 
 
+    
+    pool.runStepThreaded(b,target);
+    memcpy(board.ptrw(),target.data(),target.size()*sizeof(int_fast8_t));
+    
+    for(int i=0; i<144; i++){
+        if(b[i]!=target[i]){
+            godot::Array entry;
+            entry.resize(3);
+            entry[0]=i;
+            entry[2]=b[i];
+            entry[1]=target[i];
+            changes.append(entry);
 
+        }
+    }
 
-
+    return board;
+}
+godot::PackedByteArray Automata::AutomataStepPackedByte(godot::PackedByteArray board)
+{
+    std::lock_guard<std::mutex> lock(automata_mutex);
+    std::array<int_fast8_t, 144> b;
+    memcpy(b.data(),board.ptr(),b.size()*sizeof(int_fast8_t));
+    std::array<int_fast8_t, 144> target;
+    memcpy(target.data(),b.data(),b.size()*sizeof(int_fast8_t));
+    pool.runStepThreaded(b,target);
+    memcpy(board.ptrw(),target.data(),target.size()*sizeof(int_fast8_t));
+    return board;
+}
 
 void Automata::_process(double delta) {
 }

@@ -81,6 +81,7 @@ class threadPool{
     size_t workloadLastSize;
     void runStepThreaded(const std::array<int_fast8_t,144> &board,std::array<int_fast8_t,144> &target);
     void workerDone();
+
 };
 inline int_fast8_t getTile(int xpos,int ypos,int xsize,int ysize,const std::array<int_fast8_t,144> &board);
 inline bool matchMatrix(int posx,int posy,const std::array<int_fast8_t,144> &board,const rule &r);
@@ -109,7 +110,8 @@ public:
 
     void runStep(const std::array<int_fast8_t,144> &board,std::array<int_fast8_t,144> &target);
     Array AutomataStep(Array board);
-
+    godot::PackedByteArray simulateAutomataStepAndReturnActions(godot::PackedByteArray board,Array changes);
+    godot::PackedByteArray AutomataStepPackedByte(godot::PackedByteArray board);
 
 
 
