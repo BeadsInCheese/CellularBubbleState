@@ -10,7 +10,7 @@
 static constexpr int o = 5; //# shortcut for Any
 static constexpr int t = -1;   //# shortcut for Tower
 static constexpr int b = -2;   //# shortcut for Bubble
-
+#define boardsize 12
 struct rule{
     uint8_t matrixSize=3;
     std::array<int_fast8_t,25> rows;
@@ -83,8 +83,10 @@ class threadPool{
     void workerDone();
 
 };
-inline int_fast8_t getTile(int xpos,int ypos,int xsize,int ysize,const std::array<int_fast8_t,144> &board);
-inline bool matchMatrix(int posx,int posy,const std::array<int_fast8_t,144> &board,const rule &r);
+static std::array<int_fast8_t, 256> boardPadded;
+constexpr int getPaddedIndex(int index);
+inline int_fast8_t getTile(int pos,const std::array<int_fast8_t,144> &board);
+inline bool matchMatrix(int pos,const std::array<int_fast8_t,144> &board,const rule &r);
 int_fast8_t evaluateTile(int xpos,int ypos,const std::array<int_fast8_t,144> &board,std::array<int_fast8_t,144> &target);
 class Automata : public Node2D {
     GDCLASS(Automata, Node2D)

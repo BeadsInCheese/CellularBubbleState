@@ -402,21 +402,30 @@ Automata::Automata() {
     auto r=getRules();
     UtilityFunctions::print("Automata rules initiated rulecount "+String::num(r.size()));
     rules=r;
-}
-inline int_fast8_t godot::getTile(int xpos,int ypos,int xsize,int ysize,const std::array<int_fast8_t,144> &board){
-    if (xpos < 0 || ypos < 0 || xpos >= xsize || ypos >= ysize) {
-        return 5;
-    }
-    return board[xpos + ypos * ysize];
+    boardPadded.fill(5);
 }
 
-inline bool godot::matchMatrix(int posx, int posy,const std::array<int_fast8_t, 144> &board,const rule &r){
+ constexpr int godot::getPaddedIndex(int index)
+{
+    int pad=  2;
+    int x = index % boardsize;
+    int y = index/boardsize;
+    return pad+x+(y+pad)*(boardsize+pad*2);
+}
+
+inline int_fast8_t godot::getTile(int pos, const std::array<int_fast8_t, 144> &board)
+{
+    return boardPadded[pos];
+}
+   
+inline bool godot::matchMatrix(int pos,const std::array<int_fast8_t, 144> &board,const rule &r){
      int div=(r.matrixSize/2);
+     int pid=getPaddedIndex(pos);
     for(int i=0; i<r.matrixSize;i++){
         for(int j=0; j<r.matrixSize;j++){
            
             int a=r.rows[i+j*r.matrixSize];
-            int b=getTile(posx-(div)+i,posy+j-(div),12,12,board);
+            int b=getTile(pid+j-(div)+(i-(div))*16,board);
             
             if(a==-1){
                 continue;
@@ -435,11 +444,12 @@ inline bool godot::matchMatrix(int posx, int posy,const std::array<int_fast8_t, 
 }
 int_fast8_t godot::evaluateTile(int xpos, int ypos,const std::array<int_fast8_t, 144> &board,  std::array<int_fast8_t,144> &target)
 {
+    int pos=xpos+ ypos*boardsize;
     for (const rule& i:rules)
     {
-        if (matchMatrix(xpos, ypos, board, i))[[unlikely]]
+        if (matchMatrix(pos, board, i))
         {
-            target[xpos + ypos * 12] = i.result;
+            target[pos] = i.result;
             break;
         }
         
@@ -462,12 +472,12 @@ static std::mutex automata_mutex;
 Array Automata::AutomataStep(Array board){
     std::lock_guard<std::mutex> lock(automata_mutex);
     std::array<int_fast8_t, 144> b;
-    for(int i=0; i<144; i++){
-        b[i]=int(board[i]);
-
-    }
     std::array<int_fast8_t, 144> target;
-    memcpy(target.data(),b.data(),b.size()*sizeof(int_fast8_t));
+    
+    for(int i=0;i<boardsize*boardsize;i++){
+        boardPadded[getPaddedIndex(i)]=board[i];
+        target[i]=board[i];
+    }
     pool.runStepThreaded(b,target);
     //runStep(b,target);
     for(int i=0; i<144; i++){
@@ -477,13 +487,18 @@ Array Automata::AutomataStep(Array board){
     return board;
 
 }
+
+
 godot::PackedByteArray godot::Automata::simulateAutomataStepAndReturnActions(godot::PackedByteArray board,Array changes)
 {
     std::lock_guard<std::mutex> lock(automata_mutex);
     std::array<int_fast8_t, 144> b;
+    for(int i=0;i<boardsize*boardsize;i++){
+        boardPadded[getPaddedIndex(i)]=board[i];
+    }
     memcpy(b.data(),board.ptr(),b.size()*sizeof(int_fast8_t));
     std::array<int_fast8_t, 144> target;
-    memcpy(target.data(),b.data(),b.size()*sizeof(int_fast8_t));
+    memcpy(target.data(),board.ptr(),b.size()*sizeof(int_fast8_t));
 
 
     
@@ -508,9 +523,11 @@ godot::PackedByteArray Automata::AutomataStepPackedByte(godot::PackedByteArray b
 {
     std::lock_guard<std::mutex> lock(automata_mutex);
     std::array<int_fast8_t, 144> b;
-    memcpy(b.data(),board.ptr(),b.size()*sizeof(int_fast8_t));
+    for(int i=0;i<boardsize*boardsize;i++){
+        boardPadded[getPaddedIndex(i)]=board[i];
+    }
     std::array<int_fast8_t, 144> target;
-    memcpy(target.data(),b.data(),b.size()*sizeof(int_fast8_t));
+    memcpy(target.data(),board.ptr(),b.size()*sizeof(int_fast8_t));
     pool.runStepThreaded(b,target);
     memcpy(board.ptrw(),target.data(),target.size()*sizeof(int_fast8_t));
     return board;
