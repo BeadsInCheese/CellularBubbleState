@@ -21,7 +21,7 @@ func _process(delta: float) -> void:
 	pass
 
 
-func Larry_button_pressed(opponent) -> void:
+func fight_button_pressed(opponent) -> void:
 	await adventure_dialogue_decode(opponent)
 	Settings.P1Index=0
 	Settings.P2Index=get_bot(opponent)

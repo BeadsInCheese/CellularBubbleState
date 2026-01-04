@@ -109,4 +109,9 @@ text = "klvöksopfdkspofkopakfpoa"
 stream = ExtResource("6_d6slh")
 bus = &"SFX"
 
-[connection signal="buttonPressed" from="LevelButton" to="." method="Larry_button_pressed"]
+[connection signal="buttonPressed" from="LevelButton" to="." method="fight_button_pressed"]
+[connection signal="buttonPressed" from="LevelButton2" to="." method="fight_button_pressed"]
+[connection signal="buttonPressed" from="LevelButton3" to="." method="fight_button_pressed"]
+[connection signal="buttonPressed" from="LevelButton4" to="." method="fight_button_pressed"]
+[connection signal="buttonPressed" from="LevelButton5" to="." method="fight_button_pressed"]
+[connection signal="buttonPressed" from="LevelButton6" to="." method="fight_button_pressed"]

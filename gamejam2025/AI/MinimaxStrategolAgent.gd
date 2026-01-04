@@ -15,6 +15,7 @@ func makeMove(observation: Board):
 	
 	while thread.is_alive():
 		if observation == null or not observation.exists():
+			thread.free()
 			break
 
 		await observation.get_tree().process_frame
