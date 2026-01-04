@@ -69,7 +69,7 @@ func minimax_step() -> void:
 	
 	calculated_action = minimax_iterative(initial_state)
 
-func minimax_iterative(initial_state: Array):
+func minimax_iterative(initial_state: PackedByteArray):
 	var best_action_index = 0
 	minimax.start_time = Time.get_ticks_msec()
 	#minimax.eval_hits = 0
@@ -90,30 +90,31 @@ func minimax_iterative(initial_state: Array):
 
 # Simulate the result of an action on the board state
 # Returns the resulting board state and the separate actions made on the board by this action
-func result(state: Array, action: Array, player_state: String) -> Array:
-	var tempBoard = state.duplicate(true)
+func result(state: PackedByteArray, action: Array, player_state: String) -> Array:
+	var tempBoard: PackedByteArray = state.duplicate()
 	var tileType = 3 if player_state.begins_with("P2") else 1
 	tempBoard[action[0]] = tileType
 	
-	var resultActions = [[action[0], tileType, 0]] # this action and the resulting automata actions
+	var resultActions:Array = [[action[0], tileType, 0]] # this action and the resulting automata actions
 	
 	if player_state.ends_with("A"):
-		var results = game_board.automataAgent.simulateAutomataStepAndReturnActions(tempBoard)
-		tempBoard = results[0]
-		resultActions.append_array(results[1]) # add automata actions to resultActions
+		tempBoard = game_board.automataAgent.automata.simulateAutomataStepAndReturnActions(tempBoard,resultActions)
+
+
+		#resultActions.append_array(results) # add automata actions to resultActions
 	
 	return [tempBoard, resultActions]
 
 
 # Check if the game has reached a terminal state
-func terminal(state: Array) -> bool:
+func terminal(state: PackedByteArray) -> bool:
 	for tile in state:
 		if (tile == 0):
 			return false
 	return true
 
 # Evaluate the board state
-func utility(state: Array) -> float:
+func utility(state: PackedByteArray) -> float:
 	var score = 0
 
 	for tile in state:
@@ -131,7 +132,7 @@ func utility(state: Array) -> float:
 	return score
 
 # Get all possible valid moves on the current board
-func possible_actions(state: Array, max_actions: int) -> Array[Array]:
+func possible_actions(state: PackedByteArray, max_actions: int) -> Array[Array]:
 	var actions: Array[Array] = []
 
 	for i in len(state):
@@ -146,7 +147,7 @@ func possible_actions(state: Array, max_actions: int) -> Array[Array]:
 	actions = actions.slice(0, max_actions)
 	return actions
 
-func recalc_distances_to_latest_tiles(state: Array):
+func recalc_distances_to_latest_tiles(state: PackedByteArray):
 	distances_to_latest_tiles = []
 	distances_to_latest_tiles.resize(len(state))
 	for i in len(state):

@@ -46,7 +46,7 @@ func _init(result_func: Callable, terminal_func: Callable, utility_func: Callabl
 
 
 ## Find the best action from the current state using minimax with alpha-beta pruning.
-func action(state: Array, current_turn: int, depth: int, max_actions: int, max_actions_decay: int) -> Array:
+func action(state: PackedByteArray, current_turn: int, depth: int, max_actions: int, max_actions_decay: int) -> Array:
 	var is_adversary = turn_order[current_turn].begins_with("P2")
 	
 	var initial_zobrist_key = generate_zobrist_key(state, current_turn)
@@ -93,7 +93,7 @@ func action(state: Array, current_turn: int, depth: int, max_actions: int, max_a
 	return optimal_action
 
 ## Recursively evaluate the state using minimax with alpha-beta pruning.
-func minimax(state: Array, turn: int, alpha: float, beta: float, current_depth: int, max_actions: int, zobrist_key: int) -> float:
+func minimax(state: PackedByteArray, turn: int, alpha: float, beta: float, current_depth: int, max_actions: int, zobrist_key: int) -> float:
 	# If the board has been closed, prevent further calculations
 	if not Board.boardExists or timeout:
 		return 0
@@ -169,11 +169,11 @@ class ActionContainer:
 	var stored_eval_exists: bool
 	var stored_eval_depth: int
 	var new_zobrist_key: int
-	var result_state: Array
+	var result_state: PackedByteArray
 	var result_actions: Array
 
 
-func get_possible_action_containers(state: Array, max_actions: int, curr_zobrist_key: int, current_turn: int, is_adversary: bool) -> Array[ActionContainer]:
+func get_possible_action_containers(state: PackedByteArray, max_actions: int, curr_zobrist_key: int, current_turn: int, is_adversary: bool) -> Array[ActionContainer]:
 	var containers: Array[ActionContainer] = []
 	
 	for action in possible_actions_func.call(state, max_actions):
@@ -187,14 +187,14 @@ func get_possible_action_containers(state: Array, max_actions: int, curr_zobrist
 	
 	return containers
 
-func get_result_state_for_stored_actions(actions: Array, state: Array) -> Array:
-	var new_state = state.duplicate(true)
+func get_result_state_for_stored_actions(actions: Array, state: PackedByteArray) -> Array:
+	var new_state = state.duplicate()
 	for action in actions:
 		new_state[action[0]] = action[1]
 
 	return new_state
 
-func get_container_for_action(action: Array, state: Array, curr_zobrist_key: int, current_turn: int) -> ActionContainer:
+func get_container_for_action(action: Array, state: PackedByteArray, curr_zobrist_key: int, current_turn: int) -> ActionContainer:
 	var container = ActionContainer.new()
 	container.index = action[0]
 	container.dist_from_latest = action[1]
@@ -240,7 +240,7 @@ func init_zobrist():
 	for i in 5: # init other turns
 		zobrist_turns.append(random_64bit_int())
 
-func generate_zobrist_key(state: Array, turn: int) -> int:
+func generate_zobrist_key(state: PackedByteArray, turn: int) -> int:
 	var key = 0
 	
 	for index in len(state):

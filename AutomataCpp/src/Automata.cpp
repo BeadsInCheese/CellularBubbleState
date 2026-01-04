@@ -6,23 +6,17 @@ using namespace godot;
 void Automata::_bind_methods() {
     
     ClassDB::bind_method(D_METHOD("AutomataStep", "board"),&Automata::AutomataStep);
+    ClassDB::bind_method(D_METHOD("AutomataStepPackedByte", "board"),&Automata::AutomataStepPackedByte);
+    ClassDB::bind_method(D_METHOD("simulateAutomataStepAndReturnActions", "board", "changes"),&Automata::simulateAutomataStepAndReturnActions);
     ClassDB::bind_method(D_METHOD("printRules"),&Automata::printRules);
 
     ClassDB::bind_method(D_METHOD("clearRuleset"),&Automata::clearRuleset);
     ClassDB::bind_method(D_METHOD("addRule","pattern","result"),&Automata::addRule);
     ClassDB::bind_method(D_METHOD("compileRuleset"),&Automata::compileRuleset);
+    ClassDB::bind_method(D_METHOD("stats"),&Automata::stats);
 
 
 
-    ClassDB::bind_method(D_METHOD("checkRuleForPos", "xpos", "ypos", "board", "rules"), &Automata::checkRuleForPosStatic);
-    ClassDB::bind_method(D_METHOD("checkRule", "matchGrid", "matchResult", "xpos", "ypos", "xmark", "ymark", "board"), &Automata::checkRuleStatic);
-    ClassDB::bind_method(D_METHOD("getGridTileType", "xsize", "ysize", "xpos", "ypos", "board"), &Automata::getGridTileTypeStatic);
-    ClassDB::bind_method(D_METHOD("rotateGrid", "grid"), &Automata::rotateGrid);
-    ClassDB::bind_method(D_METHOD("rotate2x2Grid", "grid"), &Automata::rotate2x2Grid);
-    ClassDB::bind_method(D_METHOD("rotate3x1Grid", "grid"), &Automata::rotate3x1Grid);
-    ClassDB::bind_method(D_METHOD("rotate1x3Grid", "grid"), &Automata::rotate1x3Grid);
-    ClassDB::bind_method(D_METHOD("rotate3x3Grid", "grid"), &Automata::rotate3x3Grid);
-    ClassDB::bind_method(D_METHOD("getMarkIndexes", "matchGrid"), &Automata::getMarkIndexes);
 
 
 
@@ -56,18 +50,17 @@ void godot::Automata::addRule(Array r,int result)
 
     }
     rul.result=result;
-    rules.emplace_back(rul);
+    rules.push_back(rul);
 
 
 }
-
 void godot::Automata::compileRuleset()
 {
     int rl=rules.size();
     for (int j=0; j<rl;j++){
         rule nr;
         bool changed=false;
-        for(int k=0; k<25; k++){
+        for(int k=0; k<rules[j].matrixSize*rules[j].matrixSize; k++){
             auto x=rules[j].rows[k];
             if(x==2){
 
@@ -128,9 +121,9 @@ void godot::Automata::removeDuplicateRules()
 
     std::unordered_map<rule,rule> table;
 
-    for(auto& i : rules){
-        print_line(i.hash());
-        table[i]=i;
+    for(int i=0; i< rules.size(); i++){
+        print_line(rules[i].hash());
+        table[rules[i]]=rules[i];
     }
     rules.clear();
     for(auto& i:table){
@@ -204,21 +197,60 @@ rule Automata::rotate(rule &r)
 
 void Automata::printRules(){
     UtilityFunctions::print(" rulecount "+String::num(rules.size()));
-    for(auto &i :rules){
+    for(int i=0;i<rules.size(); i++){
         UtilityFunctions::print("Rule: ");
-        for(int j=0;j<i.matrixSize; j++){
+        for(int j=0;j<rules[i].matrixSize; j++){
             String text="";
-            for(int k=0;k<i.matrixSize; k++){
-               text+= String::num(i.rows[j*i.matrixSize+k])+" , ";
+            for(int k=0;k<rules[i].matrixSize; k++){
+               text+= String::num(rules[i].rows[j*rules[i].matrixSize+k])+" , ";
             }  
             UtilityFunctions::print(text);
         }
 
-        UtilityFunctions::print("Result: "+String::num(i.result));
+        UtilityFunctions::print("Result: "+String::num(rules[i].result));
     }
 
 }
 
+void godot::Automata::stats()
+{
+    auto A = std::array<int_fast8_t,144>();
+    auto B = std::array<int_fast8_t,144>();
+
+    auto t1 = std::chrono::high_resolution_clock::now();
+    runStep( B);
+    auto t2 = std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double, std::milli> ms_double = t2 - t1;
+    print_line("singlethread step " + String::num(ms_double.count()) + " ms");
+
+    t1 = std::chrono::high_resolution_clock::now();
+    pool.runStepThreaded( B);
+    t2 = std::chrono::high_resolution_clock::now();
+
+    ms_double = t2 - t1;
+    print_line("threaded step " + String::num(ms_double.count()) + " ms");
+
+
+    t1 = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < 100000; i++) {
+        runStep(B);
+    }
+    t2 = std::chrono::high_resolution_clock::now();
+
+    ms_double = t2 - t1;
+    print_line("singlethread step x100000 " + String::num(ms_double.count()) + " ms");
+
+
+    t1 = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < 100000; i++) {
+        pool.runStepThreaded( B);
+    }
+    t2 = std::chrono::high_resolution_clock::now();
+
+    ms_double = t2 - t1;
+    print_line("threaded step x100000 " + String::num(ms_double.count()) + " ms");
+}
 
 
 std::vector<rule> Automata::getRules()
@@ -370,21 +402,30 @@ Automata::Automata() {
     auto r=getRules();
     UtilityFunctions::print("Automata rules initiated rulecount "+String::num(r.size()));
     rules=r;
-}
-int Automata::getTile(int xpos,int ypos,int xsize,int ysize,std::array<int,144> &board){
-    if (xpos < 0 || ypos < 0 || xpos >= xsize || ypos >= ysize) {
-        return 5;
-    }
-    return board[xpos + ypos * ysize];
+    boardPadded.fill(5);
 }
 
-bool Automata::match3x3(int posx,int posy,std::array<int,144> &board,rule &r){
-    
-    for(int i=0; i<3;i++){
-        for(int j=0; j<3;j++){
-            
-            int a=r.rows[i+j*3];
-            int b=getTile(posx-1+i,posy+j-1,12,12,board);
+ constexpr int godot::getPaddedIndex(int index)
+{
+    int pad=  2;
+    int x = index % boardsize;
+    int y = index/boardsize;
+    return pad+x+(y+pad)*(boardsize+pad*2);
+}
+
+inline int_fast8_t godot::getTile(int pos)
+{
+    return boardPadded[pos];
+}
+   
+inline bool godot::matchMatrix(int pos,const rule &r){
+     int div=(r.matrixSize/2);
+     int pid=getPaddedIndex(pos);
+    for(int i=0; i<r.matrixSize;i++){
+        for(int j=0; j<r.matrixSize;j++){
+           
+            int a=r.rows[i+j*r.matrixSize];
+            int b=getTile(pid+j-(div)+(i-(div))*16);
             
             if(a==-1){
                 continue;
@@ -398,197 +439,98 @@ bool Automata::match3x3(int posx,int posy,std::array<int,144> &board,rule &r){
         
     }
     return true;
-
     
-}
-bool godot::Automata::match5x5(int posx, int posy, std::array<int, 144> &board, rule &r)
-{
-    for(int i=0; i<5;i++){
-        for(int j=0; j<5;j++){
-            
-            int a=r.rows[i+j*5];
-            int b=getTile(posx-2+i,posy+j-2,12,12,board);
-            
-            if(a==-1){
-                continue;
-            }
-            if(b!=a){
-                return false;
-            }
-            
-        }
-        
-        
-    }
-    return true;
-}
-bool godot::Automata::matchMatrix(int posx, int posy, std::array<int, 144> &board, rule &r){
-    if(r.matrixSize==3){
-        return match3x3( posx,  posy,  board, r);
-    }else{
-        return match5x5( posx,  posy,  board, r);
-    }
 
 }
-int Automata::evaluateTile(int xpos, int ypos, std::array<int, 144> &board, Array &target)
+int_fast8_t godot::evaluateTile(int xpos, int ypos, std::array<int_fast8_t,144> &target)
 {
-    for (rule &j : rules)
+    int pos=xpos+ ypos*boardsize;
+    for (const rule& i:rules)
     {
-        if (matchMatrix(xpos, ypos, board, j))
+        if (matchMatrix(pos, i))
         {
-            target[xpos + ypos * 12] = j.result;
+            target[pos] = i.result;
             break;
         }
+        
     }
 
     
 
     return 0;
 }
-void Automata::runStep(std::array<int,144> &board,Array& target){
-    for(int i=0; i< board.size(); i++){
+void Automata::runStep(std::array<int_fast8_t,144> &target ){
+    for(int i=0; i< target.size(); i++){
         int x=i%12;
         int y=i/12;
 
-        evaluateTile(x,y,board,target);
+        evaluateTile(x,y,target);
     }
 
 }
+static std::mutex automata_mutex;
 Array Automata::AutomataStep(Array board){
-    std::array<int, 144> b;
+    std::lock_guard<std::mutex> lock(automata_mutex);
+    std::array<int_fast8_t, 144> b;
+    std::array<int_fast8_t, 144> target;
+    
+    for(int i=0;i<boardsize*boardsize;i++){
+        boardPadded[getPaddedIndex(i)]=board[i];
+        target[i]=board[i];
+    }
+    pool.runStepThreaded(target);
+    //runStep(b,target);
     for(int i=0; i<144; i++){
-        b[i]=int(board[i]);
+        board[i]=int(target[i]);
 
     }
-
-    runStep(b,board);
-
     return board;
 
 }
 
 
+godot::PackedByteArray godot::Automata::simulateAutomataStepAndReturnActions(godot::PackedByteArray board,Array changes)
+{
+    std::lock_guard<std::mutex> lock(automata_mutex);
+    std::array<int_fast8_t, 144> b;
+    for(int i=0;i<boardsize*boardsize;i++){
+        boardPadded[getPaddedIndex(i)]=board[i];
+    }
+    memcpy(b.data(),board.ptr(),b.size()*sizeof(int_fast8_t));
+    std::array<int_fast8_t, 144> target;
+    memcpy(target.data(),board.ptr(),b.size()*sizeof(int_fast8_t));
 
 
+    
+    pool.runStepThreaded(target);
+    memcpy(board.ptrw(),target.data(),target.size()*sizeof(int_fast8_t));
+    
+    for(int i=0; i<144; i++){
+        if(b[i]!=target[i]){
+            godot::Array entry;
+            entry.resize(3);
+            entry[0]=i;
+            entry[2]=b[i];
+            entry[1]=target[i];
+            changes.append(entry);
 
-int Automata::checkRuleForPosStatic(int xpos, int ypos, Array board,Dictionary rules) {
-    for (int idx = 0; idx < rules.size(); ++idx) {
-        Array matchGrid = rules.keys()[idx];
-        Array grid = matchGrid;
-        Array marks = getMarkIndexes(matchGrid);
-
-        for (int rot = 0; rot < 4; ++rot) {
-            Array mark = marks[rot];
-            int result = checkRuleStatic(grid, rules[rules.keys()[idx]], xpos, ypos, mark[0], mark[1], board);
-            if (result != -1) {
-                return result;
-            }
-            if (rot < 3) {
-                grid = rotateGrid(grid);
-            }
         }
     }
-    return -1;
+
+    return board;
 }
-
-int Automata::checkRuleStatic(Array matchGrid, int matchResult, int xpos, int ypos, int xmark, int ymark, Array board) {
-    int matchPlayer = 0;
-    int sizex = ((Array)matchGrid[0]).size();
-    int sizey = matchGrid.size();
-    for (int j = 0; j < sizex; ++j) {
-        for (int i = 0; i < sizey; ++i) {
-            int matchRef = ((Array)matchGrid[i])[j];
-
-            if (matchRef == 5) {
-                continue;
-            }
-            int tile = getGridTileTypeStatic(12, 12, i + xpos - xmark, j + ypos - ymark, board);
-
-            if (matchRef == t) {
-                if ((tile != 1 && tile != 3) || (matchPlayer == 1 && tile == 3) || (matchPlayer == 2 && tile == 1)) {
-                    return -1;
-                }
-                matchPlayer = (tile == 1) ? 1 : 2;
-            } else if (matchRef == b) {
-                if ((tile != 2 && tile != 4) || (matchPlayer == 1 && tile == 4) || (matchPlayer == 2 && tile == 2)) {
-                    return -1;
-                }
-                matchPlayer = (tile == 2) ? 1 : 2;
-            } else if (matchRef != tile) {
-                return -1;
-            }
-        }
+godot::PackedByteArray Automata::AutomataStepPackedByte(godot::PackedByteArray board)
+{
+    std::lock_guard<std::mutex> lock(automata_mutex);
+    std::array<int_fast8_t, 144> b;
+    for(int i=0;i<boardsize*boardsize;i++){
+        boardPadded[getPaddedIndex(i)]=board[i];
     }
-    if (matchResult == b) {
-        return (matchPlayer == 1) ? 2 : 4;
-    }
-    if (matchResult == t) {
-        return (matchPlayer == 1) ? 1 : 3;
-    }
-    return matchResult;
-}
-
-int Automata::getGridTileTypeStatic(int xsize, int ysize, int xpos, int ypos, Array board) {
-    if (xpos < 0 || ypos < 0 || xpos >= xsize || ypos >= ysize) {
-        return 5;
-    }
-    return board[xpos + ypos * ysize];
-}
-
-Array Automata::rotateGrid(Array grid) {
-    int size = grid.size();
-    if (size == 2) {
-        return rotate2x2Grid(grid);
-    } else if (size == 1) {
-        return rotate1x3Grid(grid);
-    } else if (size == 3 && ((Array)grid[0]).size() == 1) {
-        return rotate3x1Grid(grid);
-    } else {
-        return rotate3x3Grid(grid);
-    }
-}
-
-Array Automata::rotate2x2Grid(Array grid) {
-    Array rotated_grid;
-    rotated_grid.append(Array::make(((Array)grid[0])[1], ((Array)grid[1])[1]));
-    rotated_grid.append(Array::make(((Array)grid[0])[0], ((Array)grid[1])[0]));
-    return rotated_grid;
-}
-
-Array Automata::rotate3x1Grid(Array grid) {
-    Array inner_array;
-    inner_array.append(((Array)grid[2])[0]);
-    inner_array.append(((Array)grid[1])[0]);
-    inner_array.append(((Array)grid[0])[0]);
-    Array outer_array;
-    outer_array.append(inner_array);
-    return outer_array;
-}
-
-Array Automata::rotate1x3Grid(Array grid) {
-    return Array::make(Array::make(((Array)grid[0])[0]), Array::make(((Array)grid[0])[1]), Array::make(((Array)grid[0])[2]));
-}
-
-Array Automata::rotate3x3Grid(Array grid) {
-    Array result;
-    for (int i = 0; i < 3; ++i) {
-        result.append(Array());
-        for (int j = 0; j < 3; ++j) {
-            ((Array)result[i]).append(((Array)grid[j])[2 - i]);
-        }
-    }
-    return result;
-}
-
-Array Automata::getMarkIndexes(Array matchGrid) {
-    int size = matchGrid.size();
-    if (size == 2) {
-        return Array::make(Array::make(0, 0), Array::make(1, 0), Array::make(1, 1), Array::make(0, 1));
-    } else if (size == 1) {
-        return Array::make(Array::make(0, 0), Array::make(0, 0), Array::make(0, 2), Array::make(2, 0));
-    } else {
-        return Array::make(Array::make(1, 1), Array::make(1, 1), Array::make(1, 1), Array::make(1, 1));
-    }
+    std::array<int_fast8_t, 144> target;
+    memcpy(target.data(),board.ptr(),b.size()*sizeof(int_fast8_t));
+    pool.runStepThreaded(target);
+    memcpy(board.ptrw(),target.data(),target.size()*sizeof(int_fast8_t));
+    return board;
 }
 
 void Automata::_process(double delta) {
@@ -621,3 +563,110 @@ bool operator==(const rule& a, const rule& b) {
     }
     return true;
 }
+
+void arena::push_back(rule element)
+{
+    ruleArray[ptr]=element;
+    ptr++;
+}
+
+void arena::clear()
+{
+    ptr=0;
+}
+
+size_t arena::size()
+{
+    return ptr;
+}
+
+void worker::kernel()
+{
+        while(true){
+            std::unique_lock<std::mutex> lk(pool->dispatch); 
+            pool->dispatchCV.wait(lk, [&]{ return (pool->dispatchStart&&!executing) || pool->stop; });
+            if (pool->stop) return;
+            executing=true;
+            lk.unlock();
+
+                for(int i=wrk.start;i<wrk.end;i++){
+                    
+                    evaluateTile(i%12,i/12,*pool->target);
+                  //  print_line(i,"  ",wrk.start,"-",wrk.end);
+                }
+            pool->workerDone();
+        }
+
+
+    }
+godot::worker::worker(threadPool* pool):workerThread(&worker::kernel,this), pool(pool){}
+    godot::threadPool::threadPool()
+    {
+        threadCount=std::max((int)std::thread::hardware_concurrency(),1);
+        pool.reserve(threadCount);
+        workloadSize=144/threadCount;
+        workloadLastSize=144%threadCount;
+        for(int i=0;i<threadCount;i++){
+            pool.emplace_back(this);
+            pool[i].wrk.start=i*workloadSize+std::min(i,(int)workloadLastSize);
+            pool[i].wrk.end=pool[i].wrk.start+(i<workloadLastSize? 1+workloadSize:workloadSize);
+        }
+
+    }
+
+    godot::threadPool::~threadPool(){ 
+    { 
+        std::lock_guard<std::mutex> lk(dispatch); 
+        stop = true; 
+        doneCV.notify_all();
+
+    } 
+    dispatchCV.notify_all();  
+    for (auto& w : pool) { 
+        if (w.workerThread.joinable()) {
+            w.workerThread.join();
+
+        }
+            
+    } 
+}
+static std::mutex call;
+    void godot::threadPool::runStepThreaded(std::array<int_fast8_t,144> &target)
+    {
+        std::lock_guard<std::mutex> guard(call);
+        for(auto& i : pool){
+            i.executing=false;
+        }
+       { 
+        std::lock_guard<std::mutex> guard(done);
+        workersFinished = 0; 
+        }
+        { 
+            std::lock_guard<std::mutex> lk(dispatch); 
+            this->target=&target;
+
+            
+ 
+            dispatchStart = true; 
+        }
+        dispatchCV.notify_all();
+        executing=true;
+        std::unique_lock<std::mutex> lock(done);
+        doneCV.wait(lock, [&]{ return workersFinished >= threadCount; });
+        {
+            std::lock_guard<std::mutex> lk(dispatch);
+            dispatchStart = false;
+        }
+        executing=false;
+
+    }
+
+    void godot::threadPool::workerDone()
+    {
+        {
+            std::lock_guard<std::mutex> guard(done);
+            workersFinished+=1;
+            
+        }
+        doneCV.notify_one();
+    }

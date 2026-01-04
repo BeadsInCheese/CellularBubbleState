@@ -19,10 +19,17 @@ func loadRuleset():
 	for rule in ruleset:
 		automata.addRule(rule[0],rule[1])
 	automata.compileRuleset()
-
+func fastStep(board:PackedByteArray):
+	return automata.AutomataStepPackedByte(board)
+func packedByteToArray(arr:PackedByteArray):
+	var ret=[]
+	for i in arr:
+		ret.append(i)
+	return ret
 func init(board:Board):
 	game_board=board
 	automata=board.get_child(0)
+	
 	automata.printRules()
 	if loadCustomRuleset:
 		loadRuleset()
@@ -30,7 +37,9 @@ func init(board:Board):
 	#automata.addRule([1,1,1, 1,1,1, 1,1,1],0)
 	#automata.compileRuleset()
 	#automata.printRules()
-
+	#automata.stats()
+	#var test:PackedByteArray=PackedByteArray(board.asArray())
+	#fastStep(test)
 var game_board: Board
 	
 func get_custom_class_name():
@@ -43,8 +52,11 @@ func automata_step() -> void:
 
 	var baseGrid = game_board.getBoardCopy()
 	var tempGrid = baseGrid.duplicate(true)
-	var result=automata.AutomataStep(tempGrid)
+	automata.AutomataStep(tempGrid)
+	#tempGrid = automata.AutomataStepPackedByte(tempGrid) 
+
 	
+
 	for i in len(tempGrid):
 		var currentTile = game_board.gridList[i].tileType
 		var newTile = tempGrid[i]
@@ -52,19 +64,20 @@ func automata_step() -> void:
 		if currentTile != newTile:
 			game_board.gridList[i].setTileType(newTile, true)
 
-static func simulateAutomataStep(board: Array):
-	board = automata.AutomataStep(board)
+static func simulateAutomataStep(board: PackedByteArray):
+	board = automata.AutomataStepPackedByte(board)
 
-static func simulateAutomataStepAndReturnActions(board: Array) -> Array:
-	var oldBoard = board.duplicate()
-	var newBoard = automata.AutomataStep(board)
-	var automataActions = []
+static func simulateAutomataStepAndReturnActions(board: PackedByteArray) -> Array:
+
+	#var newBoard = automata.AutomataStepPackedByte(board)
+	#var automataActions = []
 	
-	for i in len(oldBoard):
-		var oldTile = oldBoard[i]
-		var newTile = newBoard[i]
-		
-		if oldTile != newTile:
-			automataActions.append([i, newTile, oldTile])
-	
-	return [newBoard, automataActions]
+	#for i in len(oldBoard):
+	#	var oldTile = oldBoard[i]
+	#	var newTile = newBoard[i]
+	#	
+	#	if oldTile != newTile:
+	#		automataActions.append([i, newTile, oldTile])
+	var changes=[]
+	board=automata.simulateAutomataStepAndReturnActions(board,changes)
+	return changes#[newBoard, automataActions]

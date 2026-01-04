@@ -13,7 +13,7 @@ func init(board: Board):
 	max_depth = 3
 
 # Get all possible valid moves on the current board
-func possible_actions(state: Array, max_actions: int) -> Array[Array]:
+func possible_actions(state: PackedByteArray, max_actions: int) -> Array[Array]:
 	var actions: Array[Array] = []
 
 	for i in len(state):
