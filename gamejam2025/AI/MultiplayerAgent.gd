@@ -1,10 +1,9 @@
 extends AgentBase
 class_name MultiplayerAgent
 
-var client = StreamPeerTCP.new()
 var connected = true
-var latest_board_history = null
 
+var latest_board_history = null
 var latest_tile_index = -1
 var latest_tile_type = -1
 
