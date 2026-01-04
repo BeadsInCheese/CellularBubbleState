@@ -150,21 +150,21 @@ func updateCursor():
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	boardExists = true
-	for i in range(xsize):
-		for j in range(ysize):
-			var x:Bubble=bubble.instantiate()
-			x.tileType=0
-			x.tileIndex=j+i*xsize
+	for j in range(ysize):
+		for i in range(xsize):
+			var b:Bubble=bubble.instantiate()
+			b.tileType=0
+			b.tileIndex=i+j*xsize
 			
-			add_child(x)
-			gridList.append(x)
+			add_child(b)
+			gridList.append(b)
 			
 	boardHistory.append(DataUtility.get_board_string(gridList,currentTurn))
 	
 	if mp:
 		p1AgentInstance = playerAgent.new()
 		p2AgentInstance = multiplayerAgent.new()
-	if tutorial:
+	elif tutorial:
 		p1AgentInstance = playerAgent.new()
 		p2AgentInstance = tutorialAgent.new()
 	else:

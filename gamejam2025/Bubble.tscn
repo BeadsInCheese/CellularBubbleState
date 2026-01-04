@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://dmerm3r4u3pn8"]
+[gd_scene load_steps=10 format=3 uid="uid://dmerm3r4u3pn8"]
 
 [ext_resource type="Script" path="res://bubble.gd" id="1_k25p1"]
 [ext_resource type="Shader" path="res://Token.gdshader" id="2_5ncrq"]
 [ext_resource type="AudioStream" uid="uid://xv2itqg1romi" path="res://resources/Sound/SFX/stone_rock_or_wood_moved_no_tick.mp3" id="3_50q4b"]
 [ext_resource type="Texture2D" uid="uid://dk0kwybsd338t" path="res://Scenes/shadertest/NoiseTest2.tres" id="3_gork6"]
 [ext_resource type="Texture2D" uid="uid://d4b06b0bas7t4" path="res://Scenes/shadertest/NoiseTest.tres" id="4_8vp0b"]
+[ext_resource type="Theme" uid="uid://dck8e4axi58hk" path="res://resources/fonts/regularTheme.tres" id="5_wodwr"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_oabc8"]
 resource_local_to_scene = true
@@ -50,14 +51,29 @@ position = Vector2(0, -2)
 scale = Vector2(0.6, 0.6)
 texture = SubResource("GradientTexture2D_01tgn")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
+[node name="ColumnLabel" type="RichTextLabel" parent="."]
 visible = false
-modulate = Color(1, 0, 0, 1)
-offset_left = -10.0
-offset_top = -10.0
-offset_right = 14.0
-offset_bottom = 14.0
+modulate = Color(0.73859, 0.73859, 0.73859, 1)
+offset_left = -13.1154
+offset_top = -0.807691
+offset_right = 10.8846
+offset_bottom = 23.1923
 scale = Vector2(0.85, 0.85)
+mouse_filter = 2
+theme = ExtResource("5_wodwr")
+bbcode_enabled = true
+text = "[center]1[/center]"
+
+[node name="RowLabel" type="RichTextLabel" parent="."]
+visible = false
+modulate = Color(0.73859, 0.73859, 0.73859, 1)
+offset_left = 5.38461
+offset_top = -16.1538
+offset_right = 29.3846
+offset_bottom = 7.84616
+scale = Vector2(0.85, 0.85)
+mouse_filter = 2
+theme = ExtResource("5_wodwr")
 bbcode_enabled = true
 text = "[center]1[/center]"
 

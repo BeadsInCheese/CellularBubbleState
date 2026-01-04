@@ -18,14 +18,12 @@ func _on_text_changed() -> void:
 	text=text.to_upper()
 	set_caret_column(len(text))
 
-var rng = RandomNumberGenerator.new()
 func _on_host_button_pressed() -> void:
 	var characterList="ABCDEFGHIJKLMNOPQRSTUVXYZ1234567890"
 	var key=""
 	for i in range(5):
-		key+=characterList[rng.randi_range(0,len(characterList)-1)]
+		key+=characterList[randi_range(0,len(characterList)-1)]
 
-	print(key)
 	Settings.MPKey=key
 	SceneNavigation.goToWait()
 

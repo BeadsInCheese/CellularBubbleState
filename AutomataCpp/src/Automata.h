@@ -8,10 +8,24 @@
 static constexpr int o = 5; //# shortcut for Any
 static constexpr int t = -1;   //# shortcut for Tower
 static constexpr int b = -2;   //# shortcut for Bubble
+
 struct rule{
-    std::array<int,9> rows;
+    size_t matrixSize=3;
+    std::array<int,25> rows;
     int result;
+    unsigned int hash()const;
 };
+namespace std{
+    template<>
+    struct hash<rule>{
+    inline size_t operator()(const rule& x)const{
+        return x.hash();
+    }
+    };
+}
+int unsafePow(unsigned int a,unsigned int b);
+bool operator ==(const rule&,const rule&);
+
 
 namespace godot {
 
@@ -30,11 +44,16 @@ protected:
 public:
 
     void printRules();
+    void clearRuleset();
+    void addRule(Array Rules,int result);
+    void compileRuleset();
+    void removeDuplicateRules();
     rule rotate(rule& r);
     std::vector<rule> getRules();
     int getTile(int xpos,int ypos,int xsize,int ysize,std::array<int,144> &board);
-
+    bool matchMatrix(int posx,int posy,std::array<int,144> &board,rule &r);
     bool match3x3(int posx,int posy,std::array<int,144> &board,rule &r);
+    bool match5x5(int posx,int posy,std::array<int,144> &board,rule &r);
     int evaluateTile(int xpos,int ypos,std::array<int,144> &board,Array &target);
     void runStep(std::array<int,144> &board,Array &target);
     Array AutomataStep(Array board);

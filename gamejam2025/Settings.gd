@@ -7,6 +7,8 @@ var masterVolume:float=80
 var P1Index=0
 var P2Index=0
 var MPKey=""
+var MPPlayer1=false
+
 func setSFX(volume):
 	sfxVolume=volume
 	var sfx_index= AudioServer.get_bus_index("SFX")
@@ -21,9 +23,6 @@ func setMaster(volume):
 	masterVolume=volume
 	var Master_index= AudioServer.get_bus_index("Master")
 	AudioServer.set_bus_volume_db(Master_index, masterVolume-80)
-
-func _ready() -> void:
-	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
