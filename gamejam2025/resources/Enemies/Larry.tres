@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_kvgfh")
 dialogue = Array[String](["You@A sea urchin has landed on the beach.", "You@It is holding something. It looks like a map of some sort.", "You@There is only one thing to do", "You@Beat the sea urchin in a battle of wits.", "Larry@Ululululu"])
+bot_index = 1
