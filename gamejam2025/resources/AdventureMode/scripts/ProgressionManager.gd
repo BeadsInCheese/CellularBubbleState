@@ -14,7 +14,7 @@ func get_bot(i:int):
 func _ready() -> void:
 	Board.tutorial=false
 	Board.adventure=true
-
+	Board.mp=false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

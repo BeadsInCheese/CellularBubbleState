@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://do8gi3351ydjt"]
+[gd_scene load_steps=13 format=3 uid="uid://do8gi3351ydjt"]
 
 [ext_resource type="PackedScene" uid="uid://dwto0t5hs6gjx" path="res://resources/AdventureMode/Scenes/LevelButton.tscn" id="1_bx2to"]
 [ext_resource type="Script" path="res://resources/AdventureMode/scripts/ProgressionManager.gd" id="1_havs1"]
@@ -6,19 +6,22 @@
 [ext_resource type="Resource" uid="uid://dwon4e85bq6bx" path="res://resources/Enemies/Larry.tres" id="3_hnqn6"]
 [ext_resource type="Theme" uid="uid://dck8e4axi58hk" path="res://resources/fonts/regularTheme.tres" id="3_k4rtv"]
 [ext_resource type="Script" path="res://resources/AdventureMode/scripts/dialogueManager.gd" id="3_sblux"]
+[ext_resource type="Resource" uid="uid://bm3e58b8konpp" path="res://resources/Enemies/ampheres.tres" id="4_3qaqn"]
 [ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="4_ge8rq"]
+[ext_resource type="Resource" uid="uid://dykbb0qwo45ei" path="res://resources/Enemies/sera.tres" id="5_fvh73"]
 [ext_resource type="AudioStream" uid="uid://c1jspdoo3lhtr" path="res://resources/AdventureMode/sfx/click4.wav" id="6_d6slh"]
+[ext_resource type="Resource" uid="uid://df5y8pi4ufgh0" path="res://resources/Enemies/golgat.tres" id="6_pipn8"]
+[ext_resource type="Resource" uid="uid://c4uvwpefwpkp" path="res://resources/Enemies/Stategol.tres" id="7_51e0f"]
 
 [node name="Map" type="CanvasLayer"]
 script = ExtResource("1_havs1")
-data = Array[ExtResource("2_tuhj0")]([null, ExtResource("3_hnqn6")])
+data = Array[ExtResource("2_tuhj0")]([ExtResource("3_hnqn6"), ExtResource("4_3qaqn"), ExtResource("5_fvh73"), ExtResource("6_pipn8"), ExtResource("7_51e0f")])
 
 [node name="LevelButton" parent="." instance=ExtResource("1_bx2to")]
 offset_left = 154.0
 offset_top = 242.0
 offset_right = 154.0
 offset_bottom = 242.0
-opponent = 1
 
 [node name="LevelButton2" parent="." instance=ExtResource("1_bx2to")]
 offset_left = 273.0
