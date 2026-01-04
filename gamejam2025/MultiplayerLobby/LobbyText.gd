@@ -1,16 +1,5 @@
 extends TextEdit
 
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-
-
 func _on_text_changed() -> void:
 	if(len(text)>5):
 		text=text.substr(0,5)
@@ -36,7 +25,7 @@ func _on_join_button_pressed() -> void:
 
 
 func start_game(key: String):
-	print("key: ", key)
+	Board.tutorial = false
 	Settings.MPKey=key
 	SceneNavigation.go_to_multiplayer_lobby()
 
