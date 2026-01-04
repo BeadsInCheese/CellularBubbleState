@@ -7,7 +7,7 @@ static var achievements={}
 var data:Array[enemyResource]
 
 static var fightsWon=0
-func adventureDialogueDecode(i:int):
+func adventure_dialogue_decode(i:int):
 	await $DialogueBox.playDialogue(data[i].dialogue)
 func get_bot(i:int):
 	return data[i].bot_index
@@ -22,7 +22,7 @@ func _process(delta: float) -> void:
 
 
 func Larry_button_pressed(opponent) -> void:
-	await adventureDialogueDecode(opponent)
+	await adventure_dialogue_decode(opponent)
 	Settings.P1Index=0
 	Settings.P2Index=get_bot(opponent)
 	SceneNavigation.go_to_game()

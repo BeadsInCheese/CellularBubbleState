@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="enemyResource" load_steps=2 format=3 uid="uid://c4uvwpefwpkp"]
+
+[ext_resource type="Script" path="res://resources/Enemies/enemyResource.gd" id="1_wh2y4"]
+
+[resource]
+script = ExtResource("1_wh2y4")
+dialogue = Array[String]([])
+bot_index = 0
