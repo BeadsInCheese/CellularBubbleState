@@ -74,20 +74,19 @@ class threadPool{
     size_t workersFinished=0;
     threadPool();
     ~threadPool();
-    const std::array<int_fast8_t,144>* board;
      std::array<int_fast8_t,144>* target;
     std::vector<worker> pool;
     size_t workloadSize;
     size_t workloadLastSize;
-    void runStepThreaded(const std::array<int_fast8_t,144> &board,std::array<int_fast8_t,144> &target);
+    void runStepThreaded(std::array<int_fast8_t,144> &target);
     void workerDone();
 
 };
 static std::array<int_fast8_t, 256> boardPadded;
 constexpr int getPaddedIndex(int index);
-inline int_fast8_t getTile(int pos,const std::array<int_fast8_t,144> &board);
-inline bool matchMatrix(int pos,const std::array<int_fast8_t,144> &board,const rule &r);
-int_fast8_t evaluateTile(int xpos,int ypos,const std::array<int_fast8_t,144> &board,std::array<int_fast8_t,144> &target);
+inline int_fast8_t getTile(int pos);
+inline bool matchMatrix(int pos,const rule &r);
+int_fast8_t evaluateTile(int xpos,int ypos,std::array<int_fast8_t,144> &target);
 class Automata : public Node2D {
     GDCLASS(Automata, Node2D)
 
@@ -110,7 +109,7 @@ public:
     rule rotate(rule& r);
     std::vector<rule> getRules();
 
-    void runStep(const std::array<int_fast8_t,144> &board,std::array<int_fast8_t,144> &target);
+    void runStep(std::array<int_fast8_t,144> &target);
     Array AutomataStep(Array board);
     godot::PackedByteArray simulateAutomataStepAndReturnActions(godot::PackedByteArray board,Array changes);
     godot::PackedByteArray AutomataStepPackedByte(godot::PackedByteArray board);

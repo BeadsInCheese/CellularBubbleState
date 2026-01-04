@@ -218,14 +218,14 @@ void godot::Automata::stats()
     auto B = std::array<int_fast8_t,144>();
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    runStep(A, B);
+    runStep( B);
     auto t2 = std::chrono::high_resolution_clock::now();
 
     std::chrono::duration<double, std::milli> ms_double = t2 - t1;
     print_line("singlethread step " + String::num(ms_double.count()) + " ms");
 
     t1 = std::chrono::high_resolution_clock::now();
-    pool.runStepThreaded(A, B);
+    pool.runStepThreaded( B);
     t2 = std::chrono::high_resolution_clock::now();
 
     ms_double = t2 - t1;
@@ -234,7 +234,7 @@ void godot::Automata::stats()
 
     t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 100000; i++) {
-        runStep(A, B);
+        runStep(B);
     }
     t2 = std::chrono::high_resolution_clock::now();
 
@@ -244,7 +244,7 @@ void godot::Automata::stats()
 
     t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 100000; i++) {
-        pool.runStepThreaded(A, B);
+        pool.runStepThreaded( B);
     }
     t2 = std::chrono::high_resolution_clock::now();
 
@@ -413,19 +413,19 @@ Automata::Automata() {
     return pad+x+(y+pad)*(boardsize+pad*2);
 }
 
-inline int_fast8_t godot::getTile(int pos, const std::array<int_fast8_t, 144> &board)
+inline int_fast8_t godot::getTile(int pos)
 {
     return boardPadded[pos];
 }
    
-inline bool godot::matchMatrix(int pos,const std::array<int_fast8_t, 144> &board,const rule &r){
+inline bool godot::matchMatrix(int pos,const rule &r){
      int div=(r.matrixSize/2);
      int pid=getPaddedIndex(pos);
     for(int i=0; i<r.matrixSize;i++){
         for(int j=0; j<r.matrixSize;j++){
            
             int a=r.rows[i+j*r.matrixSize];
-            int b=getTile(pid+j-(div)+(i-(div))*16,board);
+            int b=getTile(pid+j-(div)+(i-(div))*16);
             
             if(a==-1){
                 continue;
@@ -442,12 +442,12 @@ inline bool godot::matchMatrix(int pos,const std::array<int_fast8_t, 144> &board
     
 
 }
-int_fast8_t godot::evaluateTile(int xpos, int ypos,const std::array<int_fast8_t, 144> &board,  std::array<int_fast8_t,144> &target)
+int_fast8_t godot::evaluateTile(int xpos, int ypos, std::array<int_fast8_t,144> &target)
 {
     int pos=xpos+ ypos*boardsize;
     for (const rule& i:rules)
     {
-        if (matchMatrix(pos, board, i))
+        if (matchMatrix(pos, i))
         {
             target[pos] = i.result;
             break;
@@ -459,12 +459,12 @@ int_fast8_t godot::evaluateTile(int xpos, int ypos,const std::array<int_fast8_t,
 
     return 0;
 }
-void Automata::runStep(const std::array<int_fast8_t,144> &board,std::array<int_fast8_t,144> &target ){
-    for(int i=0; i< board.size(); i++){
+void Automata::runStep(std::array<int_fast8_t,144> &target ){
+    for(int i=0; i< target.size(); i++){
         int x=i%12;
         int y=i/12;
 
-        evaluateTile(x,y,board,target);
+        evaluateTile(x,y,target);
     }
 
 }
@@ -478,7 +478,7 @@ Array Automata::AutomataStep(Array board){
         boardPadded[getPaddedIndex(i)]=board[i];
         target[i]=board[i];
     }
-    pool.runStepThreaded(b,target);
+    pool.runStepThreaded(target);
     //runStep(b,target);
     for(int i=0; i<144; i++){
         board[i]=int(target[i]);
@@ -502,7 +502,7 @@ godot::PackedByteArray godot::Automata::simulateAutomataStepAndReturnActions(god
 
 
     
-    pool.runStepThreaded(b,target);
+    pool.runStepThreaded(target);
     memcpy(board.ptrw(),target.data(),target.size()*sizeof(int_fast8_t));
     
     for(int i=0; i<144; i++){
@@ -528,7 +528,7 @@ godot::PackedByteArray Automata::AutomataStepPackedByte(godot::PackedByteArray b
     }
     std::array<int_fast8_t, 144> target;
     memcpy(target.data(),board.ptr(),b.size()*sizeof(int_fast8_t));
-    pool.runStepThreaded(b,target);
+    pool.runStepThreaded(target);
     memcpy(board.ptrw(),target.data(),target.size()*sizeof(int_fast8_t));
     return board;
 }
@@ -591,7 +591,7 @@ void worker::kernel()
 
                 for(int i=wrk.start;i<wrk.end;i++){
                     
-                    evaluateTile(i%12,i/12,*pool->board,*pool->target);
+                    evaluateTile(i%12,i/12,*pool->target);
                   //  print_line(i,"  ",wrk.start,"-",wrk.end);
                 }
             pool->workerDone();
@@ -631,7 +631,7 @@ godot::worker::worker(threadPool* pool):workerThread(&worker::kernel,this), pool
     } 
 }
 static std::mutex call;
-    void godot::threadPool::runStepThreaded(const std::array<int_fast8_t,144> &board,std::array<int_fast8_t,144> &target)
+    void godot::threadPool::runStepThreaded(std::array<int_fast8_t,144> &target)
     {
         std::lock_guard<std::mutex> guard(call);
         for(auto& i : pool){
@@ -642,8 +642,7 @@ static std::mutex call;
         workersFinished = 0; 
         }
         { 
-            std::lock_guard<std::mutex> lk(dispatch);        
-            this->board=&board;
+            std::lock_guard<std::mutex> lk(dispatch); 
             this->target=&target;
 
             
