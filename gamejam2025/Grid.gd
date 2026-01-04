@@ -270,6 +270,7 @@ func _exit_tree() -> void:
 	boardHistory.clear()
 	boardExists = false
 	hasEnded = true
+	tutorial = false
 	
 func _input(event):
 	if event is InputEventKey and event.pressed:
