@@ -1,42 +1,37 @@
 extends Node2D
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+func go_to_game(push_as_child = false) -> void:
+	_go_to_scene("res://MainGame.tscn", push_as_child)
 
+func go_to_main_menu() -> void:
+	_go_to_scene("res://Scenes/MainMenu.tscn")
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-
-
-func _onLocalMPSelected() -> void:
-	goToScene("res://MainGame.tscn")
-
-func _on_MainMenuPressed() -> void:
-	goToScene("res://Scenes/MainMenu.tscn")
+func go_to_multiplayer_selection():
+	_go_to_scene("res://Scenes/MPLobby/MultiplayerLobby.tscn")
 		
-func goToMultiplayerSelection():
-	goToScene("res://Scenes/MPLobby/MultiplayerLobby.tscn")
-		
-func goToWait():
-	goToScene("res://Scenes/MPLobby/LobbyWaitForClient.tscn")
+func go_to_multiplayer_lobby():
+	_go_to_scene("res://Scenes/MPLobby/LobbyWaitForClient.tscn")
 
-func _on_SettingsPressed() -> void:
-	goToScene("res://Scenes/SettingsMenu.tscn")
+func go_to_settings() -> void:
+	_go_to_scene("res://Scenes/SettingsMenu.tscn")
 		
-func _on_PlayerMenuPressed() -> void:
-	goToScene("res://PlayerSelect.tscn")
-func _on_MapPressed()-> void:
-	goToScene("res://resources/AdventureMode/Scenes/Map.tscn")
-func _on_RulesetCreatorPressed():
-	goToScene("res://rulesetMaker/RuleEdit.tscn")
+func go_to_player_selection() -> void:
+	_go_to_scene("res://PlayerSelect.tscn")
+
+func go_to_map()-> void:
+	_go_to_scene("res://resources/AdventureMode/Scenes/Map.tscn")
+
+func go_to_ruleset_editor():
+	_go_to_scene("res://rulesetMaker/RuleEdit.tscn")
+
 var loading=false
-func goToScene(scene: String):
+
+func _go_to_scene(scene: String, push_as_child = false):
 	# Wait hide animation
 	if loading:
 		return
+
 	loading=true
 	for i in range(51):
 		RenderingServer.global_shader_parameter_set("tt",i*0.02)
@@ -46,8 +41,14 @@ func goToScene(scene: String):
 	# Change scene
 	if(get_tree()!=null):
 		await get_tree().process_frame
-		get_tree().change_scene_to_packed(load(scene))
+		if push_as_child:
+			get_tree().root.add_child(load(scene).instantiate())
+		else:
+			get_tree().change_scene_to_packed(load(scene))
+		
 	loading=false
+
+
 func showall():
 	for i in range(51):
 		RenderingServer.global_shader_parameter_set("tt",1-i*0.02)

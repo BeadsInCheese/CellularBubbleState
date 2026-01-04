@@ -52,7 +52,7 @@ func start_lobby(connecting_id: int, lobby_key: String):
 @rpc("authority", "reliable")
 func start_game(is_player1: bool):
 	Settings.MPPlayer1 = is_player1
-	SceneNavigation._onLocalMPSelected()
+	SceneNavigation.go_to_game(true)
 
 @rpc("any_peer", "reliable")
 func request_move(connecting_id, tile_index, tile_type, lobby_key):

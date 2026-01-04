@@ -88,4 +88,4 @@ func _process(delta: float) -> void:
 
 
 func _on_exit_button_down() -> void:
-	SceneNavigation._on_PlayerMenuPressed()
+	SceneNavigation.go_to_player_selection()

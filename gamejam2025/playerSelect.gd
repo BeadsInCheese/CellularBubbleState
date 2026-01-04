@@ -19,11 +19,11 @@ func _process(delta: float) -> void:
 
 
 func _on_start_button_button_down() -> void:
-	SceneNavigation._onLocalMPSelected()
+	SceneNavigation.go_to_game()
 
 
 func _on_back_button_button_down() -> void:
-	SceneNavigation._on_MainMenuPressed()
+	SceneNavigation.go_to_main_menu()
 
 
 func _on_option_button_2_item_selected(index: int) -> void:
@@ -32,14 +32,14 @@ func _on_option_button_2_item_selected(index: int) -> void:
 
 
 func _on_back_button_pressed() -> void:
-	SceneNavigation._on_MainMenuPressed()
+	SceneNavigation.go_to_main_menu()
 
 
 func _on_tutorial_button_button_down() -> void:
 	Settings.P1Index = 0
 	Settings.P2Index = 6
-	SceneNavigation._onLocalMPSelected()
+	SceneNavigation.go_to_game()
 
 
 func _on_ruleset_creator_button_pressed() -> void:
-	SceneNavigation._on_RulesetCreatorPressed()
+	SceneNavigation.go_to_ruleset_editor()

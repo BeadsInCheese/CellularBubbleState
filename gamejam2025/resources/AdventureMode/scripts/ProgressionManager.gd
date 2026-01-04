@@ -25,4 +25,4 @@ func Larry_button_pressed(opponent) -> void:
 	await adventureDialogueDecode(opponent)
 	Settings.P1Index=0
 	Settings.P2Index=get_bot(opponent)
-	SceneNavigation._onLocalMPSelected()
+	SceneNavigation.go_to_game()

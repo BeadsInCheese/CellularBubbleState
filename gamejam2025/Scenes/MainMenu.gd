@@ -1,42 +1,20 @@
 extends Node2D
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	AutomataAgent.loadCustomRuleset=false
-	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func go_to_settings() -> void:
+	SceneNavigation.go_to_settings()
 
+func go_to_player_selection() -> void:
+	SceneNavigation.go_to_player_selection()
 
-func _onLocalMPSelected() -> void:
-	SceneNavigation._onLocalMPSelected()
-	
-func _on_MainMenuPressed() -> void:
-	SceneNavigation._on_MainMenuPressed()
-		
-func goToMultiplayerSelection():
-	SceneNavigation.goToMultiplayerSelection()
+func go_to_multiplayer_selection() -> void:
+	SceneNavigation.go_to_multiplayer_selection()
 
-func goToWait():
-	SceneNavigation.goToWait()
-		
-func _on_SettingsPressed() -> void:
-	SceneNavigation._on_SettingsPressed()
-		
-func _on_PlayerMenuPressed() -> void:
-	SceneNavigation._on_PlayerMenuPressed()
-
-
-
-func _on_MPbutton_3_button_down() -> void:
-	SceneNavigation.goToMultiplayerSelection()
-
-
-func Tutorial_pressed() -> void:
+func go_to_tutorial() -> void:
 	Board.mp = false
 	Board.tutorial = true
-	SceneNavigation._onLocalMPSelected()
+	SceneNavigation.go_to_game()

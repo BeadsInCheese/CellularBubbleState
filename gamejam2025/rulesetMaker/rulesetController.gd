@@ -118,7 +118,7 @@ func _on_load_file_selected(path: String) -> void:
 
 
 func _on_exit_pressed() -> void:
-	SceneNavigation._on_PlayerMenuPressed()
+	SceneNavigation.go_to_player_selection()
 
 
 func _on_line_edit_text_submitted(new_text: String) -> void:

@@ -44,7 +44,7 @@ func makeMove(observation:Board):
 	
 	if not connected:
 		DataUtility.save_to_file(latest_board_history, "save-"+Time.get_datetime_string_from_system(),"res://Saves")
-		SceneNavigation.goToMultiplayerSelection()
+		SceneNavigation.go_to_multiplayer_selection()
 		return
 	
 	print("Received data: ", latest_tile_index,"  , ", latest_tile_type)

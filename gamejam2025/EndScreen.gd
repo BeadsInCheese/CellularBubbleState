@@ -15,6 +15,6 @@ func _process(delta: float) -> void:
 func _on_button_down() -> void:
 	get_tree().root.get_node("root/Board").boardHistory.clear()
 	if(Board.adventure):
-		SceneNavigation._on_MapPressed()
+		SceneNavigation.go_to_map()
 	else:
-		SceneNavigation._on_MainMenuPressed()
+		SceneNavigation.go_to_main_menu()

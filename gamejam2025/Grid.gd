@@ -263,7 +263,7 @@ func _mute_button_pressed() -> void:
 		Settings.setMaster(0)
 
 func _exit_button_pressed() -> void:
-	SceneNavigation._on_MainMenuPressed()
+	SceneNavigation.go_to_main_menu()
 	hasEnded = true
 	
 func _exit_tree() -> void:

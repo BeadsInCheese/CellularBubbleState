@@ -38,11 +38,11 @@ func _on_join_button_pressed() -> void:
 func start_game(key: String):
 	print("key: ", key)
 	Settings.MPKey=key
-	SceneNavigation.goToWait()
+	SceneNavigation.go_to_multiplayer_lobby()
 
 
 func _on_back_button_pressed() -> void:
-	SceneNavigation._on_MainMenuPressed()
+	SceneNavigation.go_to_main_menu()
 	
 func _input(event):
 	if event.is_action_pressed("ui_text_submit"):

@@ -28,7 +28,7 @@ func _on_music_value_changed(value: float) -> void:
 
 func _on_button_button_down() -> void:
 	await get_tree().process_frame
-	SceneNavigation._on_MainMenuPressed()
+	SceneNavigation.go_to_main_menu()
 
 
 func _on_sfx_drag_ended(value_changed: bool) -> void:
