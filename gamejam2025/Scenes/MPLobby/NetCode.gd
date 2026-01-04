@@ -1,98 +1,78 @@
-extends Node2D
-class_name NetCode
+extends Node
 
-#static var client: StreamPeerTCP = null
-#
-#var connected = false
-#var _status = -1
-#
-#signal _connected
-#signal _error
-#signal _disconnected
+var peer: WebSocketMultiplayerPeer
 
-#var scene = preload("res://MainGame.tscn")
-#var game = null
+const PORT: int = 25565
 
-#
-#func sendkey(message:String) -> void:
-	#client.put_data(message.to_utf8_buffer())
-	#print("Sent: ", message)
-#
-#func wait_until_game_start():
-	#while connected:
-		#if client.get_available_bytes() >= 4:
-			#client.poll()
-			#client.get_32()
-			#return
-		#else:
-			## Sleep for a short duration to avoid busy-waiting
-			#await get_tree().process_frame
-#
-#func connect_to_server() -> void:
-	#client = StreamPeerTCP.new()
-	#
-	#var err = await client.connect_to_host(get_server_ip(), Server.PORT)
-	#while not connected:
-		#await get_tree().process_frame
-	#
-	#if err == OK:
-		#print("Connected to server")
-	#else:
-		#print("Failed to connect to server")
-		#_on_back_button_pressed()
+var lobbies: Dictionary = {}
 
-static func get_server_ip() -> String:
+signal on_move_confirmed(tile_index: int, tile_type: int)
+
+func start_server() -> void:
+	peer = WebSocketMultiplayerPeer.new()
+	var error = peer.create_server(PORT)
+	if error:
+		print("Failed to start server on port ", PORT, ". Error: ", error_string(error))
+		return
+	
+	multiplayer.multiplayer_peer = peer
+
+func start_client() -> void:
+	peer = WebSocketMultiplayerPeer.new()
+	peer.create_client("ws://" + get_server_ip() + ":" + str(PORT))
+	
+	multiplayer.multiplayer_peer = peer
+
+
+func get_server_ip() -> String:
 	var config = ConfigFile.new()
-	var localhost = "127.0.0.1"
-
 	var load_status = config.load("res://config/INI_Settings.cfg")
 
-	if load_status == OK and false: 
-		var ip=config.get_value("MULTIPLAYER", "SERVER_IP", localhost)
-		print("loaded IP: " + ip + " from config")
-		return ip
+	if load_status != OK or true:
+		return "127.0.0.1"
 
-	return localhost
+	return config.get_value("MULTIPLAYER", "SERVER_IP", "127.0.0.1")
+
+@rpc("any_peer", "reliable")
+func start_lobby(connecting_id: int, lobby_key: String):
+	print("Received key: ", lobby_key)
+	
+	if lobby_key in lobbies.keys():
+		var sides = randi_range(0, 1) == 0
+		
+		var lobby_players = lobbies[lobby_key]
+		lobby_players.append(connecting_id)
+		
+		start_game.rpc_id(lobby_players[0], sides)
+		start_game.rpc_id(lobby_players[1], !sides)
+	else:
+		lobbies[lobby_key] = [connecting_id]
+	pass
+
+@rpc("authority", "reliable")
+func start_game(is_player1: bool):
+	Settings.MPPlayer1 = is_player1
+	SceneNavigation._onLocalMPSelected()
+
+@rpc("any_peer", "reliable")
+func request_move(connecting_id, tile_index, tile_type, lobby_key):
+	for id in lobbies[lobby_key]:
+		if id != connecting_id:
+			confirm_move.rpc_id(id, tile_index, tile_type)
+
+@rpc("authority", "reliable")
+func confirm_move(tile_index, tile_type):
+	on_move_confirmed.emit(tile_index, tile_type)
+
+func on_peer_connected(id: int):
+	if id == 1: # Register lobby when connecting to the server
+		start_lobby.rpc_id(id, multiplayer.get_unique_id(), Settings.MPKey)
+	
+	# peer connection callback not needed after initial connection to server has been established
+	multiplayer.peer_connected.disconnect(on_peer_connected)
 
 func _ready() -> void:
-	Server.start_client(get_server_ip())
-	
-	#await connect_to_server()
-	#sendkey(Settings.MPKey)
-	#await wait_until_game_start()
-	#start_game()
-
-
-#func _process(delta: float) -> void:
-	#var new_status: int = client.get_status()
-	#client.poll()
-	#if new_status != _status:
-		#_status = new_status
-#
-		#match new_status:
-			#client.STATUS_NONE:
-				#print("Disconnected from host.")
-				#_disconnected.emit()
-			#client.STATUS_CONNECTING:
-				#print("Connecting to host.")
-			#client.STATUS_CONNECTED:
-				#print("Connected to host.")
-				#_connected.emit()
-				#connected = true
-			#client.STATUS_ERROR:
-				#print("Error with socket stream.")
-				#_error.emit()
-				#connected=false
-
-#func _exit_tree() -> void:
-	#connected=false
-	#client.disconnect_from_host()
-#
-	#if(game!=null):
-		#game.queue_free()
-#
-#func _on_back_button_pressed() -> void:
-	#if(game!=null):
-		#game.queue_free()
-#
-	#SceneNavigation.goToMultiplayerSelection()
+	if DisplayServer.get_name() == "headless":
+		start_server()
+	else:
+		multiplayer.peer_connected.connect(on_peer_connected)

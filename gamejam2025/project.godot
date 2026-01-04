@@ -21,7 +21,7 @@ config/icon="res://resources/GFX/Bubble icons/bubble03b_2.png"
 
 Settings="*res://Settings.gd"
 SceneNavigation="*res://Scenes/SceneNavigation.gd"
-Server="*res://Scenes/MPLobby/Server.gd"
+NetCode="*res://Scenes/MPLobby/NetCode.gd"
 
 [display]
 

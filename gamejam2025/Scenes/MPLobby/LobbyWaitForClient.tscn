@@ -1,6 +1,6 @@
 [gd_scene load_steps=21 format=3 uid="uid://i6kgoh1cv7oc"]
 
-[ext_resource type="Script" path="res://Scenes/MPLobby/NetCode.gd" id="1_brlfs"]
+[ext_resource type="Script" path="res://Scenes/MPLobby/LobbyWaitForClient.gd" id="1_mrxiw"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="1_uk8h5"]
 [ext_resource type="Texture2D" uid="uid://brbwhi7trcf3t" path="res://resources/GFX/Bubble icons/bubble_player1.png" id="2_0ync1"]
 [ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="3_47075"]
@@ -69,7 +69,7 @@ default_font_size = 100
 shader = ExtResource("8_3w2jm")
 
 [node name="LobbyWaitForClient" type="Node2D"]
-script = ExtResource("1_brlfs")
+script = ExtResource("1_mrxiw")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(577.953, 323.668)

@@ -24,22 +24,26 @@ func _on_host_button_pressed() -> void:
 	for i in range(5):
 		key+=characterList[randi_range(0,len(characterList)-1)]
 
-	Settings.MPKey=key
-	SceneNavigation.goToWait()
+	start_game(key)
 
-func _on_back_button_pressed() -> void:
-	SceneNavigation._on_MainMenuPressed()
-	
 
 func _on_join_button_pressed() -> void:
 	var key=text.to_upper()
 	if len(key) < 5:
 		return
+	
+	start_game(key)
 
-	print(key)
+
+func start_game(key: String):
+	print("key: ", key)
 	Settings.MPKey=key
 	SceneNavigation.goToWait()
 
+
+func _on_back_button_pressed() -> void:
+	SceneNavigation._on_MainMenuPressed()
+	
 func _input(event):
 	if event.is_action_pressed("ui_text_submit"):
 		_on_join_button_pressed()

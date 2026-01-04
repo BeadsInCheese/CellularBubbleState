@@ -9,7 +9,7 @@ var latest_tile_type = -1
 
 func init(board: Board):
 	board.p1AgentInstance.moveMade.connect(send_move)
-	Server.on_move_confirmed.connect(on_move_received)
+	NetCode.on_move_confirmed.connect(on_move_received)
 	
 	synchronize_turn_order(board)
 
@@ -29,7 +29,7 @@ func send_move(board: Board):
 	var tile_index = board.lastMove[0]
 	var tile_type = board.lastMove[1]
 	
-	Server.request_move.rpc_id(1, Server.multiplayer.get_unique_id(), tile_index, tile_type, Settings.MPKey)
+	NetCode.request_move.rpc_id(1, NetCode.multiplayer.get_unique_id(), tile_index, tile_type, Settings.MPKey)
 
 func on_move_received(tile_index: int, tile_type: int):
 	latest_tile_index = tile_index
