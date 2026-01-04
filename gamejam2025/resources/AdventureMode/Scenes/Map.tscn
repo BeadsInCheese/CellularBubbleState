@@ -17,47 +17,6 @@
 script = ExtResource("1_havs1")
 data = Array[ExtResource("2_tuhj0")]([ExtResource("3_hnqn6"), ExtResource("4_3qaqn"), ExtResource("5_fvh73"), ExtResource("6_pipn8"), ExtResource("7_51e0f")])
 
-[node name="LevelButton" parent="." instance=ExtResource("1_bx2to")]
-offset_left = 154.0
-offset_top = 242.0
-offset_right = 154.0
-offset_bottom = 242.0
-
-[node name="LevelButton2" parent="." instance=ExtResource("1_bx2to")]
-offset_left = 273.0
-offset_top = 248.0
-offset_right = 273.0
-offset_bottom = 248.0
-opponent = 1
-
-[node name="LevelButton3" parent="." instance=ExtResource("1_bx2to")]
-offset_left = 411.0
-offset_top = 254.0
-offset_right = 411.0
-offset_bottom = 254.0
-opponent = 2
-
-[node name="LevelButton4" parent="." instance=ExtResource("1_bx2to")]
-offset_left = 593.0
-offset_top = 136.0
-offset_right = 593.0
-offset_bottom = 136.0
-opponent = 3
-
-[node name="LevelButton5" parent="." instance=ExtResource("1_bx2to")]
-offset_left = 729.0
-offset_top = 270.0
-offset_right = 729.0
-offset_bottom = 270.0
-opponent = 4
-
-[node name="LevelButton6" parent="." instance=ExtResource("1_bx2to")]
-offset_left = 1096.0
-offset_top = 285.0
-offset_right = 1096.0
-offset_bottom = 285.0
-opponent = 5
-
 [node name="DialogueBox" type="Panel" parent="."]
 custom_minimum_size = Vector2(18.63, 205.475)
 anchors_preset = 12
@@ -109,9 +68,56 @@ text = "klvöksopfdkspofkopakfpoa"
 stream = ExtResource("6_d6slh")
 bus = &"SFX"
 
-[connection signal="buttonPressed" from="LevelButton" to="." method="fight_button_pressed"]
-[connection signal="buttonPressed" from="LevelButton2" to="." method="fight_button_pressed"]
-[connection signal="buttonPressed" from="LevelButton3" to="." method="fight_button_pressed"]
-[connection signal="buttonPressed" from="LevelButton4" to="." method="fight_button_pressed"]
-[connection signal="buttonPressed" from="LevelButton5" to="." method="fight_button_pressed"]
-[connection signal="buttonPressed" from="LevelButton6" to="." method="fight_button_pressed"]
+[node name="levels" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="LevelButton" parent="levels" instance=ExtResource("1_bx2to")]
+offset_left = 154.0
+offset_top = 242.0
+offset_right = 154.0
+offset_bottom = 242.0
+
+[node name="LevelButton2" parent="levels" instance=ExtResource("1_bx2to")]
+offset_left = 273.0
+offset_top = 248.0
+offset_right = 273.0
+offset_bottom = 248.0
+opponent = 1
+
+[node name="LevelButton3" parent="levels" instance=ExtResource("1_bx2to")]
+offset_left = 411.0
+offset_top = 254.0
+offset_right = 411.0
+offset_bottom = 254.0
+opponent = 2
+
+[node name="LevelButton4" parent="levels" instance=ExtResource("1_bx2to")]
+offset_left = 593.0
+offset_top = 136.0
+offset_right = 593.0
+offset_bottom = 136.0
+opponent = 3
+
+[node name="LevelButton5" parent="levels" instance=ExtResource("1_bx2to")]
+offset_left = 729.0
+offset_top = 270.0
+offset_right = 729.0
+offset_bottom = 270.0
+opponent = 4
+
+[node name="LevelButton6" parent="levels" instance=ExtResource("1_bx2to")]
+offset_left = 1096.0
+offset_top = 285.0
+offset_right = 1096.0
+offset_bottom = 285.0
+opponent = 5
+
+[connection signal="buttonPressed" from="levels/LevelButton" to="." method="fight_button_pressed"]
+[connection signal="buttonPressed" from="levels/LevelButton2" to="." method="fight_button_pressed"]
+[connection signal="buttonPressed" from="levels/LevelButton3" to="." method="fight_button_pressed"]
+[connection signal="buttonPressed" from="levels/LevelButton4" to="." method="fight_button_pressed"]
+[connection signal="buttonPressed" from="levels/LevelButton5" to="." method="fight_button_pressed"]
+[connection signal="buttonPressed" from="levels/LevelButton6" to="." method="fight_button_pressed"]
