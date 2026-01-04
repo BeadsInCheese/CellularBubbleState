@@ -25,30 +25,35 @@ offset_left = 273.0
 offset_top = 248.0
 offset_right = 273.0
 offset_bottom = 248.0
+opponent = 1
 
 [node name="LevelButton3" parent="." instance=ExtResource("1_bx2to")]
 offset_left = 411.0
 offset_top = 254.0
 offset_right = 411.0
 offset_bottom = 254.0
+opponent = 2
 
 [node name="LevelButton4" parent="." instance=ExtResource("1_bx2to")]
 offset_left = 593.0
 offset_top = 136.0
 offset_right = 593.0
 offset_bottom = 136.0
+opponent = 3
 
 [node name="LevelButton5" parent="." instance=ExtResource("1_bx2to")]
 offset_left = 729.0
 offset_top = 270.0
 offset_right = 729.0
 offset_bottom = 270.0
+opponent = 4
 
 [node name="LevelButton6" parent="." instance=ExtResource("1_bx2to")]
 offset_left = 1096.0
 offset_top = 285.0
 offset_right = 1096.0
 offset_bottom = 285.0
+opponent = 5
 
 [node name="DialogueBox" type="Panel" parent="."]
 custom_minimum_size = Vector2(18.63, 205.475)
