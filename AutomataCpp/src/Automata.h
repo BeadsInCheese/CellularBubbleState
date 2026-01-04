@@ -6,6 +6,7 @@
 #include <vector>
 #include <thread>
 #include <chrono>
+#include <condition_variable>
 
 static constexpr int o = 5; //# shortcut for Any
 static constexpr int t = -1;   //# shortcut for Tower
