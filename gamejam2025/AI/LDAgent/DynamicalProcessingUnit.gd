@@ -112,14 +112,19 @@ func update_layers():
 func update_point(posX, posY, piece):
 	if(piece == 1 && color == 1) || (piece == 3 && color == 3):
 		R[3*(posX) + posY].piece = Point.TOWER_OWN
+		R[3*(posX) + posY].score[0] = 1.2
 	elif(piece == 1 && color == 3) || (piece == 3 && color == 1):
 		R[3*(posX) + posY].piece = Point.TOWER_OPPONENT
+		R[3*(posX) + posY].score[0] = -1
 	elif(piece == 2 && color == 1) || (piece == 4 && color == 3):
 		R[3*(posX) + posY].piece = Point.BUBBLE_OWN
+		R[3*(posX) + posY].score[0] = 1.6
 	elif(piece == 2 && color == 3) || (piece == 4 && color == 1):
 		R[3*(posX) + posY].piece = Point.BUBBLE_OPPONENT
+		R[3*(posX) + posY].score[0] = -2.8
 	elif(piece == 0):
 		R[3*(posX) + posY].piece = Point.EMPTY
+		R[3*(posX) + posY].score[0] = 0
 
 func inference_generic_backward(x,y,R,startVector,targetVector,tTime,endPointY):
 	targetTime = tTime

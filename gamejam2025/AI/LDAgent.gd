@@ -8,6 +8,7 @@ var G_default_own_coeff2 : float
 var G_default_opponent_coeff1 : float
 var G_default_opponent_coeff2 : float
 var W_target = [true,false]
+var R_waypoints : Array
 var DPU_list : Array[DynamicalProcessingUnit] = []
 var transitions : Array[Array]
 var game_board
@@ -90,12 +91,6 @@ func generate_plan(heuristicValues, metricValues):
 	
 
 #meta-heuristic, decentralized move generation algorithm solving a local optimization problem of finding a best move at time 0
-#PHASE 0: measure the position, form targets procedurally and get the clause chains for those targets
-#PHASE 1: update DPUs
-#PHASE 2: process triggers from E & MEM_UNIT
-#PHASE 3: main round, solve paths for each individual DPU unit from current position to DPU_i target R_i
-#PHASE 4: sort all metric pairs across DPUs (m_i,m_j) in terms of pursuit of target clauses W
-#PHASE 5: compare all available moves, optimized amongst DPU:s, to best paths starting vectors v'_j
 
 #R_waypoints format: [[Vector4(m1,m2,pUL,pLR),[dpu_id,W_i,dpu_j]], [Vector4(m1,m2,pUL,pLR),[dpu_id,W_i,dpu_j]]]
 #transitions format: = [[R_id,Vector2(m1,m2),Vector2(x0,y0),Vector2(...),],[R_id,Vector2(m1,m3),Vector2(x0,y0),Vector2(...),]]
@@ -106,15 +101,11 @@ func generate_move(b : Board) -> int:
 	#var C : Array = setTriggers(E)
 	#for i in range(0,targetTime):
 	#LOG_CLAUSE_CHAIN.append(GSystem.getClause(W,i,targetTime))
-	print("E ",E)
-	print("W ",W)
-
-	
 	update_grids(board)
 	
 	for dpu: DynamicalProcessingUnit in DPU_list:
-		dpu.update_layers()
-		#print("dpu: ",dpu.id)
+		#dpu.update_layers()
+		computeLayers(dpu.get_points())
 		var points = 0
 		var layer0Sum = 0
 		var lowRelevance = true
@@ -155,51 +146,47 @@ func generate_move(b : Board) -> int:
 		layer0Sum = 0
 		points = 0
 
-		
-
-
 	#MemoryUnit.triggers()
 	#triggers from C are processed, settings flags, reordering DPU relevances for later phases
-	
-	#prepare to select DPU in the middle, if starting at turn 0
-	if b.absoluteTurn == 0:
-		for i in range(0,9):
-			var x = randi_range(3,6)
-			var y = randi_range(3,6)
-			DPU_list[x*10 + y].setLocalW(10+randf_range(-1,1))
 
+	var n = 0
+	var moveIndex
+	
+	print("dpu 1 points")
+	for p in DPU_list[1].get_points():
+		print("point at",p.x,",",p.y," = ",p.score)
+		print("testing pattern np.pn")
+		GSystem.pattern(p,1,"np.pn", 1, DPU_list[1].get_points())
+	
+	
+
+		
+			
+
+		
+	
 	var wTime = 10
 	var tTime = 1
-	var n = 0
-	var R_waypoints : Array
-	
 	DPU_list.sort_custom(sortRce)
 
 	while(n < N_ROUNDS):
 		var d = 2*abs(E[0][2])+1
 		for h in range(0,2):
 			var dpu : DynamicalProcessingUnit = DPU_list[h]
-			print("relevance: ",dpu.computeRelevance())
-			for i in range(0,1):
-				for j in range(0,2): 
-					var R = FSystem.getWaypointTarget(i,W[i]) #create waypoint [m1,m2,nw_point,se_point] and append
-					R.append([dpu.id,i,j,dpu.id*10**4+i*10**2+j])
-					R_waypoints.append(R)
-					var z_min = FSystem.computeError(dpu,R[0],tTime) #heptagon local search phase, 'backward inference' <-
-					var p = Vector2(dpu.get_points()[R[0].x % 9].score[R[0].x / 9],dpu.get_points()[R[0].y % 9].score[R[0].y / 9])
-					var TR_LIST = FSystem.generatePath(dpu,R[0],z_min[0],z_min[1],wTime,p) #find out transition chain, 'forward inference' ->
-					TR_LIST.push_front(dpu.id*10**4+i*10**2+j)
-					transitions.append(TR_LIST)
+			var R = R_waypoints[0]
+			var z_min = FSystem.computeError(dpu,R[0],tTime) #heptagon local search phase, 'backward inference' <-
+			var p = Vector2(dpu.get_points()[R[0].x % 9].score[R[0].x / 9],dpu.get_points()[R[0].y % 9].score[R[0].y / 9])
+			var TR_LIST = FSystem.generatePath(dpu,R[0],z_min[0],z_min[1],wTime,p) #find out transition chain, 'forward inference' ->
+			TR_LIST.push_front(R[0][3])
+			transitions.append(TR_LIST)
+			Console.instance.write("Sera",str(TR_LIST[0]))
+			print("added transition "+str(TR_LIST.back())+" using (m0,m1):"+str(TR_LIST[1]))
 		n += 1
-	assert(R_waypoints.size()!=0)
-	assert(transitions.size()!=0)
-	var bestIndex = 0
-	var moveIndex = 0
-	#find paths starting vectors for all best manifolds, get best waypoints' TR_LIST:s first Transition vector v'
-	FSystem.update_Q()
-	R_waypoints.sort_custom(computeLD)
 	
+	var bestIndex = 0
+	R_waypoints.sort_custom(computeLD)
 	var bestVectors = []
+	
 	for i in range(0,R_waypoints.size()):
 		var R_id = R_waypoints[i][1][3]
 		for tr in transitions:
@@ -208,15 +195,14 @@ func generate_move(b : Board) -> int:
 				#print("m1=",tr[1].x," m2=",tr[1].y)
 				
 	var value = -1
-	assert(bestVectors.size()!=0)
-	#return move which most closely resembles the changes of some vector in the set of best vectors
+	
 	for j in range(0,bestVectors.size()):
 		var bestDPU = DPU_list[floor(bestVectors[j][0]/(10**4))]
 		var y = floor(bestVectors[j][1].x / 9)
 		print("current dpu: ",bestDPU.id)
 		#minimize vector (x0,y0) of {m1,m2} distance to N[y][m1][m2] + Rell_c(m1,change,dpu)
 		var temp = GSystem.inferMove(y,bestVectors[j][1].x,bestVectors[j][1].y,bestVectors[j][2].x,bestVectors[j][2].y,bestDPU)
-		
+		assert(temp.size()!=0)
 		var sq
 		for k in range(0,temp.size()):
 			print(temp[k])
@@ -226,9 +212,54 @@ func generate_move(b : Board) -> int:
 				print("current best: ",sq[0]," ",sq[1])
 				moveIndex = (sq[1] + bestDPU.offsetY - 1)*12 + sq[0] + bestDPU.offsetX - 1 
 				
-	print("best move: ",moveIndex)
+	prints("best move: ",moveIndex, getIndex(moveIndex))
+
+	
 	return moveIndex
 	
+
+func setPoints(layer,points,p,str,val):
+	pass
+
+
+func computeLayers(g):
+	for p in g:
+		var layer
+		if GSystem.pattern(p,1, "fp.pf", 0, g): #'1' at p, 0 at fp && pf
+			p.score[1] += 2.77
+		elif GSystem.pattern(p,0, "pn.np", 1,g):
+			p.score[1] += 5.7
+		elif GSystem.pattern(p,-4, "pm", -1, g):
+			setPoints(1,g,p,"mp",-2.0)
+			
+		if GSystem.pattern(p,1,"np.pn", 1, g):
+			p.score[1] += 1.2
+			setPoints(1,g,p,"np.pn",1.0)
+			setPoints(1,g,p,"qp.pq.pe.ep",0.5)
+		if GSystem.pattern(p,-1, "pD", -1, g) && GSystem.pattern(p,-1, "pA", 0, g):
+			setPoints(layer,g,p,"pD",-9)
+			setPoints(layer,g,p,"pA",3)
+		if GSystem.pattern(p,1,"pA",1,g):
+			setPoints(1,g,p,"pA",-1.44)
+
+#ins = [metric,compValue,targetMetric,add]
+#ins_2454 = [6,0,21,2.8]
+#func parseIns(g):
+	#for ic in ins_list:
+		#if g[ic[0] / 9].score[ic[0] / 7] < ic[1]:
+			#g[ic[2] / 9].score[ic[2] / 7] += ic[3]
+
+func getStructures():
+	var C = []
+	C.append([0,1,0,-1,0,2.5,0,-2.5,1,1.5,-1,-1.5,2.5,-5,-2.5,5])
+	
+	
+
+
+func getIndex(m):
+	var s = "ABCDEFGHIJKL"
+	return s[m%12]+str(m/12 + 1)
+
 #generate rectangular subset R of metricplane Z (g_ij(y) is x-axis m_p is y-axis)
 #this subset serves as a preliminary target to be reached by Transitions
 func getTargets(eval,t):
@@ -316,11 +347,26 @@ func init(board):
 	#testing
 	#read SP polynomials, C constraints and read N,N0 matrix values
 	FSystem.initialize()
-	#GSystem.initialize()
+	GSystem.populate()
 	#TODO implement non-debug mode, where synthetic constraints, relations are created
 	#TODO implement training mode
 	#TODO read N,N0 from file
-	GSystem.populate()
+	
+	for i in range(0,9):
+		var x = randi_range(3,6)
+		var y = randi_range(3,6)
+		DPU_list[x*10 + y].setLocalW(10+randf_range(-1,1))
+	
+	for k in range(0,100):
+		var dpu : DynamicalProcessingUnit = DPU_list[k]
+
+		#print("relevance: ",dpu.computeRelevance())
+		for i in range(0,1):
+			for j in range(0,9): 
+				var R = FSystem.getWaypointTarget(i,10) #create waypoint [m1,m2,nw_point,se_point] and append
+				R.append([dpu.id,i,j,dpu.id*10**4+i*10**2+j])
+				R_waypoints.append(R)
+	
 
 func makeMove(observation:Board):
 	game_board = observation

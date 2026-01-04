@@ -8,26 +8,30 @@ contains also Principles C_0 & C_1
 '''
 
 static var relvector = []
-static var collection1 = [] #9*9*7 matrix
-static var collection2 = [] #9*7*7 matrix
+static var q1 = [] #9*9*7 matrix
+static var q2 = [] #9*7*7 matrix
 
-static var C = []
+static var C = [] #set of constraints
+static var W = [] #set of state->change functions F0
 static var seq = []
 	
 static var ge = []
 static var e0 = []
+static var e1 = []
+
+static var counter = 0
 
 static func loadData():
 	var lines1 = []
 	var lines2 = []
 	
-	var file = FileAccess.open("/EngineData-ldagent/train/dataN1", FileAccess.READ)
+	var file = FileAccess.open("/EngineData-ldagent/data/dataN1", FileAccess.READ)
 	while(file.get_position() < file.get_length()):
 		var str = file.get_line()
 		lines1.append(str)
 	file.close()
 	
-	var file2 = FileAccess.open("/EngineData-ldagent/train/dataN0", FileAccess.READ)
+	var file2 = FileAccess.open("/EngineData-ldagent/data/dataN0", FileAccess.READ)
 	while(file2.get_position() < file.get_length()):
 		var str = file.get_line()
 		lines2.append(str)
@@ -38,7 +42,7 @@ static func loadData():
 	var column = 0
 	for row in lines1:
 		for j :String in row.split(" "):
-			collection1[line / 81][column*9 + line] = j.to_float()
+			q1[line / 81][column*9 + line] = j.to_float()
 			column += 1
 		line += 1
 		
@@ -46,7 +50,7 @@ static func loadData():
 	column = 0
 	for row in lines2:
 		for j :String in row.split(" "):
-			collection2[line / 63][column*9 + line] = j.to_float()
+			q2[line / 63][column*9 + line] = j.to_float()
 			column += 1
 		line += 1
 		
@@ -57,9 +61,9 @@ static func getRelVector(dpu,i,j):
 		relvector.append(dpu.get_points()[3*i+j].score[y])
 
 static func rell(y1,y2,i,j,m,n):
-	var temp1_1 = MathLib.mult(collection1[y1],collection2[y1])
+	var temp1_1 = MathLib.mult(q1[y1],q2[y1])
 	var temp1_2 = MathLib.mult(temp1_1,relvector)
-	var temp2_1 = MathLib.mult(collection1[y2],collection2[y2])
+	var temp2_1 = MathLib.mult(q1[y2],q2[y2])
 	var temp2_2 = MathLib.mult(temp2_1,relvector)
 	var sum = 0
 	for k in range(0,temp2_2.size()):
@@ -76,29 +80,23 @@ static func populate():
 				if j == k:
 					temp.append(1)
 				else:
-					temp.append(randf_range(-5.0,5.0))
-		collection1.append(temp)
+					temp.append(0)
+		q1.append(temp)
 		
 		
 	for i in range(0,7):
 		var temp = []
 		for j in range(0,7):
 			for k in range(0,9):
-				temp.append(randf_range(-5.0,5.0))
-		collection2.append(temp)
+				temp.append(0)
+		q2.append(temp)
 	
-	for i in range(0,7):
-		var row = []
-		for j in range(0,9):
-			var col = []
-			for k in range(0,9):
-				col.append(0)
-			row.append(col)
-		e0.append(row)
-		
+	e0.resize(3906)
+	e0.fill(0)
+	
 	
 
-#start Dynamic System Logic Learning phase, update N,N0 values and compute approximation of rell_y1y2_{i,j}{m,n}
+#start Dynamic System Logic Learning procedure, update q1,q2 values and compute local state of rell_y1y2_{i,j}{m,n}
 static func dslLearning(dpu,R,dyDiffVector): 
 
 	var result = 0
@@ -106,6 +104,7 @@ static func dslLearning(dpu,R,dyDiffVector):
 	#var gates = dpu.gates
 	#var channelIndex = dpu.channelIndex
 	var y1 = R[0] / 9
+	var y2 = R[1] / 9
 	var i1 = (R[0] % 9) % 3
 	var j1 = (R[0] % 9) / 3
 	var i2 = (R[1] % 9) % 3
@@ -116,10 +115,14 @@ static func dslLearning(dpu,R,dyDiffVector):
 	dyDiffVector = dyDiffVector.normalized()
 	var l_sqr = dyDiffVector.x**2 + dyDiffVector.y**2
 	
-	for M in range(0,1):
+	var g = dpu.get_points().duplicate(true)
+	counter = 0
+	for M in range(0,10):
 		randValue = randf_range(-l_sqr + dyDiffVector.x,l_sqr + dyDiffVector.x)
-		computeSeq(i2,j2,y1,randValue,dpu,i2,j2,y1,false)
-		errors.append([randValue,abs(e0[y1][i2][j2])])
+		computeSeq(i1,j1,y1,randValue,dpu,i2,j2,y2,false,g)
+		errors.append([randValue,e0[y1][3*i1+i2][3*j1+j2]])
+		
+	prints("recursive phase finished with",counter,"calls")
 		
 	var min = 10000
 	for e in errors:
@@ -131,37 +134,204 @@ static func dslLearning(dpu,R,dyDiffVector):
 	
 	return y / result
 
+static func transition(q,y,a,b,i,j,g):
+	g[3*i+j].score[q] += q1[q][9*(3*a+b) + 3*i+j] * g[3*a+b].score[q] - constr(q,g[3*a+b].score[q]) + computeF0(q,g,3*i+j)
+	g[3*i+j].score[y] += q2[q][9*y + 3*i+j] * g[3*i+j].score[q] #update (y,i,j)
 
-
-static func computeSeq(a,b,q,randValue,dpu,x1,x2,layer,stop):
-	var g = dpu.get_points()
+#recursively computes (a,b,q) -> (x1,x2,layer) error for test value 'randvalue' by computing q1,q2 matrix intermediate values
+static func computeSeq(a,b,q,randValue,dpu,x1,x2,layer,stop,g):
+	
 	var i = (a+1)%3
 	var j = (b+1)%3
-	var y = q
+	var y = (q+1)%7
+	
+	counter += 1
+	
+	#start (q,a,b)
+	#update (q,i,j) with constraint + F0
+	#go to (y,i,j), update
+	#update (y,a,b) with constr+ F0
+	#
+	
+	
+	
+	
+	#var id = ((i*3+j)*7 + y)*100 + dpu.id
+	#FSystem.REL.get_or_add(id,-1.0)
+			
 	while(!stop):
 		while(!stop):
-			setRelInG(q,a,b,i,j,g[3*i+j].score[q]/randValue)
+			
+			
+			#collection1[q][9*(3*a+b) + 3*i+j] = g[3*a+b].score[q] * randValue - constraint(q,g[3*a+b].score[q])
+			#g[3*i+j].score[q] += collection1[q][9*(3*a+b) + 3*i+j] + computeF0(q,g,3*a+b)
 			seq.append([i,j,q])
-			var id = ((i*3+j)*7 + y)*100 + dpu.id
-			FSystem.REL.get_or_add(id,-1.0)
 			while(!stop):
-				setRell(q,y,i,j,g[3*i+j].score[y]/randValue)
+				transition(q,y,a,b,i,j,g)
+				#collection2[q][9*y + 3*i+j] = g[3*i+j].score[q] * randValue
+				#g[3*i+j].score[y] += collection2[q][9*y + 3*i+j] #+ computeF0(q,)
 				seq.append([i,j,y])
 				if(i == x1 && j == x2 && y == layer):
-					e0[y][i][j] = collection2[y][9*q + 3*i+j] - randValue
+					e0[y][3*a+b][3*i+j] = q2[q][9*y + 3*i+j] - randValue
 					return true
-				i = (i+1) % 3
-				j = (j+1) % 3
 				y = (y+1) % 7
-				stop = computeSeq(i,j,y,randValue,dpu,x1,x2,layer,stop)
+				stop = computeSeq(i,j,y,randValue,dpu,x1,x2,layer,stop,g)
+			j = (j+1) % 3
+		i = (i+11) % 3
 				
 	return true
 
-static func setRell(y1,y2,m,n,value):
-	collection2[y2][9*y1 + 3*m+n] = value
+static func constr(layer,value):
+	for element in C[layer]:
+		if element[0] == value:
+			return element[1]
+			
+	return 0
 
-static func setRelInG(y1,i,j,m,n,value):
-	collection1[y1][9*(3*i+j) + 3*m+n] = value
+
+
+#W[y] = [no_of_state, no_of_c, s_gnote0,s_gnote1,..., s_val0, s_val1, ..., start,  c_gnote0,c_gnote1,..., c_val0,...]
+#W[0] = [2  9  0,4  1,2.5  5  0,1,2,3,4,5,6,7,8,9  1,2,3,1,5,-1,2,2.2,2] = "29p.mp12.5_5_p.np.pm.pn.mp.qp.pe.pq.ep.fp0102030105-010202.202"
+
+#computes all F0 rules on state, if tgt applies to rule and returns the sum of all rule changes to be added at point 'tgt'
+static func computeF0(layer,state,tgt):
+	var sum = 0    
+
+	for w in W:
+		
+		var s_values = []
+		var s_gformat = []
+		var c_gformat = []
+		var c_values = []
+		
+		for i in range(4,4+w[0]):
+			s_values.append(w[i])
+
+		for h in range(2,2+w[0]):
+			s_gformat.append(w[h])
+			
+		for k in range(3 + 2*w[0], 3 + 2*w[0] + w[1]):
+			c_gformat.append(w[k])
+			
+		for j in range(3+ 2*w[0] + w[1], 3+2*w[0] + 2*w[1]):
+			c_values.append(w[j])
+					
+		var anchor = patternCheck(layer,s_values,c_gformat,state,Vector2(-1,3),w[2+2*w[0]])
+		if anchor.magnitude != 0:
+			for g in range(c_gformat.size()):
+				if cpattern(2+ 3*w[0],w[3+ 2*w[0] + g],anchor) == tgt:
+					sum += w[3 + 2*w[0] + w[1] + g]
+							
+	return sum
+		
+#test if pattern given by 'format_spec' with 'values' exists in 'state' starting with 'p', oriented by 'anchor' at 'layer'
+static func patternCheck(layer,values,format_spec,state,anchor,p):
+	
+	if values.size() == 0:
+		return anchor
+
+	var temp = values.pop()
+	var temp2 = format_spec.pop()
+	
+	if state[cpattern(p,format_spec,Vector2(-1,3))].score[layer] == temp:
+		return patternCheck(layer,values,format_spec,state,Vector2(-1,3),p)
+	elif state[cpattern(p,format_spec,Vector2(3,3))].score[layer] == temp:
+		return patternCheck(layer,values,format_spec,state,Vector2(3,3),p)
+	elif state[cpattern(p,format_spec,Vector2(3,-1))].score[layer] == temp:
+		return patternCheck(layer,values,format_spec,state,Vector2(3,-1),p)
+	elif state[cpattern(p,format_spec,Vector2(-1,-1))].score[layer] == temp:
+		return patternCheck(layer,values,format_spec,state,Vector2(-1,-1),p)
+
+	return Vector2(0,0)
+
+
+	'''p np pm pn mp qp pe pq ep fp wp pf pw
+	   0  1  2  3  4  5  6  7  8  9 10 11 12'''
+
+#return relative pattern index 'currGForm' in terms of 'anchor'
+static func cpattern(p,currGForm,anchor):
+	#C1 = [-3,1,3,-1]
+	#C2 = [-4,2,4,-2]
+	#C3 = [-6,-2,6,2]
+#
+	#var offsets = [0,0,0,3,1,1,2,2,2,1,3,3]
+
+	var B1 =[0, -3,1,3,-1, -4,2,4,-2, -6,-2,6,2] 
+	var B2 =[0, -1,-3,1,3, 2,4,-2,-4, -2,6,2,-6] #-offsets [3,1,1]
+	var B3 =[0, 3,-1,-3,1, 4,-2,-4,2, 6,2,-6,-2] #-[2,2,2]
+	var B4 =[0, 1, 3,-1,-3, -2,-4,2,4, 2,-6,-2,6] #-[1,3,3]
+
+	if anchor.x == -1 && anchor.y == 3:
+		return p + B1[currGForm]
+	elif anchor.x == 3 && anchor.y == 3:
+		return p + B2[currGForm]
+	elif anchor.x == 3 && anchor.y == -1:
+		return p + B3[currGForm]
+	elif anchor.x == -1 && anchor.y == -1:
+		return p + B4[currGForm]
+
+
+#static func trainSeq(h1,q,randValue,dpu,h3,layer):
+	#var g = dpu.get_points()
+	#var N = 0
+	##(a,b,q) -> (x1,x2,q) -> (x1,x2,layer)
+	#
+	#var temp = 10000
+	#while(temp > 1 && N < 100):
+		#temp = getRelg(q,h1,h3,randValue,dpu)
+		#N += 1
+#
+	#N = 0
+	#while(temp > 1 && N < 100):
+		#temp = getRell(q,layer,h3,randValue,dpu)
+		#N += 1
+		#
+	#return temp
+#
+#
+#
+#static func getRell(y1,y2,h1,randValue,dpu):
+	#return 1
+#
+#static func getRelg(y1,h1,h3,randValue,dpu):
+	#var g = dpu.get_points()
+	#var e = 0
+	#var h2 = randi_range(0,8)
+	#var q = randi_range(0,6)
+	#
+	##(h1,y1) -> (h2,y1)
+	#var value = applyIns(y1,h2)
+	#collection1[y1][9*h1 + h2] += value
+	#var change = g[h1].score[y1] * value
+	#e += change - constraintCheck(y1,g,h1,h2,change)
+	##e0[y][9*h1 + h2] += e
+	#
+	##(h2,y1) -> (h2,q)
+	#value = 1
+	#collection2[y1][9*q + h2] += value
+	#change = g[h2].score[y1] * value
+	#e += change
+	##e1[y1][7*q + h2] += e
+	#
+	##(h2,q) -> (h3,q)
+	#value = 1
+	#collection1[q][9*h2 + h3] += value
+	#change = g[h2].score[q] * value
+	#e += change - constraintCheck(q,g,h2,h3,change)
+	##e0[q][9*h2 + h3] += change - constraintCheck(q,g,h2,h3,change)
+	#
+	##(h3,q) -> (h3,y1)
+	#value = 1
+	#collection2[q][9*y1 + h3] += value
+	#change = g[h3].score[q] * value
+	#e += change
+	#
+	#
+	#return e*(change - randValue)
+	
+	
+static func applyIns(layer, metric):
+	return 1
 	
 #dm_1 * relg(m1,m2,y1) + rell(m2,y1,0)
 #returns [i,j,confidence] where (i,j) is the point closest to 1.0 in layer 0 (the move layer)
@@ -173,28 +343,27 @@ static func inferMove(y,m1,m2,d_m1,d_m2,dpu):
 	var temp1
 	var temp2
 	
-	for i2 in range(0,3):
-		for j2 in range(0,3):
-			prints("dpu:",dpu.id,"i2",i2,"j2",j2,"piece:",dpu.get_points()[3*i2+j2].piece)
-			if dpu.get_points()[3*i2+j2].piece != 0:
+	for j2 in range(0,3):
+		for i2 in range(0,3):
+			prints("dpu:",dpu.id,"i2",i2,"j2",j2,"piece:",dpu.get_points()[3*j2+i2].piece)
+			if dpu.get_points()[3*j2+i2].piece != 0:
 				continue
 			
 			#rel(0,i2,j2,y,i2,j2) + rel(y,i2,j2,y, (m1 % 9) % 3, (m1 % 9) / 3)
-			t += pow(collection2[0][9*y + 3*i2+j2] + collection1[y][9*(3*i2+j2) + m1] - d_m1,-4)
-			t += pow(collection2[0][9*y + 3*i2+j2] + collection1[y][9*(3*i2+j2) + m2] - d_m2,-4)
+			t += pow(q2[0][9*y + 3*j2+i2] + q1[y][9*(3*j2+i2) + m1] - d_m1,-4)
+			t += pow(q2[0][9*y + 3*j2+i2] + q1[y][9*(3*j2+i2) + m2] - d_m2,-4)
 			
 			
 			for cl in C:
 				for constraint in cl:
-					t += 1.0/((constraint[0] - dpu.get_points()[3*i2+j2].score[0])**4)
-					t += 1.0/((constraint[1] - d_m1*collection2[y][m1])**4)
+					t += 1.0/((constraint[0] - dpu.get_points()[3*j2+i2].score[0])**4)
+					t += 1.0/((constraint[1] - d_m1*q2[y][m1])**4)
 
 			R.append([i2,j2,t])
 			t = 0
 
 	
 	return R
-
 
 static func sampleVec(w, change_direction, m1, m2, pUL, pLR, N, dpu):
 	getRelVector(dpu,(m1 % 9) % 3, (m1 % 9) / 3)
@@ -233,7 +402,7 @@ static func wInft(w,y,i,j,g:int):
 		return 5.0/7.0
 	else:
 		return randf_range(-2.5,2.5)
-	
+
 
 static func getClause(W : Array,t,end):
 	var clause = []
@@ -241,14 +410,6 @@ static func getClause(W : Array,t,end):
 		clause.append(W[i]**(1-2/((W[i]*t/end)**3)))
 	return clause
 
-'''
-np
-mp
-Ap
-Dp
-nd
-md
-'''
 
 static func pattern(p, pType, s, matchType, R) -> bool:
 	var corners = [Vector2(-1,-1),Vector2(3,3), Vector2(-1,3), Vector2(3,-1)]
@@ -401,8 +562,32 @@ wp.nwp,wp.wpn = 0
 p|np.pn|mp|wp|dP|wp.npw,wp.wpn
 pnppnmpwpdPwpnpwwpwpn--[1,4,2,2,2,10]@[(1,2),(5,2,7)]#[(5,5)]
 '''
+
+#C[y] = [gnote_str, source, point_states, change_vector, target_layer]
+
 #var test = "np.p.pn,np.mpd.mp:pn = pn"
 #gnote(test,[Vector2(1,2),Vector2(0,2)])
+
+
+static func convertC(t):
+	'''
+	  [[[0,0,0],
+		[0,2.5,0],
+		[0,1,0]],
+
+		[[1,2,3],
+		[1,5,-1],
+		[2,2.2,2]],
+		2,9,0,4,5]
+	'''
+	var result = []
+	result.append_array([t[2],t[3],t[4],t[5]])
+	
+	for rowVec in t[0]:
+		for s_value in rowVec:
+			result.append(s_value)
+	
+	result.append(t[6])
 
 static func gnote(state,change):
 	pass
@@ -461,33 +646,33 @@ static func gnoteString(s:String, p:Array[Vector2]):
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	C.append([[0,1],[0,-1],[0,2.5],[0,-2.5],[1,1.5],[-1,-1.5],[2.5,-5],[-2.5,5]])
-
+	W.append([2,9,0,4,1,2.5,5,15,1,2,3,1,5,-1,2,2.2,2])
 			
-	var t = [[[0,0,0],
-			[0,2.5,0],
-			[0,1,0]],
-	
-			[[1,2,3],
-			[1,5,-1],
-			[2,2.2,2]]]
-			
-	var d = 0
-	for i in range(0,3):
-		for j in range(0,3):
-			if(t[i][j] != 0):
-				d += i + j
-		
-	var s = "p.pw|2.5,1|p.pm.pmn.npm.np.pn.mp.mpn.nmp|5,2.2,2,2,1,-1,2,3,1"
-	
-	var w = s.split("|")
-	var stateL = w[0].split(".")
-	var stateV = w[1].split(",")
-	var changeL = w[2].split(".")
-	var changeV = w[3].split(",")
-	
-	#C.append()
-	
-	[["p.pw",[2.5,1],"p.pm.pmn.npm.np.pn.mp.mpn.nmp",[5,2.2,2,2,1,-1,2,3,1]]]
+	#var t = [[[0,0,0],
+			#[0,2.5,0],
+			#[0,1,0]],
+	#
+			#[[1,2,3],
+			#[1,5,-1],
+			#[2,2.2,2]]]
+			#
+	#var d = 0
+	#for i in range(0,3):
+		#for j in range(0,3):
+			#if(t[i][j] != 0):
+				#d += i + j
+		#
+	#var s = "p.pw|2.5,1|p.pm.pmn.npm.np.pn.mp.mpn.nmp|5,2.2,2,2,1,-1,2,3,1"
+	#
+	#var w = s.split("|")
+	#var stateL = w[0].split(".")
+	#var stateV = w[1].split(",")
+	#var changeL = w[2].split(".")
+	#var changeV = w[3].split(",")
+	#
+	##C.append()
+	#
+	#[["p.pw",[2.5,1],"p.pm.pmn.npm.np.pn.mp.mpn.nmp",[5,2.2,2,2,1,-1,2,3,1]]]
 	
 	
 
