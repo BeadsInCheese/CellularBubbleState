@@ -32,6 +32,7 @@ func playDialogue(dialogue:Array[String]):
 	for i in dialogue:
 		var parts=i.split("@")
 		$Panel/Header.text="[center]"+parts[0]+"[center]"
-		await waitOrWrite(parts[1])
+		if len(parts)>1:
+			await waitOrWrite(parts[1])
 		await inputProgress()
 	visible=false

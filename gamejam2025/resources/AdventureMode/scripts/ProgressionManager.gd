@@ -5,7 +5,8 @@ class_name ProgressionManager
 static var achievements={}
 @export 
 var data:Array[enemyResource]
-
+@export
+var after_stage_dialogue:Array[String]
 static var fightsWon=0
 static var current_fight=0
 func adventure_dialogue_decode(i:int):
