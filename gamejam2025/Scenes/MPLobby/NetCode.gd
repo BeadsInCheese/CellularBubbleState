@@ -27,7 +27,7 @@ func start_client() -> void:
 	multiplayer.multiplayer_peer = peer
 
 func disconnect_client() -> void:
-	peer.disconnect_peer(1)
+	peer.close()
 
 
 func get_server_ip() -> String:
@@ -67,6 +67,9 @@ func request_move(connecting_id: int, tile_index: int, tile_type: int, lobby_key
 	confirm_move.rpc_id(get_opponent_id(connecting_id, lobby_key), tile_index, tile_type)
 
 func get_opponent_id(id: int, lobby_key: String) -> int:
+	if not lobby_key in lobbies:
+		return 1 # return server id if lobby doesn't exist
+	
 	for other_id in lobbies[lobby_key]:
 		if other_id != id:
 			return other_id
