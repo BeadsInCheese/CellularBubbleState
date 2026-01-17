@@ -15,7 +15,7 @@ class PlayerInfo:
 var lobbies: Dictionary = {} # key: lobby_key, value: Array<int> (player_id array)
 var players: Dictionary = {} # key: player_id, value: PlayerInfo
 
-var local_opponent_id: int
+var local_opponent_id: int = 0 # id of the current opponent. 0 if not connected to a game
 
 signal on_move_confirmed(tile_index: int, tile_type: int)
 
@@ -39,6 +39,8 @@ func connect_client() -> void:
 func disconnect_client() -> void:
 	if peer != null:
 		peer.close()
+	
+	local_opponent_id = 0
 
 
 func get_server_ip() -> String:
@@ -51,7 +53,9 @@ func get_server_ip() -> String:
 	return config.get_value("MULTIPLAYER", "SERVER_IP", "127.0.0.1")
 
 @rpc("any_peer", "reliable")
-func start_lobby(connecting_id: int, lobby_key: String):
+func start_lobby(lobby_key: String):
+	var connecting_id = multiplayer.get_remote_sender_id()
+	
 	if lobby_key in lobbies:
 		var lobby_players: Array = lobbies[lobby_key]
 		if len(lobby_players) != 1:
@@ -88,9 +92,12 @@ func write_to_console(author: String, message: String):
 
 func on_peer_connected(id: int):
 	if id == 1: # Register lobby when connecting to the server
-		start_lobby.rpc_id(id, multiplayer.get_unique_id(), Settings.MPKey)
+		start_lobby.rpc_id(id, Settings.MPKey)
 
 func on_peer_disconnected(id: int):
+	local_opponent_id = 0
+
+func on_client_disconnected(id: int):
 	if not id in players: # skip if player connection was invalid (e.g. 3rd player in the same lobby)
 		return
 	
@@ -107,6 +114,7 @@ func _ready() -> void:
 	if DisplayServer.get_name() == "headless":
 		start_server()
 		
-		multiplayer.peer_disconnected.connect(on_peer_disconnected)
+		multiplayer.peer_disconnected.connect(on_client_disconnected)
 	else:
 		multiplayer.peer_connected.connect(on_peer_connected)
+		multiplayer.peer_disconnected.connect(on_peer_disconnected)
