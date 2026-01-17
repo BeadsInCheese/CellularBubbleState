@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://do8gi3351ydjt"]
+[gd_scene load_steps=19 format=3 uid="uid://do8gi3351ydjt"]
 
 [ext_resource type="PackedScene" uid="uid://dwto0t5hs6gjx" path="res://resources/AdventureMode/Scenes/LevelButton.tscn" id="1_bx2to"]
 [ext_resource type="Script" path="res://resources/AdventureMode/scripts/ProgressionManager.gd" id="1_havs1"]
@@ -13,12 +13,54 @@
 [ext_resource type="AudioStream" uid="uid://c1jspdoo3lhtr" path="res://resources/AdventureMode/sfx/click4.wav" id="6_d6slh"]
 [ext_resource type="Resource" uid="uid://df5y8pi4ufgh0" path="res://resources/Enemies/golgat.tres" id="6_pipn8"]
 [ext_resource type="Resource" uid="uid://c4uvwpefwpkp" path="res://resources/Enemies/Stategol.tres" id="7_51e0f"]
+[ext_resource type="Texture2D" uid="uid://bpla4t57vgoxp" path="res://resources/AdventureMode/enemy_sprites/golgath.png" id="9_i3pxt"]
+[ext_resource type="Texture2D" uid="uid://dsac4s8snkkmi" path="res://resources/AdventureMode/enemy_sprites/map.png" id="9_ickhe"]
+[ext_resource type="Texture2D" uid="uid://20efrpwpggx7" path="res://resources/AdventureMode/enemy_sprites/ampere.png" id="9_rlj38"]
+[ext_resource type="Texture2D" uid="uid://duhf5rgjvawlr" path="res://resources/AdventureMode/enemy_sprites/sera.png" id="10_tl1lw"]
 [ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="14_4ihod"]
 
 [node name="Map" type="CanvasLayer"]
 script = ExtResource("1_havs1")
 data = Array[ExtResource("2_tuhj0")]([ExtResource("3_hnqn6"), ExtResource("4_ev681"), ExtResource("4_3qaqn"), ExtResource("5_fvh73"), ExtResource("6_pipn8"), ExtResource("7_51e0f")])
 after_stage_dialogue = Array[String](["", "", "", "", ""])
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchors_preset = -1
+anchor_left = 0.00260417
+anchor_top = 0.000333339
+anchor_right = 0.998243
+anchor_bottom = 0.986111
+offset_top = -0.216003
+offset_right = 0.0239258
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_ickhe")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Ampere" type="TextureRect" parent="."]
+offset_left = 433.0
+offset_top = 269.0
+offset_right = 591.0
+offset_bottom = 462.0
+texture = ExtResource("9_rlj38")
+
+[node name="Sera" type="TextureRect" parent="."]
+offset_left = 290.0
+offset_top = 237.0
+offset_right = 547.0
+offset_bottom = 584.0
+scale = Vector2(0.600706, 0.583204)
+texture = ExtResource("10_tl1lw")
+
+[node name="Golgath" type="TextureRect" parent="."]
+texture_filter = 1
+offset_left = 924.0
+offset_top = 307.0
+offset_right = 1244.0
+offset_bottom = 627.0
+scale = Vector2(0.454464, 0.487843)
+texture = ExtResource("9_i3pxt")
 
 [node name="DialogueBox" type="Panel" parent="."]
 custom_minimum_size = Vector2(18.63, 205.475)
@@ -85,23 +127,23 @@ offset_bottom = 242.0
 
 [node name="LevelButton2" parent="levels" instance=ExtResource("1_bx2to")]
 offset_left = 273.0
-offset_top = 248.0
+offset_top = 247.0
 offset_right = 273.0
-offset_bottom = 248.0
+offset_bottom = 247.0
 opponent = 1
 
 [node name="LevelButton3" parent="levels" instance=ExtResource("1_bx2to")]
-offset_left = 411.0
-offset_top = 254.0
-offset_right = 411.0
-offset_bottom = 254.0
+offset_left = 362.0
+offset_top = 353.0
+offset_right = 362.0
+offset_bottom = 353.0
 opponent = 2
 
 [node name="LevelButton4" parent="levels" instance=ExtResource("1_bx2to")]
-offset_left = 593.0
-offset_top = 136.0
-offset_right = 593.0
-offset_bottom = 136.0
+offset_left = 535.0
+offset_top = 413.0
+offset_right = 535.0
+offset_bottom = 413.0
 opponent = 3
 
 [node name="LevelButton5" parent="levels" instance=ExtResource("1_bx2to")]
@@ -112,10 +154,10 @@ offset_bottom = 270.0
 opponent = 4
 
 [node name="LevelButton6" parent="levels" instance=ExtResource("1_bx2to")]
-offset_left = 1096.0
-offset_top = 285.0
-offset_right = 1096.0
-offset_bottom = 285.0
+offset_left = 978.0
+offset_top = 385.0
+offset_right = 978.0
+offset_bottom = 385.0
 opponent = 5
 
 [node name="Transition" parent="." instance=ExtResource("14_4ihod")]
