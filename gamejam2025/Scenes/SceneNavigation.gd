@@ -25,12 +25,17 @@ func go_to_map()-> void:
 func go_to_ruleset_editor():
 	_go_to_scene("res://rulesetMaker/RuleEdit.tscn")
 
-var loading=false
+var loading = false
+var pushed_scene = null
 
 func _go_to_scene(scene: String, push_as_child = false):
 	# Wait hide animation
 	if loading:
 		return
+
+	if pushed_scene != null:
+		pushed_scene.queue_free()
+		pushed_scene = null
 
 	loading=true
 	for i in range(51):
@@ -42,7 +47,8 @@ func _go_to_scene(scene: String, push_as_child = false):
 	if(get_tree()!=null):
 		await get_tree().process_frame
 		if push_as_child:
-			get_tree().root.add_child(load(scene).instantiate())
+			pushed_scene = load(scene).instantiate()
+			get_tree().root.add_child(pushed_scene)
 		else:
 			get_tree().change_scene_to_packed(load(scene))
 		

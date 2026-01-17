@@ -29,7 +29,7 @@ func send_move(board: Board):
 	var tile_index = board.lastMove[0]
 	var tile_type = board.lastMove[1]
 	
-	NetCode.request_move.rpc_id(1, NetCode.multiplayer.get_unique_id(), tile_index, tile_type, Settings.MPKey)
+	NetCode.send_move.rpc_id(NetCode.local_opponent_id, tile_index, tile_type)
 
 func on_move_received(tile_index: int, tile_type: int):
 	latest_tile_index = tile_index

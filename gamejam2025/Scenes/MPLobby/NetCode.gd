@@ -4,8 +4,18 @@ var peer: WebSocketMultiplayerPeer
 
 const PORT: int = 25565
 
-var lobbies: Dictionary = {}
-var players: Dictionary = {}
+class PlayerInfo:
+	var lobby_key: String
+	var opponent_id: int
+	
+	func _init(lobby_key: String, opponent_id: int) -> void:
+		self.lobby_key = lobby_key
+		self.opponent_id = opponent_id
+
+var lobbies: Dictionary = {} # key: lobby_key, value: Array<int> (player_id array)
+var players: Dictionary = {} # key: player_id, value: PlayerInfo
+
+var local_opponent_id: int
 
 signal on_move_confirmed(tile_index: int, tile_type: int)
 
@@ -18,7 +28,7 @@ func start_server() -> void:
 	
 	multiplayer.multiplayer_peer = peer
 
-func start_client() -> void:
+func connect_client() -> void:
 	if peer == null:
 		peer = WebSocketMultiplayerPeer.new()
 
@@ -27,7 +37,8 @@ func start_client() -> void:
 	multiplayer.multiplayer_peer = peer
 
 func disconnect_client() -> void:
-	peer.close()
+	if peer != null:
+		peer.close()
 
 
 func get_server_ip() -> String:
@@ -42,60 +53,55 @@ func get_server_ip() -> String:
 @rpc("any_peer", "reliable")
 func start_lobby(connecting_id: int, lobby_key: String):
 	if lobby_key in lobbies:
-		var sides = randi_range(0, 1) == 0
-		
-		var lobby_players = lobbies[lobby_key]
-		if len(lobby_players) > 1:
+		var lobby_players: Array = lobbies[lobby_key]
+		if len(lobby_players) != 1:
 			return # if lobby is full, discard additional players
+
+		var opponent_id = lobby_players[0]
+		
+		players[connecting_id] = PlayerInfo.new(lobby_key, opponent_id)
+		players[opponent_id] = PlayerInfo.new(lobby_key, connecting_id)
 		
 		lobby_players.append(connecting_id)
+		lobby_players.shuffle()
 		
-		start_game.rpc_id(lobby_players[0], sides)
-		start_game.rpc_id(lobby_players[1], !sides)
+		start_game.rpc_id(lobby_players[0], lobby_players[1], true)
+		start_game.rpc_id(lobby_players[1], lobby_players[0], false)
 	else:
 		lobbies[lobby_key] = [connecting_id]
-	
-	players[connecting_id] = lobby_key
 
 @rpc("authority", "reliable")
-func start_game(is_player1: bool):
+func start_game(opponent_id: int, is_player1: bool):
+	local_opponent_id = opponent_id
+	
 	Settings.MPPlayer1 = is_player1
 	SceneNavigation.go_to_game(true)
 
+
 @rpc("any_peer", "reliable")
-func request_move(connecting_id: int, tile_index: int, tile_type: int, lobby_key: String):
-	confirm_move.rpc_id(get_opponent_id(connecting_id, lobby_key), tile_index, tile_type)
-
-func get_opponent_id(id: int, lobby_key: String) -> int:
-	if not lobby_key in lobbies:
-		return 1 # return server id if lobby doesn't exist
-	
-	for other_id in lobbies[lobby_key]:
-		if other_id != id:
-			return other_id
-	return 1
-
-@rpc("authority", "reliable")
-func confirm_move(tile_index: int, tile_type: int):
+func send_move(tile_index: int, tile_type: int):
 	on_move_confirmed.emit(tile_index, tile_type)
 
-@rpc("authority", "reliable")
-func write_to_console(message: String):
-	Console.write("Server", message)
+@rpc("any_peer", "reliable")
+func write_to_console(author: String, message: String):
+	Console.write(author, message)
 
 func on_peer_connected(id: int):
 	if id == 1: # Register lobby when connecting to the server
 		start_lobby.rpc_id(id, multiplayer.get_unique_id(), Settings.MPKey)
 
 func on_peer_disconnected(id: int):
-	if not id in players: # if player connection was invalid, do not destroy lobby
+	if not id in players: # skip if player connection was invalid (e.g. 3rd player in the same lobby)
 		return
 	
-	var lobby_key = players[id]
-	write_to_console.rpc_id(get_opponent_id(id, lobby_key), "Client " + str(id) + " disconnected!!!")
-	
-	lobbies.erase(lobby_key)
+	var player_info: PlayerInfo = players[id]
 	players.erase(id)
+	
+	if not player_info.lobby_key in lobbies:
+		return
+	
+	write_to_console.rpc_id(player_info.opponent_id, "Server", "Player " + ("1" if id == lobbies[player_info.lobby_key][0] else "2") + " disconnected!!!")
+	lobbies.erase(player_info.lobby_key)
 
 func _ready() -> void:
 	if DisplayServer.get_name() == "headless":
