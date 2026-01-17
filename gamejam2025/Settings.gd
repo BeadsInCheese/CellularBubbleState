@@ -8,6 +8,7 @@ var P1Index=0
 var P2Index=0
 var MPKey=""
 var MPPlayer1=false
+var MPResumeHistory: Array[String] = []
 
 func setSFX(volume):
 	sfxVolume=volume

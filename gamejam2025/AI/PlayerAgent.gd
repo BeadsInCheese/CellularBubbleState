@@ -7,8 +7,6 @@ class_name PlayerAgent
 func makeMove(observation:Board):
 	makingMove=true
 	
-	#print("latest tile index: " + str(observation.latestTileIndex))
-
 	if observation.tutorial:
 		observation.get_node("Node2D").sequence
 
@@ -27,15 +25,10 @@ func makeMove(observation:Board):
 				return
 		else:
 			return
-		#print((makingMove))
+
 	moveMade.emit(observation)
-func _ready() -> void:
-	pass
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
 func get_custom_class_name():
 	return "PlayerAgent"
 func get_is_player() -> bool:

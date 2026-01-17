@@ -8,9 +8,6 @@ var agentStage = 0
 #[66,43,67,64,64,43,90,78,89,90,51]
 var t = [43,67,43,56,89,103]
 
-# Called when the node enters the scene tree for the first time.
-#var makingMove=false
-
 func makeMove(observation:Board):
 	makingMove=true
 	

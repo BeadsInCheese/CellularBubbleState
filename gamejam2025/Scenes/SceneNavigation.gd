@@ -29,7 +29,6 @@ var loading = false
 var pushed_scene = null
 
 func _go_to_scene(scene: String, push_as_child = false):
-	# Wait hide animation
 	if loading:
 		return
 
@@ -37,6 +36,7 @@ func _go_to_scene(scene: String, push_as_child = false):
 		pushed_scene.queue_free()
 		pushed_scene = null
 
+	# Wait hide animation
 	loading=true
 	for i in range(51):
 		RenderingServer.global_shader_parameter_set("tt",i*0.02)

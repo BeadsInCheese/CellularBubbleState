@@ -7,10 +7,12 @@ const PORT: int = 25565
 class PlayerInfo:
 	var lobby_key: String
 	var opponent_id: int
+	var is_player1: bool
 	
-	func _init(lobby_key: String, opponent_id: int) -> void:
+	func _init(lobby_key: String, opponent_id: int, is_player1: bool) -> void:
 		self.lobby_key = lobby_key
 		self.opponent_id = opponent_id
+		self.is_player1 = is_player1
 
 var lobbies: Dictionary = {} # key: lobby_key, value: Array<int> (player_id array)
 var players: Dictionary = {} # key: player_id, value: PlayerInfo
@@ -62,15 +64,26 @@ func start_lobby(lobby_key: String):
 			return # if lobby is full, discard additional players
 
 		var opponent_id = lobby_players[0]
+
+		if opponent_id in players:
+			# continuing a disconnected game...
+			
+			players[connecting_id] = PlayerInfo.new(lobby_key, opponent_id, !players[opponent_id].is_player1)
+			lobby_players.append(connecting_id)
+			
+			restart_game.rpc_id(opponent_id, connecting_id)
+			
+			return
+			
+		var sides: bool = randi() & 1
 		
-		players[connecting_id] = PlayerInfo.new(lobby_key, opponent_id)
-		players[opponent_id] = PlayerInfo.new(lobby_key, connecting_id)
+		players[connecting_id] = PlayerInfo.new(lobby_key, opponent_id, sides)
+		players[opponent_id] = PlayerInfo.new(lobby_key, connecting_id, !sides)
 		
 		lobby_players.append(connecting_id)
-		lobby_players.shuffle()
 		
-		start_game.rpc_id(lobby_players[0], lobby_players[1], true)
-		start_game.rpc_id(lobby_players[1], lobby_players[0], false)
+		start_game.rpc_id(connecting_id, opponent_id, sides)
+		start_game.rpc_id(opponent_id, connecting_id, !sides)
 	else:
 		lobbies[lobby_key] = [connecting_id]
 
@@ -79,6 +92,21 @@ func start_game(opponent_id: int, is_player1: bool):
 	local_opponent_id = opponent_id
 	
 	Settings.MPPlayer1 = is_player1
+	SceneNavigation.go_to_game(true)
+
+@rpc("any_peer", "reliable")
+func restart_game(opponent_id: int):
+	local_opponent_id = opponent_id
+	
+	var board: Board = get_tree().root.get_node("root/Board")
+	resync_game.rpc_id(opponent_id, !Settings.MPPlayer1, board.boardHistory)
+
+@rpc("any_peer", "reliable")
+func resync_game(is_player1: bool, board_history: Array[String]):
+	local_opponent_id = multiplayer.get_remote_sender_id()
+	
+	Settings.MPPlayer1 = is_player1
+	Settings.MPResumeHistory = board_history
 	SceneNavigation.go_to_game(true)
 
 
@@ -107,8 +135,14 @@ func on_client_disconnected(id: int):
 	if not player_info.lobby_key in lobbies:
 		return
 	
-	write_to_console.rpc_id(player_info.opponent_id, "Server", "Player " + ("1" if id == lobbies[player_info.lobby_key][0] else "2") + " disconnected!!!")
-	lobbies.erase(player_info.lobby_key)
+	var lobby_players: Array = lobbies[player_info.lobby_key]
+	lobby_players.erase(id)
+	
+	if len(lobby_players) == 0:
+		lobbies.erase(player_info.lobby_key) # remove lobby when the last player disconnects -> lobby becomes empty
+		return
+	
+	write_to_console.rpc_id(player_info.opponent_id, "Server", "Player " + ("1" if player_info.is_player1 else "2") + " disconnected!!!")
 
 func _ready() -> void:
 	if DisplayServer.get_name() == "headless":

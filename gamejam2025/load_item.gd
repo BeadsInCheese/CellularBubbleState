@@ -8,14 +8,12 @@ func _button_pressed():
 	
 	var board : Board = find_parent("Board")
 	
-	#print("currentAgent",board.currentAgent.playerType)
-	
 	board.boardHistory = DataUtility.load_from_file(n)
 	board.currentBoardStatePointer = len(board.boardHistory)-1
 	board.decode_board(board.currentBoardStatePointer)
 
 	board.loading = true
-	board.currentAgent.makingMove = false
+	board.turnOrder[board.currentTurn].makingMove = false
 	
 
 # Called when the node enters the scene tree for the first time.

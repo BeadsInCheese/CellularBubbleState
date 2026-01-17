@@ -11,7 +11,6 @@ var xsize: int = 12
 @export
 var ysize: int = 12
 
-var currentAgent
 var gridList: Array[Bubble] = []
 var latestTileIndexes: Array[int] = []
 var latestAutomataIndexes: Array[int] = []
@@ -85,14 +84,10 @@ func getVictor():
 		v=1
 	return v
 
-var dataAquisition=false
-var dataCounter=0
-
-func changeTurn()->void:
-	currentAgent = turnOrder[currentTurn]
-	await turnOrder[currentTurn].makeMove(self)
+func change_turn(simulate = false):
+	if not simulate:
+		await turnOrder[currentTurn].makeMove(self)
 	
-	#print("type",currentAgent.playerType)
 	if(!loading):
 		currentTurn = (currentTurn+1) % 6
 		absoluteTurn += 1
@@ -103,45 +98,37 @@ func changeTurn()->void:
 		loading = false
 	
 	updateScore()
-	#print(player1Score,"   ",player2Score)
-	if(not isEnd() and not hasEnded):
-		changeTurn()
+	
+	if not isEnd() and not hasEnded:
+		if not simulate:
+			change_turn()
+		
 		turnChangedSignal.emit(absoluteTurn)
-
-	if dataAquisition and isEnd():
-		#print(boardHistory)
-		#_trainSave_button_pressed()
-		turnOrder[0].onTrainEnd(boardHistory,getVictor())
-		turnOrder[1].onTrainEnd(boardHistory,getVictor())
-		for i in gridList:
-			i.setTileType(0)
-		currentBoardStatePointer=0
-		boardHistory=[]
-		#trainer.delete_folder_contents("Train/TrainingData")
-		dataCounter+=1
-			
-			
-		changeTurn()
-		pass
+	
 	gui.updateSidebar(currentTurn,player1Score,player2Score,turnOrder[currentTurn].get_is_player())
 	updateCursor()
+	
 	if(!hasEnded and isEnd()):
 		hasEnded=true
 		var x = load("res://VictorAnnouncement.tscn").instantiate()
+		
 		if player1Score==player2Score:
 			victor=0.5
 		elif player1Score>player2Score:
 			victor=0
 		else:
 			victor=1
+		
 		for i in turnOrder:
 			i.destructor(self)
+		
 		x.get_node("ColorRect/VBoxContainer/Text").text="[center]DRAW[/center]" if player1Score==player2Score  else "[center]Player 1 Wins[/center]" if player1Score>player2Score else "[center]Player 2 Wins[/center]"  
+		
 		if(adventure and player1Score>player2Score):
 			ProgressionManager.set_progress(max(ProgressionManager.fightsWon,ProgressionManager.current_fight+1))
-		add_child(x)
 		
-	
+		add_child(x)
+
 
 func updateCursor():
 	var new_cursor_image =p1cursor if(turnOrder[currentTurn].playerType==Players.PLAYER1) else p2cursor
@@ -194,7 +181,11 @@ func _ready() -> void:
 	
 	moveToplace()
 	updateCursor()
-	changeTurn()
+	
+	if not Settings.MPResumeHistory.is_empty():
+		resume_multiplayer_game()
+	
+	change_turn()
 
 
 func moveToplace()->void:
@@ -229,8 +220,19 @@ static func getGridTileTypeStatic(xsize:int,ysize:int,xpos: int, ypos: int, boar
 
 	return board[xpos + ypos * ysize]
 
+## Reload board for resuming multiplayer client
+func resume_multiplayer_game():
+	boardHistory = Settings.MPResumeHistory
+	Settings.MPResumeHistory = []
+	
+	currentBoardStatePointer = len(boardHistory)-1
+	decode_board(currentBoardStatePointer)
 
-func decodeBoard(pointer):
+	loading = true
+	turnOrder[currentTurn].makingMove = false
+	change_turn(true)
+
+func decode_board(pointer):
 	var s = boardHistory[pointer]
 	currentTurn = int(s[len(s) - 1])
 	s = DataUtility.decode(s.substr(0,len(s)-1))
@@ -278,7 +280,7 @@ func _input(event):
 			currentBoardStatePointer -= 1
 			currentBoardStatePointer = clampi(currentBoardStatePointer,0,len(boardHistory)-1)
 			#print("pointer=",currentBoardStatePointer," turn=",currentTurn)
-			decodeBoard(currentBoardStatePointer)
+			decode_board(currentBoardStatePointer)
 			updateMeta()
 			turnChangedSignal.emit(absoluteTurn)
 
@@ -286,7 +288,7 @@ func _input(event):
 			currentBoardStatePointer += 1
 			currentBoardStatePointer = clampi(currentBoardStatePointer,0,len(boardHistory)-1)
 			#print("pointer=",currentBoardStatePointer," turn=",currentTurn)
-			decodeBoard(currentBoardStatePointer)
+			decode_board(currentBoardStatePointer)
 			updateMeta()
 			turnChangedSignal.emit(absoluteTurn)
 
