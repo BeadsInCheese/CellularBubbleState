@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource("1_0elgw")
-dialogue = Array[String](["amphere@a"])
+dialogue = Array[String](["amphere@"])
 bot_index = 4
