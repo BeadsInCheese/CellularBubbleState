@@ -24,8 +24,3 @@ func setMaster(volume):
 	masterVolume=volume
 	var Master_index= AudioServer.get_bus_index("Master")
 	AudioServer.set_bus_volume_db(Master_index, masterVolume-80)
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass

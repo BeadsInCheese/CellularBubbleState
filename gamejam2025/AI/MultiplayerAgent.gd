@@ -47,7 +47,8 @@ func makeMove(observation:Board):
 		SceneNavigation.go_to_multiplayer_selection()
 		return
 	
-	print("Received data: ", latest_tile_index,"  , ", latest_tile_type)
+	print("Received move to index: ", latest_tile_index, ", tiletype: ", latest_tile_type)
+	
 	observation.gridList[latest_tile_index].setTileType(observation.turnOrder[observation.currentTurn].playerType)
 	latest_board_history = observation.boardHistory
 	latest_tile_index = -1

@@ -55,37 +55,42 @@ func get_server_ip() -> String:
 	return config.get_value("MULTIPLAYER", "SERVER_IP", "127.0.0.1")
 
 @rpc("any_peer", "reliable")
-func start_lobby(lobby_key: String):
+func connect_lobby(lobby_key: String):
 	var connecting_id = multiplayer.get_remote_sender_id()
 	
-	if lobby_key in lobbies:
-		var lobby_players: Array = lobbies[lobby_key]
-		if len(lobby_players) != 1:
-			return # if lobby is full, discard additional players
+	if not lobby_key in lobbies:
+		lobbies[lobby_key] = [connecting_id] # add a new lobby key on the first connection and return
+		return
+	
+	var lobby_players: Array = lobbies[lobby_key]
+	if len(lobby_players) != 1:
+		return # if lobby is full, discard additional players
 
-		var opponent_id = lobby_players[0]
+	var opponent_id = lobby_players[0]
+	lobby_players.append(connecting_id)
 
-		if opponent_id in players:
-			# continuing a disconnected game...
-			
-			players[connecting_id] = PlayerInfo.new(lobby_key, opponent_id, !players[opponent_id].is_player1)
-			lobby_players.append(connecting_id)
-			
-			restart_game.rpc_id(opponent_id, connecting_id)
-			
-			return
-			
-		var sides: bool = randi() & 1
-		
-		players[connecting_id] = PlayerInfo.new(lobby_key, opponent_id, sides)
-		players[opponent_id] = PlayerInfo.new(lobby_key, connecting_id, !sides)
-		
-		lobby_players.append(connecting_id)
-		
-		start_game.rpc_id(connecting_id, opponent_id, sides)
-		start_game.rpc_id(opponent_id, connecting_id, !sides)
-	else:
-		lobbies[lobby_key] = [connecting_id]
+	if opponent_id in players:
+		reconnect_lobby(connecting_id, opponent_id, lobby_key)
+		return
+	
+	print("Starting lobby ", lobby_key, " for clients ", connecting_id, " and ", opponent_id)
+	
+	var sides: bool = randi() & 1
+	
+	players[connecting_id] = PlayerInfo.new(lobby_key, opponent_id, sides)
+	players[opponent_id] = PlayerInfo.new(lobby_key, connecting_id, !sides)
+	
+	start_game.rpc_id(connecting_id, opponent_id, sides)
+	start_game.rpc_id(opponent_id, connecting_id, !sides)
+
+func reconnect_lobby(connecting_id: int, opponent_id: int, lobby_key: String):
+	# continuing a disconnected game...
+	print("Client: ", connecting_id, " reconnecting to lobby: ", lobby_key)
+	
+	players[connecting_id] = PlayerInfo.new(lobby_key, opponent_id, !players[opponent_id].is_player1)
+	players[opponent_id].opponent_id = connecting_id
+	
+	restart_game.rpc_id(opponent_id, connecting_id)
 
 @rpc("authority", "reliable")
 func start_game(opponent_id: int, is_player1: bool):
@@ -120,12 +125,14 @@ func write_to_console(author: String, message: String):
 
 func on_peer_connected(id: int):
 	if id == 1: # Register lobby when connecting to the server
-		start_lobby.rpc_id(id, Settings.MPKey)
+		connect_lobby.rpc_id(id, Settings.MPKey)
 
 func on_peer_disconnected(id: int):
 	local_opponent_id = 0
 
 func on_client_disconnected(id: int):
+	print("Client: ", id, " disconnected.")
+	
 	if not id in players: # skip if player connection was invalid (e.g. 3rd player in the same lobby)
 		return
 	
@@ -145,7 +152,7 @@ func on_client_disconnected(id: int):
 	write_to_console.rpc_id(player_info.opponent_id, "Server", "Player " + ("1" if player_info.is_player1 else "2") + " disconnected!!!")
 
 func _ready() -> void:
-	if DisplayServer.get_name() == "headless":
+	if DisplayServer.get_name() == "headless" or OS.has_feature("dedicated_server"):
 		start_server()
 		
 		multiplayer.peer_disconnected.connect(on_client_disconnected)
