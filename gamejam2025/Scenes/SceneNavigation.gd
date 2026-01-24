@@ -1,5 +1,7 @@
 extends Node2D
 
+func go_to_credits() ->void:
+	_go_to_scene("res://credits/credits.tscn")
 
 func go_to_game(push_as_child = false) -> void:
 	_go_to_scene("res://MainGame.tscn", push_as_child)

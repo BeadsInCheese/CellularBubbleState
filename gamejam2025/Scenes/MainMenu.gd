@@ -18,3 +18,7 @@ func go_to_tutorial() -> void:
 	Board.mp = false
 	Board.tutorial = true
 	SceneNavigation.go_to_game()
+
+
+func _on_credits_pressed() -> void:
+	SceneNavigation.go_to_credits()

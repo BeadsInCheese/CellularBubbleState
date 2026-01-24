@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://dxyjatnbd7f2b"]
+
+[ext_resource type="Theme" uid="uid://dck8e4axi58hk" path="res://resources/fonts/regularTheme.tres" id="1_2jrit"]
+[ext_resource type="Script" path="res://credits/credits.gd" id="1_yo700"]
+
+[node name="Credits" type="CanvasLayer"]
+script = ExtResource("1_yo700")
+
+[node name="Button" type="Button" parent="."]
+custom_minimum_size = Vector2(82.295, 43.155)
+offset_left = 525.0
+offset_top = 540.0
+offset_right = 533.0
+offset_bottom = 548.0
+theme = ExtResource("1_2jrit")
+text = "Back"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+offset_right = 1152.0
+offset_bottom = 526.0
+bbcode_enabled = true
+text = "[center]
+temeleh
+sorgath
+Aarnituli
+
+SFX by Circlerun
+
+
+[/center]"
+
+[connection signal="pressed" from="Button" to="." method="_on_credits_pressed"]
