@@ -26,6 +26,11 @@ func _write(author:String,msg:String,end:String="\n"):
 	consoleLog.text+=result
 	consoleLog.scroll_vertical=lines
 	messageWritten.emit(author,msg,end)
+static func get_log()->String:
+	if(instance!=null):
+		return instance.consoleLog.text
+	else:
+		return ""
 
 func _systemWrite(msg:String):
 	write("System",msg)
