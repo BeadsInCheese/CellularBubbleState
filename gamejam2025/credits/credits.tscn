@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dxyjatnbd7f2b"]
+[gd_scene load_steps=4 format=3 uid="uid://dxyjatnbd7f2b"]
 
 [ext_resource type="Theme" uid="uid://dck8e4axi58hk" path="res://resources/fonts/regularTheme.tres" id="1_2jrit"]
 [ext_resource type="Script" path="res://credits/credits.gd" id="1_yo700"]
+[ext_resource type="Theme" uid="uid://bgqmjm172gald" path="res://FontArtistic.tres" id="3_auuwh"]
 
 [node name="Credits" type="CanvasLayer"]
 script = ExtResource("1_yo700")
@@ -18,8 +19,10 @@ text = "Back"
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 offset_right = 1152.0
 offset_bottom = 526.0
+theme = ExtResource("3_auuwh")
 bbcode_enabled = true
 text = "[center]
+created by
 temeleh
 sorgath
 Aarnituli
