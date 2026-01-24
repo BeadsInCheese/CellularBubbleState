@@ -161,6 +161,9 @@ layout_mode = 2
 theme = ExtResource("2_m1ob4")
 text = "exit"
 
+[node name="sfx" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
+
 [connection signal="pressed" from="CanvasLayer/addRuleButton" to="CanvasLayer" method="_on_add_rule_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/resultButton" to="CanvasLayer/resultButton" method="_on_pressed"]
 [connection signal="sizeChanged" from="CanvasLayer/MatrixBase" to="CanvasLayer" method="_on_matrix_base_size_changed"]

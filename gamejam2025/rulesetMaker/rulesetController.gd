@@ -4,7 +4,9 @@ var ruleTemplate=preload("res://rulesetMaker/rule.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$MenuButton.get_popup().id_pressed.connect(_on_menu_button_pressed)
-
+var audio:AudioStreamPlayer
+func play_sound():
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -71,6 +73,7 @@ func recalculatePosition():
 				return
 
 func addRule(ruleName,pattern,result):
+	
 	if(entryExists(ruleName)):
 		setRule(ruleName,pattern,result)
 		return
