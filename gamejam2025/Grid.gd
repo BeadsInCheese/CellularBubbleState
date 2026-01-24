@@ -230,7 +230,7 @@ func resume_multiplayer_game():
 		turnChangedSignal.emit(absoluteTurn)
 	
 	await get_tree().process_frame
-	print("received console: ", Settings.MPConsoleHistory)
+
 	Console.write("", Settings.MPConsoleHistory)
 	Settings.MPConsoleHistory = ""
 	
