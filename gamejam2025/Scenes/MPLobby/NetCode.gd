@@ -49,7 +49,7 @@ func get_server_ip() -> String:
 	var config = ConfigFile.new()
 	var load_status = config.load("res://config/INI_Settings.cfg")
 
-	if load_status != OK or true:
+	if load_status != OK:
 		return "127.0.0.1"
 
 	return config.get_value("MULTIPLAYER", "SERVER_IP", "127.0.0.1")
@@ -59,6 +59,7 @@ func connect_lobby(lobby_key: String):
 	var connecting_id = multiplayer.get_remote_sender_id()
 	
 	if not lobby_key in lobbies:
+		print("Creating lobby ", lobby_key, " by client ", connecting_id)
 		lobbies[lobby_key] = [connecting_id] # add a new lobby key on the first connection and return
 		return
 	
@@ -85,12 +86,12 @@ func connect_lobby(lobby_key: String):
 
 func reconnect_lobby(connecting_id: int, opponent_id: int, lobby_key: String):
 	# continuing a disconnected game...
-	print("Client: ", connecting_id, " reconnecting to lobby: ", lobby_key)
+	print("Client ", connecting_id, " reconnecting to lobby ", lobby_key)
 	
 	players[connecting_id] = PlayerInfo.new(lobby_key, opponent_id, !players[opponent_id].is_player1)
 	players[opponent_id].opponent_id = connecting_id
 	
-	restart_game.rpc_id(opponent_id, connecting_id)
+	resend_game_to_opponent.rpc_id(opponent_id, connecting_id)
 
 @rpc("authority", "reliable")
 func start_game(opponent_id: int, is_player1: bool):
@@ -100,7 +101,7 @@ func start_game(opponent_id: int, is_player1: bool):
 	SceneNavigation.go_to_game(true)
 
 @rpc("any_peer", "reliable")
-func restart_game(opponent_id: int):
+func resend_game_to_opponent(opponent_id: int):
 	local_opponent_id = opponent_id
 	
 	var board: Board = get_tree().root.get_node("root/Board")
@@ -131,7 +132,7 @@ func on_peer_disconnected(id: int):
 	local_opponent_id = 0
 
 func on_client_disconnected(id: int):
-	print("Client: ", id, " disconnected.")
+	print("Client ", id, " disconnected.")
 	
 	if not id in players: # skip if player connection was invalid (e.g. 3rd player in the same lobby)
 		return
