@@ -85,6 +85,7 @@ func addRule(ruleName,pattern,result):
 	$ListBg/ScrollContainer/VBoxContainer.add_child(rule)
 	rule.name=ruleName
 func _on_add_rule_button_pressed() -> void:
+	AudioManager.play_sound(AudioManager.Sounds.BUTTONV2)
 	var mat=$MatrixBase.getMatrix()
 	var Rulename=$LineEdit.text
 	if(Rulename!=""):

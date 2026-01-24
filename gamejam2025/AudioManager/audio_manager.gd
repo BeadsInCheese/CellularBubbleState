@@ -7,7 +7,7 @@ enum Sounds{
 enum Musics{
 	MAINMENU
 }
-var sound_dic={Sounds.BUTTONV1:preload("res://rulesetMaker/sfx/sounds/button1.ogg")}
+var sound_dic={Sounds.BUTTONV1:preload("res://rulesetMaker/sfx/sounds/button1.ogg"),Sounds.BUTTONV2:preload("res://rulesetMaker/sfx/sounds/button2.ogg")}
 var music_dic={Musics.MAINMENU:preload("res://sunrise_over_water.mp3")}
 func play_sound(sound:Sounds):
 	$sfx.stream=sound_dic[sound]

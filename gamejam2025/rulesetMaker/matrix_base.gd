@@ -37,7 +37,7 @@ func setMatrix(mat):
 		__setMatrix(mat)
 func updateUI():
 	for node in $VBoxContainer.get_children():
-		node.queue_free()
+		node.free()
 	for i in sizey:
 		var hBox=HBoxContainer.new()
 		hBox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
