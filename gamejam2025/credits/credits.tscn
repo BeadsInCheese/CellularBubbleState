@@ -18,7 +18,7 @@ text = "Back"
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 offset_right = 1152.0
-offset_bottom = 526.0
+offset_bottom = 649.0
 theme = ExtResource("3_auuwh")
 bbcode_enabled = true
 text = "[center]
@@ -27,9 +27,10 @@ temeleh
 sorgath
 Aarnituli
 Music by SterlingRay
-SFX by Circlerun
-
-
+SFX by 
+Circlerun
+rubberduck
+pauliuw
 [/center]"
 
 [connection signal="pressed" from="Button" to="." method="_on_credits_pressed"]
