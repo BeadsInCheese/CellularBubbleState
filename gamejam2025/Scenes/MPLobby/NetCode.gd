@@ -92,6 +92,7 @@ func reconnect_lobby(connecting_id: int, opponent_id: int, lobby_key: String):
 	players[opponent_id].opponent_id = connecting_id
 	
 	resend_game_to_opponent.rpc_id(opponent_id, connecting_id)
+	
 
 @rpc("authority", "reliable")
 func start_game(opponent_id: int, is_player1: bool):
@@ -103,18 +104,20 @@ func start_game(opponent_id: int, is_player1: bool):
 @rpc("any_peer", "reliable")
 func resend_game_to_opponent(opponent_id: int):
 	local_opponent_id = opponent_id
+	write_to_console("Server", "Player " + ("1" if !Settings.MPPlayer1 else "2") + " reconnected!!!")
 	
 	var board: Board = get_tree().root.get_node("root/Board")
-	resync_game.rpc_id(opponent_id, !Settings.MPPlayer1, board.boardHistory)
+	resync_game.rpc_id(opponent_id, !Settings.MPPlayer1, board.boardHistory, Console.get_log())
 
 @rpc("any_peer", "reliable")
-func resync_game(is_player1: bool, board_history: Array[String]):
+func resync_game(is_player1: bool, board_history: Array[String], console_history: String):
 	local_opponent_id = multiplayer.get_remote_sender_id()
 	
 	Settings.MPPlayer1 = is_player1
 	Settings.MPResumeHistory = board_history
+	Settings.MPConsoleHistory = console_history
 	SceneNavigation.go_to_game(true)
-
+	
 
 @rpc("any_peer", "reliable")
 func send_move(tile_index: int, tile_type: int):

@@ -1,14 +1,16 @@
 extends Node
 
-var sfxVolume:float=80
-var musicVolume:float=80
-var masterVolume:float=80
+var sfxVolume: float = 80
+var musicVolume: float = 80
+var masterVolume: float = 80
 
-var P1Index=0
-var P2Index=0
-var MPKey=""
-var MPPlayer1=false
+var P1Index = 0
+var P2Index = 0
+
+var MPKey = ""
+var MPPlayer1 = false
 var MPResumeHistory: Array[String] = []
+var MPConsoleHistory = ""
 
 func setSFX(volume):
 	sfxVolume=volume

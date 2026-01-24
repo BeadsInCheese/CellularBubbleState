@@ -229,6 +229,11 @@ func resume_multiplayer_game():
 	if not isEnd():
 		turnChangedSignal.emit(absoluteTurn)
 	
+	await get_tree().process_frame
+	print("received console: ", Settings.MPConsoleHistory)
+	Console.write("", Settings.MPConsoleHistory)
+	Settings.MPConsoleHistory = ""
+	
 	update_gfx()
 
 func decode_board(pointer):
