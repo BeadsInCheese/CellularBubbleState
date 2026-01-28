@@ -23,7 +23,7 @@ signal on_move_confirmed(tile_index: int, tile_type: int)
 
 func start_server() -> void:
 	peer = WebSocketMultiplayerPeer.new()
-	var error = peer.create_server(PORT)
+	var error = peer.create_server(PORT, "*", TLSOptions.server(load("res://privkey.key"), load("res://fullchain.crt")))
 	if error:
 		print("Failed to start server on port ", PORT, ". Error: ", error_string(error))
 		return
@@ -34,7 +34,7 @@ func connect_client() -> void:
 	if peer == null:
 		peer = WebSocketMultiplayerPeer.new()
 
-	peer.create_client("ws://" + get_server_ip() + ":" + str(PORT))
+	peer.create_client("wss://" + get_server_ip() + ":" + str(PORT))
 	
 	multiplayer.multiplayer_peer = peer
 
