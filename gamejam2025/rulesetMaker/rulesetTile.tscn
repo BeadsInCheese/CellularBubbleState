@@ -32,8 +32,8 @@ void fragment() {
 resource_local_to_scene = true
 shader = SubResource("Shader_lqr4q")
 shader_parameter/offset = Vector2(0.51, 0.385)
-shader_parameter/inner = 0.365
-shader_parameter/thickness = 0.205
+shader_parameter/inner = 0.4
+shader_parameter/thickness = 0.1
 shader_parameter/color = Color(0.0890831, 0.213921, 0.326991, 1)
 shader_parameter/center = false
 
