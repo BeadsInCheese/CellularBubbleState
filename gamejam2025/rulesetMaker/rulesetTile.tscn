@@ -1,9 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://c4pls12ssqor6"]
+[gd_scene load_steps=5 format=3 uid="uid://c4pls12ssqor6"]
 
+[ext_resource type="Shader" path="res://rulesetMaker/rulesetTile.gdshader" id="1_bgtxg"]
 [ext_resource type="Texture2D" uid="uid://bfkyh5nr4motd" path="res://resources/GFX/towers/pillar_player1.png" id="1_qrdo2"]
 [ext_resource type="Script" path="res://rulesetMaker/rulesetTile.gd" id="2_gppt8"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hp3bd"]
+shader = ExtResource("1_bgtxg")
+
 [node name="Tile" type="TextureButton"]
+material = SubResource("ShaderMaterial_hp3bd")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
