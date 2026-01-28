@@ -1,11 +1,41 @@
 [gd_scene load_steps=5 format=3 uid="uid://c4pls12ssqor6"]
 
-[ext_resource type="Shader" path="res://rulesetMaker/rulesetTile.gdshader" id="1_bgtxg"]
 [ext_resource type="Texture2D" uid="uid://bfkyh5nr4motd" path="res://resources/GFX/towers/pillar_player1.png" id="1_qrdo2"]
 [ext_resource type="Script" path="res://rulesetMaker/rulesetTile.gd" id="2_gppt8"]
 
+[sub_resource type="Shader" id="Shader_lqr4q"]
+code = "shader_type canvas_item;
+
+void vertex() {
+	// Called for every vertex the material is visible on.
+}
+uniform vec2 offset;
+uniform float inner;
+uniform float thickness;
+uniform vec3 color: source_color;
+uniform bool center;
+void fragment() {
+		COLOR=texture(TEXTURE ,vec2(UV.x,UV.y));
+		float dist=length(UV-0.5);
+		if(center){
+			COLOR=mix(COLOR, vec4(color,float(inner+thickness>dist&&inner<dist)),step(0.5,1.-COLOR.a));
+		}
+}
+
+//void light() {
+	// Called for every pixel for every light affecting the CanvasItem.
+	// Uncomment to replace the default light processing function with this one.
+//}
+"
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hp3bd"]
-shader = ExtResource("1_bgtxg")
+resource_local_to_scene = true
+shader = SubResource("Shader_lqr4q")
+shader_parameter/offset = Vector2(0.51, 0.385)
+shader_parameter/inner = 0.365
+shader_parameter/thickness = 0.205
+shader_parameter/color = Color(0.0890831, 0.213921, 0.326991, 1)
+shader_parameter/center = false
 
 [node name="Tile" type="TextureButton"]
 material = SubResource("ShaderMaterial_hp3bd")

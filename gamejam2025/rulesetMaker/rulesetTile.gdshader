@@ -3,10 +3,17 @@ shader_type canvas_item;
 void vertex() {
 	// Called for every vertex the material is visible on.
 }
-
+uniform vec2 offset;
+uniform float inner;
+uniform float thickness;
+uniform vec3 color: source_color;
+uniform bool center;
 void fragment() {
 		COLOR=texture(TEXTURE ,vec2(UV.x,UV.y));
-		COLOR+=vec4(0.,0.,0.,float(0.8<length(UV-0.5)));
+		float dist=length(UV-0.5);
+		if(center){
+			COLOR=mix(COLOR, vec4(color,float(inner+thickness>dist&&inner<dist)),step(0.5,1.-COLOR.a));
+		}
 }
 
 //void light() {

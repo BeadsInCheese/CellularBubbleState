@@ -46,6 +46,8 @@ func updateUI():
 		$VBoxContainer.add_child(hBox)
 		for j in sizex:
 			var tile=UITile.instantiate()
+			if(i==sizey/2&&j==sizex/2):
+				tile.material.set_shader_parameter("center",true);
 			tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			tile.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			
