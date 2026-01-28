@@ -5,7 +5,8 @@ compatibility_minimum = "4.1"
 reloadable = true
 
 [libraries]
-
+web.release = "res://bin/libautomata.web.template_release.wasm32.wasm"
+web.debug = "res://bin/libautomata.web.template_debug.wasm32.wasm"
 macos.debug = "res://bin/libautomata.macos.template_debug.framework"
 macos.release = "res://bin/libautomata.macos.template_release.framework"
 ios.debug = "res://bin/libautomata.ios.template_debug.xcframework"
