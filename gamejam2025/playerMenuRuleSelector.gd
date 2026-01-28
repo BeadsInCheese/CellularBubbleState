@@ -17,8 +17,7 @@ func _on_pressed() -> void:
 
 func _on_file_dialog_file_selected(path: String) -> void:
 	var rules=ruleSet.new()
-	var file = FileAccess.open(path, FileAccess.READ)
-	rules.deserialize(file.get_as_text())
-	file.close()
+	rules.load_from_file(path)
 	AutomataAgent.ruleset=rules.getAsArray()
-	AutomataAgent.loadCustomRuleset=true
+	AutomataAgent.ruleset_name=rules.name
+	$rulesetName.text="loaded ruleset: "+rules.name

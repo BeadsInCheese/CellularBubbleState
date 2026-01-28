@@ -2,7 +2,7 @@ extends Node2D
 
 
 func _ready() -> void:
-	AutomataAgent.loadCustomRuleset=false
+	AutomataAgent.ruleset_name="vanilla"
 
 
 func go_to_settings() -> void:

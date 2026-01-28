@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cj0un5t317b7y"]
+[gd_scene load_steps=22 format=3 uid="uid://cj0un5t317b7y"]
 
 [ext_resource type="Script" path="res://playerSelect.gd" id="1_ck5mi"]
 [ext_resource type="Shader" path="res://Voronoisurface.gdshader" id="2_64eh4"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://buk1ghkxjvnfv" path="res://PlayermenuComponents/option_button.tscn" id="7_dknv5"]
 [ext_resource type="PackedScene" uid="uid://qk3k2gxjndaw" path="res://transition.tscn" id="7_tav7e"]
 [ext_resource type="Script" path="res://playerMenuRuleSelector.gd" id="11_pka2q"]
+[ext_resource type="Theme" uid="uid://dck8e4axi58hk" path="res://resources/fonts/regularTheme.tres" id="12_fnqr1"]
 
 [sub_resource type="Gradient" id="Gradient_156fm"]
 colors = PackedColorArray(0.117647, 0.117647, 0.564706, 1, 0, 1, 1, 1)
@@ -177,6 +178,15 @@ file_mode = 0
 access = 2
 filters = PackedStringArray("*.rule.json")
 use_native_dialog = true
+
+[node name="rulesetName" type="RichTextLabel" parent="HBoxContainer/loadCustomRuleset"]
+layout_mode = 0
+offset_left = -275.0
+offset_top = 16.0
+offset_right = -11.0
+offset_bottom = 44.0
+theme = ExtResource("12_fnqr1")
+text = "loaded ruleset: vanilla"
 
 [node name="rulesetCreatorButton" type="Button" parent="HBoxContainer"]
 layout_mode = 2

@@ -1,10 +1,12 @@
 
 class_name ruleSet
 var rules:Dictionary={}
+var name:String
 class rule:
 	var pattern:Array
 	var result:int
 	var index:int
+
 	func _init(pattern:Array,result:int,index:int) -> void:
 		self.pattern=pattern
 		self.result=result
@@ -44,7 +46,23 @@ func arrToIntArr(arr):
 	for i in arr:
 		result.append(int(i))
 	return result
+func get_name_from_path(path:String):
+	var str=""
+	for i in path:
+		if(i=="/"||i=="\\"):
+			str=""
+		elif(i=="."):
+			return str
+		else:
+			str+=i
 		
+
+func load_from_file(src:String):
+	name=get_name_from_path(src)
+	var file = FileAccess.open(src, FileAccess.READ)
+	deserialize(file.get_as_text())
+	file.close()
+	
 func deserialize(src:String):
 	var dic=JSON.parse_string(src)
 	for i in dic.keys():

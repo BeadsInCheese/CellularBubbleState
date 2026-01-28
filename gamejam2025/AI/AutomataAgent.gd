@@ -1,7 +1,7 @@
 extends AgentBase
 
 class_name AutomataAgent
-static var  loadCustomRuleset:bool=false
+static var  ruleset_name:String="vanilla"
 static var ruleset:Array
 func makeMove(observation:Board):
 	if observation == null or not observation.exists():
@@ -24,7 +24,7 @@ func init(board:Board):
 	game_board=board
 	automata=board.get_child(0)
 	#automata.printRules()
-	if loadCustomRuleset:
+	if ruleset_name=="vanilla":
 		loadRuleset()
 	#automata.clearRuleset()
 	#automata.addRule([1,1,1, 1,1,1, 1,1,1],0)

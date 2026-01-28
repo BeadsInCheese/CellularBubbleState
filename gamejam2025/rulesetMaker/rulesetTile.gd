@@ -13,7 +13,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
-var textures=["res://resources/GFX/Bubble icons/bubble02b_2.png","res://rulesetMaker/ruleset icons/empty icon.png","res://resources/GFX/towers/pillar_player1.png","res://rulesetMaker/ruleset icons/bubble 1 icon.png","res://resources/GFX/towers/pillar_player2.png","res://rulesetMaker/ruleset icons/bubble 2 icon.png"]
+var textures=["res://rulesetMaker/ruleset icons/any.png","res://rulesetMaker/ruleset icons/empty icon.png","res://rulesetMaker/ruleset icons/tower1.png","res://rulesetMaker/ruleset icons/bubble 1 icon.png","res://rulesetMaker/ruleset icons/tower2.png","res://rulesetMaker/ruleset icons/bubble 2 icon.png"]
 func updateUI():
 	texture_normal=load(textures[tileType+1])
 	
