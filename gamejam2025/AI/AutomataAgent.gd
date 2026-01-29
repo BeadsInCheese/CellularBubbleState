@@ -24,7 +24,7 @@ func init(board:Board):
 	game_board=board
 	automata=board.get_child(0)
 	#automata.printRules()
-	if ruleset_name=="vanilla":
+	if ruleset_name!="vanilla":
 		loadRuleset()
 	#automata.clearRuleset()
 	#automata.addRule([1,1,1, 1,1,1, 1,1,1],0)
