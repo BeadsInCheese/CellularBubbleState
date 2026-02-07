@@ -60,7 +60,8 @@ func connect_lobby(lobby_key: String):
 	
 	if not lobby_key in lobbies:
 		print("Creating lobby ", lobby_key, " by client ", connecting_id)
-		lobbies[lobby_key] = [connecting_id] # add a new lobby key on the first connection and return
+		lobbies[lobby_key] = [connecting_id]
+		players[connecting_id] = PlayerInfo.new(lobby_key, 0, false)
 		return
 	
 	var lobby_players: Array = lobbies[lobby_key]
@@ -70,7 +71,7 @@ func connect_lobby(lobby_key: String):
 	var opponent_id = lobby_players[0]
 	lobby_players.append(connecting_id)
 
-	if opponent_id in players:
+	if opponent_id in players and players[opponent_id].opponent_id != 0:
 		reconnect_lobby(connecting_id, opponent_id, lobby_key)
 		return
 	
@@ -151,6 +152,7 @@ func on_client_disconnected(id: int):
 	
 	if len(lobby_players) == 0:
 		lobbies.erase(player_info.lobby_key) # remove lobby when the last player disconnects -> lobby becomes empty
+		print("Lobby ", player_info.lobby_key, " removed.")
 		return
 	
 	write_to_console.rpc_id(player_info.opponent_id, "Server", "Player " + ("1" if player_info.is_player1 else "2") + " disconnected!!!")
