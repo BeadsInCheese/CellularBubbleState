@@ -23,7 +23,8 @@ signal on_move_confirmed(tile_index: int, tile_type: int)
 
 func start_server() -> void:
 	peer = WebSocketMultiplayerPeer.new()
-	var error = peer.create_server(PORT, "*", TLSOptions.server(load("res://privkey.key"), load("res://fullchain.crt")))
+	var exec_path = OS.get_executable_path().get_base_dir()
+	var error = peer.create_server(PORT, "*", TLSOptions.server(load(exec_path + "/privkey.key"), load(exec_path + "/fullchain.crt")))
 	if error:
 		print("Failed to start server on port ", PORT, ". Error: ", error_string(error))
 		return
@@ -50,7 +51,7 @@ func get_server_ip() -> String:
 	var load_status = config.load("res://config/INI_Settings.cfg")
 
 	if load_status != OK:
-		return "127.0.0.1"
+		return "127.0.0.1" if OS.get_name() != "Web" else OS.get_cmdline_user_args()[0]
 
 	return config.get_value("MULTIPLAYER", "SERVER_IP", "127.0.0.1")
 
